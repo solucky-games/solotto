@@ -8,6 +8,10 @@ import { WalletMultiButton, useAnchorWallet, useWallet } from 'solana-wallets-vu
 import idl from './idl.json'
 import { Buffer } from 'buffer'
 
+const coinTicker = require('coin-ticker');
+
+
+
 // @ts-ignore
 window.Buffer = Buffer;
 
@@ -34,14 +38,19 @@ export default {
     const counterPublicKey = useLocalStorage('counterPublicKey', null);
     const counter = ref(0);
     const prize = ref(0);
+    const SOL_USD = ref(0);
     const balance = ref();
+
+    watchEffect(async () => {
+      const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
+      prize.value = Math.floor(pri*100)/100;
+      await coinTicker('coinbase', 'SOL_USD').then((tick) => { SOL_USD.value = tick.last })
+    })
 
     watchEffect(async () => {
       if (!counterPublicKey.value) return;
       const account = await program.value.account.baseAccount.fetch(counterPublicKey.value)
       counter.value = account.count.toNumber()
-      const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
-      prize.value = Math.floor(pri*100)/100;
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
       
@@ -117,6 +126,7 @@ export default {
       incrementCounter,
       balance,
       prize,
+      SOL_USD,
       sendSOL,
       masterWallet
     }
@@ -150,17 +160,27 @@ export default {
     <div class="m-auto w-full max-w-md p-8">
       <div class="shadow-xl rounded-xl" :class="dark ? 'bg-gray-700' : 'bg-white'">
         
-        <div class="p-8 text-center">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total prize</p>
-          <div class="flex justify-center mr-3" >
-            <p class="font-bold text-2xl mt-5 mr-1"
-              :class="dark ? 'text-white' : 'text-gray-900'"
-            >◎ </p>
-            <p class="font-bold text-5xl mt-2"
-              :class="dark ? 'text-white' : 'text-gray-900'"
-            > {{prize}}</p>
+          <div class="p-8 text-center">
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total prize</p>
+            <div class="flex justify-center mr-3" >
+              <p class="font-bold text-2xl mt-5 mr-1"
+                :class="dark ? 'text-white' : 'text-gray-900'"
+              >◎ </p>
+              <p class="font-bold text-5xl mt-2"
+                :class="dark ? 'text-white' : 'text-gray-900'"
+              > {{prize}}</p>
+            </div>
+
+            <div class="flex justify-center" >
+              <p class="font-bold text-2xl mt-2 mr-1"
+                :class="dark ? 'text-white' : 'text-gray-900'"
+              >$ </p>
+              <p class="font-bold text-2xl mt-2"
+                :class="dark ? 'text-white' : 'text-gray-900'"
+              > {{prize*SOL_USD}}</p>
+            </div>
           </div>
-        </div>
+  
 
 
         <div class="flex">

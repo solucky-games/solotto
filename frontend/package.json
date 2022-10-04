@@ -14,6 +14,7 @@
     "@vueuse/core": "^9.3.0",
     "base58-js": "^1.0.4",
     "buffer": "^6.0.3",
+    "coin-ticker": "^3.2.0",
     "core-js": "^3.8.3",
     "crypto": "^1.0.1",
     "solana-wallets-vue": "^0.4.5",
