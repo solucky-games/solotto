@@ -8,6 +8,8 @@ import { WalletMultiButton, useAnchorWallet, useWallet } from 'solana-wallets-vu
 import idl from './idl.json'
 import { Buffer } from 'buffer'
 
+import KeyBoard from './components/KeyBoard'
+
 const coinTicker = require('coin-ticker');
 
 
@@ -20,7 +22,8 @@ const programID = new PublicKey(idl.metadata.address)
 const preflightCommitment = 'processed'
 
 const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
-const network = 'devnet'
+const cluster = 'devnet'
+const commitSOL = 1;
 
 
 export default {
@@ -31,20 +34,20 @@ export default {
     const dark = ref(false)
     const wallet = useAnchorWallet()
     
-    const connection = new Connection(clusterApiUrl(network), preflightCommitment)
+    const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
     const provider = computed(() => new AnchorProvider(connection, wallet.value, { preflightCommitment }))
     const program = computed(() => new Program(idl, programID, provider.value))
 
     const counterPublicKey = useLocalStorage('counterPublicKey', null);
     const counter = ref(0);
     const prize = ref(0);
-    const SOL_USD = ref(0);
+    const SOL_USD = ref();
     const balance = ref();
 
     watchEffect(async () => {
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri*100)/100;
-      await coinTicker('coinbase', 'SOL_USD').then((tick) => { SOL_USD.value = tick.last })
+      coinTicker('bitstamp', 'SOL_USD').then((tick) => { SOL_USD.value = tick.last })
     })
 
     watchEffect(async () => {
@@ -97,20 +100,24 @@ export default {
         return alert('Connect your wallet first.')
       } 
 
-      const connection = new Connection(clusterApiUrl(network), preflightCommitment)
+      const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
+
+      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
+
+      if (bal < commitSOL) 
+        return alert('Not enough SOL in your wallet. Minimum funds needed: 1 SOL')
 
       const transaction = new Transaction().add(
           SystemProgram.transfer({
               fromPubkey: wallet.value.publicKey,
               toPubkey: new PublicKey(masterWallet),
-              lamports: 1000000000 })
+              lamports: commitSOL*1000000000 })
       )
 
       const signature = await sendTransaction(transaction, connection);
 
       await connection.confirmTransaction(signature, 'processed');
 
-      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
 
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
@@ -128,7 +135,8 @@ export default {
       prize,
       SOL_USD,
       sendSOL,
-      masterWallet
+      masterWallet,
+      KeyBoard
     }
   },
 }
@@ -153,17 +161,18 @@ export default {
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
       </button>
+
     </div>
 
-    <!-- Centered. -->
+    <div class="absolute top-20 right-0 p-8 flex space-x-8 justify-center ">
 
-    <div class="m-auto w-full max-w-md p-8">
-      <div class="shadow-xl rounded-xl" :class="dark ? 'bg-gray-700' : 'bg-white'">
+      <div class="shadow-xl rounded-xl mr-3" :class="dark ? 'bg-gray-700' : 'bg-white'">
         
+        <div class="flex">
           <div class="p-8 text-center">
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total prize</p>
-            <div class="flex justify-center mr-3" >
-              <p class="font-bold text-2xl mt-5 mr-1"
+            <div class="flex justify-center mr-3 mt-2" >
+              <p class="font-bold text-2xl mt-4 mr-1"
                 :class="dark ? 'text-white' : 'text-gray-900'"
               >◎ </p>
               <p class="font-bold text-5xl mt-2"
@@ -173,16 +182,54 @@ export default {
 
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2 mr-1"
-                :class="dark ? 'text-white' : 'text-gray-900'"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
               >$ </p>
               <p class="font-bold text-2xl mt-2"
-                :class="dark ? 'text-white' : 'text-gray-900'"
-              > {{prize*SOL_USD}}</p>
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ Math.floor(prize*SOL_USD*100)/100 }}</p>
             </div>
           </div>
+          <div class="p-8 text-center">
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
+
+            <div class="flex justify-center" >
+              <p class="font-bold text-2xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ 120 }}</p>
+            </div>
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
+
+            <div class="flex justify-center" >
+              <p class="font-bold text-2xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ `${Math.floor(prize)/100} %`}}</p>
+            </div>
   
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Centered. -->
+
+    <div class="m-auto w-full max-w-md p-8">
+      <div class="shadow-xl rounded-xl" :class="dark ? 'bg-gray-700' : 'bg-white'">
+        
+        <div class="grid grid-cols-3 gap-4 text-xs font-semibold text-center">
+          <div :class="dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'" class="h-10 justify-center">1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+          <div>9</div>
+        </div>
 
 
+  
         <div class="flex">
           <button
             class="flex-1 py-4 px-2 rounded-br-xl"
