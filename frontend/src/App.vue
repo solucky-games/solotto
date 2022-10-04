@@ -5,13 +5,19 @@ import { useLocalStorage } from '@vueuse/core'
 import { Connection, PublicKey, Keypair, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
 import { Program, AnchorProvider } from '@project-serum/anchor'
 import { WalletMultiButton, useAnchorWallet, useWallet } from 'solana-wallets-vue'
+import CountDown from '@chenfengyuan/vue-countdown';
 import idl from './idl.json'
 import { Buffer } from 'buffer'
+import coinTicker from 'coin-ticker'
 
-import KeyBoard from './components/KeyBoard'
 
-const coinTicker = require('coin-ticker');
-
+let today = new Date();
+today.setDate(today.getDate() + 1);
+const year = String(today.getFullYear())
+const month = String(today.getMonth() + 1)
+const day = String(today.getDate())
+const date = new Date(`${year}-${month}-${day}`);
+const time = (date.getTime()-Date.now());
 
 
 // @ts-ignore
@@ -29,6 +35,7 @@ const commitSOL = 1;
 export default {
   components: {
     WalletMultiButton,
+    CountDown,
   },
   setup () {
     const dark = ref(false)
@@ -136,7 +143,7 @@ export default {
       SOL_USD,
       sendSOL,
       masterWallet,
-      KeyBoard
+      time
     }
   },
 }
@@ -208,6 +215,13 @@ export default {
           </div>
           
         </div>
+
+        <div class="flex text-center uppercase text-sm tracking-widest font-semibold mb-7 justify-center">
+          <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</p>
+        <CountDown :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+          {{ hours }} h {{ minutes }} m {{ seconds }} s
+        </CountDown>
+      </div>
       </div>
     </div>
 
