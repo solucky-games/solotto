@@ -11,13 +11,21 @@ import { Buffer } from 'buffer'
 import coinTicker from 'coin-ticker'
 
 
-let today = new Date();
-today.setDate(today.getDate() + 1);
-const year = String(today.getFullYear())
-const month = String(today.getMonth() + 1)
-const day = String(today.getDate())
-const date = new Date(`${year}-${month}-${day}`);
-const time = (date.getTime()-Date.now());
+let tomorrow = new Date();
+tomorrow.setDate(tomorrow.getUTCDate() + 1);
+const year = tomorrow.getUTCFullYear()
+const month = tomorrow.getUTCMonth()
+const day = tomorrow.getUTCDate()
+const expires = new Date(Date.UTC(year, month, day));
+const now = new Date().getTime()
+const time = (expires.getTime()-now);
+
+const db = ref({
+        10: 'kjsdlkjksddkslñkñs',
+        22: 'nsdkjdskjdsjkdshdskj',
+        33: 'cnkjcdncjkdbcdsjkscd',
+        44: 'jskdljdslkdsjlkjsdk'
+      })
 
 
 // @ts-ignore
@@ -104,7 +112,7 @@ export default {
     async function commitNumber () {
 
       if (! wallet.value) {
-        return alert('Connect your wallet first.')
+        return alert('Connect your wallet first!')
       } 
 
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
@@ -125,10 +133,14 @@ export default {
 
       await connection.confirmTransaction(signature, 'processed');
 
+      db.value[Number(number.value)] = wallet.value.publicKey?.toBase58();
+
       balance.value = Math.floor(bal*100)/100;
 
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri*100)/100;
+
+      
 
     }
 
@@ -171,12 +183,13 @@ export default {
       deleteNum,
       resetNum,
       number,
-      nf
+      nf,
+      db
     }
   },
   data() {
     return {
-      commitHover: false
+      commitHover: false,
     }
   }
 }
@@ -189,7 +202,7 @@ export default {
     <div class="absolute top-0 right-0 p-8 flex space-x-8 justify-center ">
 
       <!-- Solana Wallets Vue. -->
-      <wallet-multi-button :dark="dark"></wallet-multi-button>
+      <WalletMultiButton :dark="dark"></WalletMultiButton>
       <p :class="dark ? 'text-white' : 'text-gray-600'" class="text-sm font-semibold mt-3" v-if="balance">{{`${balance} SOL`}}</p>
 
       <!-- Dark Button. -->
@@ -204,25 +217,14 @@ export default {
 
     </div>
 
-    <!-- Top-Left Corner. -->
-    <div class="absolute top-0 left-0 p-8 flex space-x-8 justify-center ">
-
-      <!-- Dark Button. -->
-      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
-      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
-        <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
-      </button>
-
-    </div>
-
-
     <div class="absolute top-20 right-0 p-8 flex space-x-8 justify-center z-50 ">
 
-      <div class="shadow-xl rounded-xl mr-5" :class="dark ? 'bg-gray-700' : 'bg-white'">
+      <div class="shadow-xl rounded-xl mr-3" :class="dark ? 'bg-gray-700' : 'bg-white'">
         
         <div class="flex">
           <div class="p-8 text-center">
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total prize</p>
+
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Current prize</p>
             <div class="flex justify-center mr-3 mt-2 p-1" >
               <p class="font-bold text-2xl mt-3 mr-1"
                 :class="dark ? 'text-white' : 'text-gray-600'"
@@ -240,7 +242,9 @@ export default {
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
               > {{ nf.format(prize*SOL_USD).split('.')[0] }}</p>
             </div>
+
           </div>
+
           <div class="p-8 text-center">
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
 
@@ -256,7 +260,6 @@ export default {
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
               > {{ `${Math.floor((1/prize)*1000000)/10000} %`}}</p>
             </div>
-  
           </div>
           
         </div>
@@ -268,6 +271,22 @@ export default {
         </CountDown>
       </div>
       </div>
+    </div>
+
+    <!-- Top-Left Corner. -->
+    <div class="absolute top-0 left-0 p-8 flex space-x-8 justify-center ">
+
+      <!-- Dark Button. -->
+      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
+      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+        <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
+      </button>
+
+    </div>
+
+
+    <div class="absolute top-20 left-0 p-8 space-x-8 justify-center">
+      <div v-for="(item, index) in db" :key="index">{{ index }} -> {{ item }}</div>
     </div>
 
 
