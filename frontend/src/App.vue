@@ -101,7 +101,7 @@ export default {
 
     const { sendTransaction } = useWallet();
 
-    const sendSOL = async () => {
+    async function commitNumber () {
 
       if (! wallet.value) {
         return alert('Connect your wallet first.')
@@ -130,7 +130,11 @@ export default {
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri*100)/100;
 
-    };
+    }
+
+    function messageCommit() {
+      return this.hover === true ? "I'm being hovered" : "Hover me";
+    }
 
     const number = ref('0')
     const nf = Intl.NumberFormat();
@@ -155,8 +159,6 @@ export default {
       number.value = '0';
     }
 
-    const onHover = ref(false)
-
     return { 
       dark,
       counterPublicKey,
@@ -166,17 +168,22 @@ export default {
       balance,
       prize,
       SOL_USD,
-      sendSOL,
+      commitNumber,
       masterWallet,
       time, 
       clickNum,
       deleteNum,
       resetNum,
       number,
-      onHover,
+      messageCommit,
       nf
     }
   },
+  data() {
+    return {
+      commitHover: false
+    }
+  }
 }
 </script>
 
@@ -256,6 +263,7 @@ export default {
       </div>
     </div>
 
+
     <!-- Centered. -->
 
     <div class="m-auto w-full max-w-md p-8">
@@ -263,9 +271,11 @@ export default {
 
         <div class="font-bold text-4xl text-center p-7 rounded-xl m-2 cursor-pointer"
         :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'"
-        @click="sendSOL"
-        @mouseover="!onHover">
-          {{ nf.format(number, ' ').replaceAll(',', ' ') }}
+        @click="commitNumber"
+        @mouseover="commitHover=true"
+        @mouseleave="commitHover=false">
+          <div class="text-2xl py-2 mr-10" v-if="commitHover"><a class="text-gray-400 text-xl mr-5">Commit 🚀 </a>{{nf.format(number)}}</div>
+          <div v-else>{{ nf.format(number).replaceAll(',', ' ') }}</div>
         </div>
         
         <div class="grid grid-cols-3 gap-1 text-s font-semibold text-center py-4 px-2 rounded-xl">
