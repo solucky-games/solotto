@@ -132,10 +132,6 @@ export default {
 
     }
 
-    function messageCommit() {
-      return this.hover === true ? "I'm being hovered" : "Hover me";
-    }
-
     const number = ref('0')
     const nf = Intl.NumberFormat();
 
@@ -175,7 +171,6 @@ export default {
       deleteNum,
       resetNum,
       number,
-      messageCommit,
       nf
     }
   },
@@ -208,6 +203,18 @@ export default {
       </button>
 
     </div>
+
+    <!-- Top-Left Corner. -->
+    <div class="absolute top-0 left-0 p-8 flex space-x-8 justify-center ">
+
+      <!-- Dark Button. -->
+      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
+      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+        <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
+      </button>
+
+    </div>
+
 
     <div class="absolute top-20 right-0 p-8 flex space-x-8 justify-center z-50 ">
 
