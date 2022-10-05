@@ -30,6 +30,7 @@ const preflightCommitment = 'processed'
 const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
 const cluster = 'devnet'
 const commitSOL = 1;
+const maxNumber = 1000000000;
 
 
 export default {
@@ -65,7 +66,6 @@ export default {
       balance.value = Math.floor(bal*100)/100;
       
     })
-
 
     const createCounter = async () => {
       if (! wallet.value) {
@@ -132,6 +132,31 @@ export default {
 
     };
 
+    const number = ref('0')
+    const nf = Intl.NumberFormat();
+
+    function clickNum (n) {
+      if (number.value[0] === '0')
+        return number.value = String(n)
+      
+      if ( number.value+n <= maxNumber )
+        number.value += n
+      else
+        return alert(`Number must be between 0 and ${nf.format(maxNumber)}, including both.`)     
+    }
+
+    function deleteNum () {
+      if (number.value.length > 1)
+        number.value = number.value.slice(0, -1);
+      else resetNum();
+    }
+
+    function resetNum () {
+      number.value = '0';
+    }
+
+    const onHover = ref(false)
+
     return { 
       dark,
       counterPublicKey,
@@ -143,7 +168,13 @@ export default {
       SOL_USD,
       sendSOL,
       masterWallet,
-      time
+      time, 
+      clickNum,
+      deleteNum,
+      resetNum,
+      number,
+      onHover,
+      nf
     }
   },
 }
@@ -171,15 +202,15 @@ export default {
 
     </div>
 
-    <div class="absolute top-20 right-0 p-8 flex space-x-8 justify-center ">
+    <div class="absolute top-20 right-0 p-8 flex space-x-8 justify-center z-50 ">
 
-      <div class="shadow-xl rounded-xl mr-3" :class="dark ? 'bg-gray-700' : 'bg-white'">
+      <div class="shadow-xl rounded-xl mr-5" :class="dark ? 'bg-gray-700' : 'bg-white'">
         
         <div class="flex">
           <div class="p-8 text-center">
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total prize</p>
             <div class="flex justify-center mr-3 mt-2 p-1" >
-              <p class="font-bold text-2xl mt-4 mr-1"
+              <p class="font-bold text-2xl mt-3 mr-1"
                 :class="dark ? 'text-white' : 'text-gray-600'"
               >◎ </p>
               <p class="font-bold text-4xl mt-2"
@@ -193,7 +224,7 @@ export default {
               >$ </p>
               <p class="font-bold text-xl mt-2"
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ Math.floor(prize*SOL_USD*100)/100 }}</p>
+              > {{ nf.format(prize*SOL_USD).split('.')[0] }}</p>
             </div>
           </div>
           <div class="p-8 text-center">
@@ -207,9 +238,9 @@ export default {
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
 
             <div class="flex justify-center" >
-              <p class="font-bold text-2xl mt-2"
+              <p class="font-bold text-xl mt-2"
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ `${Math.floor(prize)/100} %`}}</p>
+              > {{ `${Math.floor((1/prize)*1000000)/10000} %`}}</p>
             </div>
   
           </div>
@@ -228,30 +259,28 @@ export default {
     <!-- Centered. -->
 
     <div class="m-auto w-full max-w-md p-8">
-      <div class="shadow-xl rounded-xl" :class="dark ? 'bg-gray-700' : 'bg-white'">
+      <div class="shadow-xl rounded-xl pt-2 pb-2" :class="dark ? 'bg-gray-700' : 'bg-white'">
+
+        <div class="font-bold text-4xl text-center p-7 rounded-xl m-2 cursor-pointer"
+        :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'"
+        @click="sendSOL"
+        @mouseover="!onHover">
+          {{ nf.format(number, ' ').replaceAll(',', ' ') }}
+        </div>
         
         <div class="grid grid-cols-3 gap-1 text-s font-semibold text-center py-4 px-2 rounded-xl">
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tl-xl align-middle relative">1</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">2</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tr-xl align-middle relative">3</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">4</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">5</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">6</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-bl-xl align-middle relative">7</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">8</button>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-br-xl align-middle relative">9</button>
-          <div/>
-          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-b-xl align-middle relative">0</button>
-          <div/>
-        </div>
-
-
-        <div class="text-center">
-          <button
-            class="py-6 px-6 rounded-xl align-middle mb-5 border text-sm"
-            :class="dark ? 'hover:bg-grey-800' : 'hover:bg-grey-200'"
-            @click="sendSOL"
-          >Commit Number</button>
+          <button @click="clickNum(1)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tl-xl align-middle relative">1</button>
+          <button @click="clickNum(2)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">2</button>
+          <button @click="clickNum(3)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tr-xl align-middle relative">3</button>
+          <button @click="clickNum(4)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">4</button>
+          <button @click="clickNum(5)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">5</button>
+          <button @click="clickNum(6)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">6</button>
+          <button @click="clickNum(7)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-bl-xl align-middle relative">7</button>
+          <button @click="clickNum(8)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">8</button>
+          <button @click="clickNum(9)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-br-xl align-middle relative">9</button>
+          <button @click="resetNum()" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-3 px-2 rounded-3xl m-3 align-middle relative">↻</button>
+          <button @click="clickNum(0)" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-b-xl align-middle relative">0</button>
+          <button @click="deleteNum()" :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-3 px-2 rounded-3xl m-3 align-middle relative">⇐</button>          <div/>
         </div>
       </div>
 
