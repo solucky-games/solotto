@@ -178,20 +178,20 @@ export default {
         <div class="flex">
           <div class="p-8 text-center">
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total prize</p>
-            <div class="flex justify-center mr-3 mt-2" >
+            <div class="flex justify-center mr-3 mt-2 p-1" >
               <p class="font-bold text-2xl mt-4 mr-1"
-                :class="dark ? 'text-white' : 'text-gray-900'"
+                :class="dark ? 'text-white' : 'text-gray-600'"
               >◎ </p>
-              <p class="font-bold text-5xl mt-2"
-                :class="dark ? 'text-white' : 'text-gray-900'"
+              <p class="font-bold text-4xl mt-2"
+                :class="dark ? 'text-white' : 'text-gray-600'"
               > {{prize}}</p>
             </div>
 
-            <div class="flex justify-center" >
-              <p class="font-bold text-2xl mt-2 mr-1"
+            <div class="flex justify-center mt-2 pb-1" >
+              <p class="font-bold text-xl mt-2 mr-1"
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
               >$ </p>
-              <p class="font-bold text-2xl mt-2"
+              <p class="font-bold text-xl mt-2"
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
               > {{ Math.floor(prize*SOL_USD*100)/100 }}</p>
             </div>
@@ -230,24 +230,26 @@ export default {
     <div class="m-auto w-full max-w-md p-8">
       <div class="shadow-xl rounded-xl" :class="dark ? 'bg-gray-700' : 'bg-white'">
         
-        <div class="grid grid-cols-3 gap-4 text-xs font-semibold text-center">
-          <div :class="dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'" class="h-10 justify-center">1</div>
-          <div>2</div>
-          <div>3</div>
-          <div>4</div>
-          <div>5</div>
-          <div>6</div>
-          <div>7</div>
-          <div>8</div>
-          <div>9</div>
+        <div class="grid grid-cols-3 gap-1 text-s font-semibold text-center py-4 px-2 rounded-xl">
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tl-xl align-middle relative">1</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">2</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tr-xl align-middle relative">3</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">4</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">5</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">6</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-bl-xl align-middle relative">7</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">8</button>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-br-xl align-middle relative">9</button>
+          <div/>
+          <button :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-b-xl align-middle relative">0</button>
+          <div/>
         </div>
 
 
-  
-        <div class="flex">
+        <div class="text-center">
           <button
-            class="flex-1 py-4 px-2 rounded-br-xl"
-            :class="dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'"
+            class="py-6 px-6 rounded-xl align-middle mb-5 border text-sm"
+            :class="dark ? 'hover:bg-grey-800' : 'hover:bg-grey-200'"
             @click="sendSOL"
           >Commit Number</button>
         </div>
