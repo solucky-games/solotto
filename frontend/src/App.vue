@@ -137,6 +137,30 @@ export default {
 
       db.value = await getNumbers();
 
+      updateYourNumbers();
+      updateYourProbability();
+
+    }
+
+    async function postNumber () {
+      const post = { "id": number.value, "wallet": wallet.value.publicKey.toBase58() }
+      const res = await fetch(db_url+'numbers/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post)
+      })
+      console.log(res);
+      // if (res.status==201)
+      //   return alert(`${number.value} commited succefully!`)
+      // else
+      //   return alert('Number commitment failed! Please try again.')
+    }
+
+    async function chechNumber (id) {
+      const res = await fetch(db_url+'numbers/'+id)
+      if (res.status==200) 
+        return false
+      return true
     }
 
     const number = ref('0')
@@ -177,24 +201,40 @@ export default {
       db.value = await getNumbers()
     });
 
-    async function postNumber () {
-      const post = { "id": number.value, "wallet": wallet.value.publicKey.toBase58() }
-      const res = await fetch(db_url+'numbers/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(post)
-      })
-      if (res.status==201)
-        return alert(`${number.value} commited succefully!`)
-      else
-        return alert('Number commitment failed! Please try again.')
+    function shortWallet (wallet) {
+      return wallet.slice(0, 8)+'...'+wallet.slice(-8)
+    }
+    
+    const yourNumbers = ref(0);
+    function updateYourNumbers () {
+      const address = wallet.value.publicKey.toBase58();
+      const arr = [];
+      for ( const [key, value] of Object.entries(db.value)) {
+        if (value === address)
+          arr.push(key);
+      }
+      yourNumbers.value = arr.length;
     }
 
-    async function chechNumber (id) {
-      const res = await fetch(db_url+'numbers/'+id)
-      if (res.status==200) 
-        return false
-      return true
+    const yourProbability = ref(0);
+    function updateYourProbability () {
+      yourProbability.value = Math.floor((yourNumbers.value/Object.keys(db.value).length)*10000)/100;
+    }
+
+    watchEffect(async () => {
+      updateYourNumbers();
+      updateYourProbability();
+    });
+
+    function markWallet(address){
+      if( wallet.value.publicKey.toBase58() == address ) return 'font-semibold text-green-500';
+    }
+
+    function dollarPrize () {
+      const ret = nf.format(prize.value*SOL_USD.value).split('.')[0];
+      if ( !ret )
+        dollarPrize();
+      else return ret;
     }
     
     return { 
@@ -214,7 +254,13 @@ export default {
       resetNum,
       number,
       nf,
-      db
+      db,
+      shortWallet,
+      yourNumbers,
+      yourProbability,
+      markWallet,
+      cluster,
+      dollarPrize
     }
   },
   data() {
@@ -270,25 +316,25 @@ export default {
               >$ </p>
               <p class="font-bold text-xl mt-2"
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ nf.format(prize*SOL_USD).split('.')[0] }}</p>
+              > {{ dollarPrize() }}</p>
             </div>
 
           </div>
 
           <div class="p-8 text-center">
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Wallet numbers</p>
 
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ 120 }}</p>
+              > {{ yourNumbers }}</p>
             </div>
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
 
             <div class="flex justify-center" >
               <p class="font-bold text-xl mt-2"
                 :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ `${Math.floor((1/prize)*1000000)/10000} %`}}</p>
+              > {{ `${yourProbability} %`}}</p>
             </div>
           </div>
           
@@ -315,16 +361,25 @@ export default {
     </div>
 
 
-    <div class="absolute top-20 left-0 p-8 space-x-8 justify-center">
-      <div v-for="(item, index) in db" :key="index">{{ index }} -> {{ item }}</div>
+    <div class="absolute top-20 left-20 p-8 text-gray-600 ">
+      <div class="uppercase text-s mb-3 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
+      <div class="hover:font-semibold" v-for="(addr, num) in db" :key="num" >
+        <div class="grid grid-cols-3 gap-1 ">
+          <a :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">{{ shortWallet(addr) }}</a>
+          <div class="text-center" :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
+        </div>
+      </div>
     </div>
 
 
     <!-- Centered. -->
 
     <div class="m-auto w-full max-w-md p-8">
-      <div class="shadow-xl rounded-xl pt-2 pb-2" :class="dark ? 'bg-gray-700' : 'bg-white'">
 
+      <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
+
+
+      <div class="shadow-xl rounded-xl pt-2 pb-2" :class="dark ? 'bg-gray-700' : 'bg-white'">
         <div class="font-bold text-4xl text-center p-7 rounded-xl m-2 cursor-pointer"
         :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'"
         @click="commitNumber"
