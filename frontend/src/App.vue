@@ -20,13 +20,6 @@ const expires = new Date(Date.UTC(year, month, day));
 const now = new Date().getTime()
 const time = (expires.getTime()-now);
 
-const db = ref({
-        10: 'kjsdlkjksddkslñkñs',
-        22: 'nsdkjdskjdsjkdshdskj',
-        33: 'cnkjcdncjkdbcdsjkscd',
-        44: 'jskdljdslkdsjlkjsdk'
-      })
-
 
 // @ts-ignore
 window.Buffer = Buffer;
@@ -39,6 +32,7 @@ const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
 const cluster = 'devnet'
 const commitSOL = 1;
 const maxNumber = 1000000000;
+const db_url = 'http://localhost:5000/'
 
 
 export default {
@@ -115,6 +109,9 @@ export default {
         return alert('Connect your wallet first!')
       } 
 
+      if ( db.value[number.value] && chechNumber(number.value) )
+        return alert('This number is already commited! Try another one.')
+
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
 
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
@@ -133,14 +130,12 @@ export default {
 
       await connection.confirmTransaction(signature, 'processed');
 
-      db.value[Number(number.value)] = wallet.value.publicKey?.toBase58();
-
-      balance.value = Math.floor(bal*100)/100;
-
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri*100)/100;
 
-      
+      await postNumber();
+
+      db.value = await getNumbers();
 
     }
 
@@ -167,6 +162,41 @@ export default {
       number.value = '0';
     }
 
+    async function getNumbers () {
+      const res = await fetch(db_url+'numbers')
+      const data = await res.json()
+      const dict = {}
+      for (let x of data) {
+        dict[Number(x['id'])] = x['wallet']
+      }
+      return dict
+    }
+
+    const db = ref({});
+    watchEffect(async () => {
+      db.value = await getNumbers()
+    });
+
+    async function postNumber () {
+      const post = { "id": number.value, "wallet": wallet.value.publicKey.toBase58() }
+      const res = await fetch(db_url+'numbers/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post)
+      })
+      if (res.status==201)
+        return alert(`${number.value} commited succefully!`)
+      else
+        return alert('Number commitment failed! Please try again.')
+    }
+
+    async function chechNumber (id) {
+      const res = await fetch(db_url+'numbers/'+id)
+      if (res.status==200) 
+        return false
+      return true
+    }
+    
     return { 
       dark,
       counterPublicKey,
@@ -189,7 +219,7 @@ export default {
   },
   data() {
     return {
-      commitHover: false,
+      commitHover: false
     }
   }
 }
