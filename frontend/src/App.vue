@@ -123,12 +123,13 @@ export default {
           SystemProgram.transfer({
               fromPubkey: wallet.value.publicKey,
               toPubkey: new PublicKey(masterWallet),
-              lamports: commitSOL*1000000000 })
+              lamports: commitSOL*1000000000,
+              message: number.value})
       )
 
       const signature = await sendTransaction(transaction, connection);
 
-      await connection.confirmTransaction(signature, 'processed');
+      await connection.confirmTransaction(signature, number.value);// processed');
 
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri*100)/100;
@@ -228,7 +229,7 @@ export default {
     });
 
     function markWallet(address){
-      if( wallet.value.publicKey.toBase58() == address ) return 'text-green-500';
+      if( wallet.value.publicKey.toBase58() == address ) return 'font-semibold text-green-500';
     }
 
     function dollarPrize () {
@@ -282,6 +283,16 @@ export default {
       <WalletMultiButton :dark="dark"></WalletMultiButton>
       <p :class="dark ? 'text-white' : 'text-gray-600'" class="text-sm font-semibold mt-3" v-if="balance">{{`${balance} SOL`}}</p>
 
+      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
+      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+        <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
+      </button>
+      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
+      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+
+      <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
+    </button>
+
       <!-- Dark Button. -->
       <button @click="dark = !dark" class="rounded-full p-3 z-99" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -294,9 +305,9 @@ export default {
 
     </div>
 
-    <div class="absolute top-20 right-0 p-8 flex space-x-8 justify-center z-50 ">
+    <div class="absolute top-20 right-20 p-8 flex space-x-8 justify-center z-50 ">
 
-      <div class="shadow-xl rounded-xl mr-3" :class="dark ? 'bg-gray-700' : 'bg-white'">
+      <div class="shadow-xl rounded-xl mr-3 p-4" :class="dark ? 'bg-gray-700' : 'bg-white'">
         
         <div class="flex">
           <div class="p-8 text-center">
@@ -353,21 +364,13 @@ export default {
     <!-- Top-Left Corner. -->
     <div class="absolute top-0 left-0 p-8 flex space-x-8 justify-center ">
       <!-- Dark Button. -->
-      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
-      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
-        <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
-      </button>
-      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
-      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
-
-      <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
-    </button>
+    
     </div>
 
 
-    <div class="absolute top-20 left-20 p-8 text-gray-600 bg-black/5 rounded-xl">
-      <div class="uppercase text-s mb-3 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
-        <lo class="max-h-[46rem] flex flex-col-reverse flex-grow overflow-y-auto">
+    <div class="absolute max-w-md p-8 top-20 left-20 p-8 text-gray-600 bg-white rounded-xl w-[25rem] text-center shadow-xl">
+      <div class="uppercase text-s mb-7 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
+        <lo class="max-h-[42rem] flex flex-col-reverse flex-grow overflow-y-auto">
           <div v-for="(addr, num) in db" :key="num" >
             <div class="hover:font-semibold grid grid-cols-2 gap-1 flex flex-col-reverse">
               <a :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
@@ -432,13 +435,13 @@ export default {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #333;
+  background-color: rgba(187, 187, 187, 0.253);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: #bbb;
+
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
