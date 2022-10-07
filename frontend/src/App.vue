@@ -199,6 +199,7 @@ export default {
     const db = ref({});
     watchEffect(async () => {
       db.value = await getNumbers()
+      console.log(Object.keys(db.value).length);
     });
 
     function shortWallet (wallet) {
@@ -227,7 +228,7 @@ export default {
     });
 
     function markWallet(address){
-      if( wallet.value.publicKey.toBase58() == address ) return 'font-semibold text-green-500';
+      if( wallet.value.publicKey.toBase58() == address ) return 'text-green-500';
     }
 
     function dollarPrize () {
@@ -272,7 +273,7 @@ export default {
 </script>
 
 <template>
-  <div class="h-screen w-screen flex" :class="dark ? 'bg-black/90 text-gray-100' : 'bg-gray-100 text-gray-700'">
+  <div class="h-screen w-screen m-0 flex" :class="dark ? 'bg-black/90 text-gray-100' : 'bg-gray-100 text-gray-700'">
 
     <!-- Top-Right Corner. -->
     <div class="absolute top-0 right-0 p-8 flex space-x-8 justify-center ">
@@ -282,7 +283,7 @@ export default {
       <p :class="dark ? 'text-white' : 'text-gray-600'" class="text-sm font-semibold mt-3" v-if="balance">{{`${balance} SOL`}}</p>
 
       <!-- Dark Button. -->
-      <button @click="dark = !dark" class="rounded-full p-3" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+      <button @click="dark = !dark" class="rounded-full p-3 z-99" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
@@ -322,7 +323,7 @@ export default {
           </div>
 
           <div class="p-8 text-center">
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Wallet numbers</p>
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your numbers</p>
 
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
@@ -351,24 +352,33 @@ export default {
 
     <!-- Top-Left Corner. -->
     <div class="absolute top-0 left-0 p-8 flex space-x-8 justify-center ">
-
       <!-- Dark Button. -->
       <button class="font-bold rounded-full p-2 align-center justify-center relative" 
       :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
       </button>
+      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
+      :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
 
+      <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
+    </button>
     </div>
 
 
-    <div class="absolute top-20 left-20 p-8 text-gray-600 ">
+    <div class="absolute top-20 left-20 p-8 text-gray-600 bg-black/5 rounded-xl">
       <div class="uppercase text-s mb-3 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
-      <div class="hover:font-semibold" v-for="(addr, num) in db" :key="num" >
-        <div class="grid grid-cols-3 gap-1 ">
-          <a :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">{{ shortWallet(addr) }}</a>
-          <div class="text-center" :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
-        </div>
-      </div>
+        <lo class="max-h-[46rem] flex flex-col-reverse flex-grow overflow-y-auto">
+          <div v-for="(addr, num) in db" :key="num" >
+            <div class="hover:font-semibold grid grid-cols-2 gap-1 flex flex-col-reverse">
+              <a :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                <div class="ml-5 text-xs w-20">{{ shortWallet(addr) }}</div>
+              </a>
+              <a :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                <div class="text-[14px] text-center pl-10" :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
+              </a>
+            </div>
+          </div>
+        </lo>
     </div>
 
 
@@ -377,7 +387,6 @@ export default {
     <div class="m-auto w-full max-w-md p-8">
 
       <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
-
 
       <div class="shadow-xl rounded-xl pt-2 pb-2" :class="dark ? 'bg-gray-700' : 'bg-white'">
         <div class="font-bold text-4xl text-center p-7 rounded-xl m-2 cursor-pointer"
@@ -414,3 +423,23 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped>
+
+::-webkit-scrollbar {
+  width: 10px;
+
+}
+
+::-webkit-scrollbar-track {
+  background-color: #333;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #bbb;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+</style>
