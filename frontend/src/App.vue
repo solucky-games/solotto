@@ -1,14 +1,18 @@
 <script>
 
-import { ref, computed, watchEffect } from 'vue'
-import { useLocalStorage } from '@vueuse/core'
-import { Connection, PublicKey, Keypair, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
-import { Program, AnchorProvider } from '@project-serum/anchor'
+import { ref, watchEffect } from 'vue'
+//import { useLocalStorage } from '@vueuse/core'
+import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
+//import { Program, AnchorProvider } from '@project-serum/anchor'
 import { WalletMultiButton, useAnchorWallet, useWallet } from 'solana-wallets-vue'
 import CountDown from '@chenfengyuan/vue-countdown';
-import idl from './idl.json'
+//import idl from './idl.json'
 import { Buffer } from 'buffer'
 import coinTicker from 'coin-ticker'
+
+import {sendTicket} from './sendTicket'
+import {getTickets} from './getTickets'
+import {deleteTicket} from './deleteTicket'
 
 
 let tomorrow = new Date();
@@ -24,8 +28,7 @@ const time = (expires.getTime()-now);
 // @ts-ignore
 window.Buffer = Buffer;
 
-
-const programID = new PublicKey(idl.metadata.address)
+//const programID = new PublicKey(idl.metadata.address)
 const preflightCommitment = 'processed'
 
 const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
@@ -45,14 +48,16 @@ export default {
     const wallet = useAnchorWallet()
     
     const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
-    const provider = computed(() => new AnchorProvider(connection, wallet.value, { preflightCommitment }))
-    const program = computed(() => new Program(idl, programID, provider.value))
+    //const provider = computed(() => new AnchorProvider(connection, wallet.value, { preflightCommitment }))
+    //const program = computed(() => new Program(idl, programID, provider.value))
 
-    const counterPublicKey = useLocalStorage('counterPublicKey', null);
-    const counter = ref(0);
     const prize = ref(0);
     const SOL_USD = ref();
     const balance = ref();
+
+    watchEffect(async () => {
+      console.log(await getTickets())
+    })
 
     watchEffect(async () => {
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
@@ -61,45 +66,22 @@ export default {
     })
 
     watchEffect(async () => {
-      if (!counterPublicKey.value) return;
-      const account = await program.value.account.baseAccount.fetch(counterPublicKey.value)
-      counter.value = account.count.toNumber()
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
       
     })
 
-    const createCounter = async () => {
-      if (! wallet.value) {
-        return alert('Connect your wallet first.')
-      }
-
-      const newCounter = Keypair.generate();
-      await program.value.rpc.create({
-        accounts: {
-          baseAccount: newCounter.publicKey,
-          user: wallet.value.publicKey,
-          systemProgram: SystemProgram.programId,
-        },
-        signers: [newCounter],
-      })
-      counterPublicKey.value = newCounter.publicKey;
-    }
-
-    const incrementCounter = async () => {
-      if (! wallet.value) {
-        return alert('Connect your wallet first.')
-      } else if (! counterPublicKey.value) {
-        return alert('Create a new counter first.')
-      }
-
-      await program.value.rpc.increment({
-        accounts: {
-          baseAccount: counterPublicKey.value
-        }
-      })
-      counter.value += 1
-    }
+    // const location = ref()
+    const flag = ref('US');
+    // fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
+    // .then(function (response) {
+    //     return response.json();
+    // })
+    // .then(function (payload) {
+    //     console.log(payload);
+    //     flag.value = payload.location.country.flag.emoji
+    //     location.value =  payload.location.city;
+    // });
 
     const { sendTransaction } = useWallet();
 
@@ -111,6 +93,8 @@ export default {
 
       if ( db.value[number.value] && chechNumber(number.value) )
         return alert('This number is already commited! Try another one.')
+
+      await sendTicket(number.value, flag.value);
 
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
 
@@ -187,6 +171,18 @@ export default {
       number.value = '0';
     }
 
+    async function getWinners () {
+      const res = await fetch(db_url+'winners')
+      const data = await res.json()
+      console.log(data);
+      return data;
+    }
+
+    const winners = ref({});
+    watchEffect(async () => {
+      winners.value = await getWinners()
+    });
+
     async function getNumbers () {
       const res = await fetch(db_url+'numbers')
       const data = await res.json()
@@ -203,9 +199,17 @@ export default {
       console.log(Object.keys(db.value).length);
     });
 
-    function shortWallet (wallet) {
-      return wallet.slice(0, 8)+'...'+wallet.slice(-8)
+    function shortWallet (wallet, n) {
+      return wallet.slice(0, n)+'...'+wallet.slice(-n)
     }
+
+    // const players = ref(0);
+    // function countPlayers () {
+    //   for ( const [key, value] of Object.entries(db.value)) {
+    //     if (value === address)
+    //       arr.push(key);
+    //   }
+    // }
     
     const yourNumbers = ref(0);
     function updateYourNumbers () {
@@ -241,10 +245,6 @@ export default {
     
     return { 
       dark,
-      counterPublicKey,
-      counter,
-      createCounter,
-      incrementCounter,
       balance,
       prize,
       SOL_USD,
@@ -262,7 +262,12 @@ export default {
       yourProbability,
       markWallet,
       cluster,
-      dollarPrize
+      dollarPrize,
+      location,
+      flag,
+      winners,
+      deleteTicket,
+      getTickets
     }
   },
   data() {
@@ -283,15 +288,15 @@ export default {
       <WalletMultiButton :dark="dark"></WalletMultiButton>
       <p :class="dark ? 'text-white' : 'text-gray-600'" class="text-sm font-semibold mt-3" v-if="balance">{{`${balance} SOL`}}</p>
 
-      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
+      <button @click="deleteTicket" class="font-bold rounded-full p-2 align-center justify-center relative" 
       :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
       </button>
+      <button @click="getTickets" class="font-bold rounded-full p-2 align-center justify-center relative" >ticket</button>
       <button class="font-bold rounded-full p-2 align-center justify-center relative" 
       :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
-
-      <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
-    </button>
+        <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
+      </button>
 
       <!-- Dark Button. -->
       <button @click="dark = !dark" class="rounded-full p-3 z-99" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
@@ -305,60 +310,26 @@ export default {
 
     </div>
 
-    <div class="absolute top-20 right-20 p-8 flex space-x-8 justify-center z-50 ">
+    <!-- Right Panel. -->
 
-      <div class="shadow-xl rounded-xl mr-3 p-4" :class="dark ? 'bg-gray-700' : 'bg-white'">
-        
-        <div class="flex">
-          <div class="p-8 text-center">
+    <div class="absolute top-20 right-20 p-8 text-gray-600 bg-white rounded-xl w-[27rem] text-center shadow-xl">
+     
+      <div class="uppercase text-s mb-7 tracking-widest text-gray-400 font-semibold">Historical winners</div>
+        <lo class="max-h-[30rem] flex flex-col flex-grow overflow-y-auto">
+          <div v-for="x of winners" :key="x.id" >
+            <div class="hover:font-semibold grid grid-cols-10 gap-1 flex justify-center align-center align-middle">
+              <div class="text-xs col-span-2 inline-block align-text-center">{{ x.date }}</div>
+              <div class="text-xs">{{ flag }}</div>
+              
+              <div class="text-xs text-center col-span-2">{{ shortWallet(x.wallet, 4) }}</div>
+              
+              <div class="text-xs text-center col-span-3 "> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
 
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Current prize</p>
-            <div class="flex justify-center mr-3 mt-2 p-1" >
-              <p class="font-bold text-2xl mt-3 mr-1"
-                :class="dark ? 'text-white' : 'text-gray-600'"
-              >◎ </p>
-              <p class="font-bold text-4xl mt-2"
-                :class="dark ? 'text-white' : 'text-gray-600'"
-              > {{prize}}</p>
-            </div>
-
-            <div class="flex justify-center mt-2 pb-1" >
-              <p class="font-bold text-xl mt-2 mr-1"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              >$ </p>
-              <p class="font-bold text-xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ dollarPrize() }}</p>
-            </div>
-
-          </div>
-
-          <div class="p-8 text-center">
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your numbers</p>
-
-            <div class="flex justify-center" >
-              <p class="font-bold text-2xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ yourNumbers }}</p>
-            </div>
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
-
-            <div class="flex justify-center" >
-              <p class="font-bold text-xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ `${yourProbability} %`}}</p>
+              <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pr-1"> ◎ </div>{{ x.prize }}</div>
+              
             </div>
           </div>
-          
-        </div>
-
-        <div class="flex text-center uppercase text-sm tracking-widest font-semibold mb-7 justify-center">
-          <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</p>
-        <CountDown :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-          {{ hours }} h {{ minutes }} m {{ seconds }} s
-        </CountDown>
-      </div>
-      </div>
+        </lo>
     </div>
 
     <!-- Top-Left Corner. -->
@@ -367,17 +338,63 @@ export default {
     
     </div>
 
+    <div class="absolute top-20 left-20 p-8 text-gray-600 bg-white rounded-xl w-[27rem] text-center shadow-xl">
+     
+      <div class="flex text-center uppercase text-sm tracking-widest font-semibold justify-center">
+          <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</p>
+        <CountDown class="text-xl" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+          {{ hours }} h {{ minutes }} m {{ seconds }} s
+        </CountDown>
+      </div>
 
-    <div class="absolute max-w-md p-8 top-20 left-20 p-8 text-gray-600 bg-white rounded-xl w-[25rem] text-center shadow-xl">
+      <div class="flex align-center justify-center">
+      
+        <div class="p-4 text-center">
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Current prize</p>
+          <div class="flex justify-center mr-3 mt-2 p-1" >
+            <p class="font-bold text-2xl mt-3 mr-1"
+              :class="dark ? 'text-white' : 'text-gray-600'"
+            >◎ </p>
+            <p class="font-bold text-4xl mt-2"
+              :class="dark ? 'text-white' : 'text-gray-600'"
+            > {{prize}}</p>
+          </div>
+
+          <div class="flex justify-center mt-2 pb-1" >
+            <p class="font-bold text-xl mt-2 mr-1"
+              :class="dark ? 'text-gray-300' : 'text-gray-600'"
+            >$ </p>
+            <p class="font-bold text-xl mt-2"
+              :class="dark ? 'text-gray-300' : 'text-gray-600'"
+            > {{ dollarPrize() }}</p>
+          </div>
+        </div>
+        <div class="p-4 text-center">
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
+          <div class="flex justify-center" >
+            <p class="font-bold text-2xl mt-2"
+              :class="dark ? 'text-gray-300' : 'text-gray-600'"
+            > {{ yourNumbers }}</p>
+          </div>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Numbers</p>
+          <div class="flex justify-center" >
+            <p class="font-bold text-xl mt-2"
+              :class="dark ? 'text-gray-300' : 'text-gray-600'"
+            > {{ Object.keys(db).length }}</p>
+          </div>
+        </div>
+      </div>
+
       <div class="uppercase text-s mb-7 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
-        <lo class="max-h-[42rem] flex flex-col-reverse flex-grow overflow-y-auto">
+        <lo class="max-h-[30rem] flex flex-col-reverse flex-grow overflow-y-auto">
           <div v-for="(addr, num) in db" :key="num" >
-            <div class="hover:font-semibold grid grid-cols-2 gap-1 flex flex-col-reverse">
-              <a :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
-                <div class="ml-5 text-xs w-20">{{ shortWallet(addr) }}</div>
+            <div class="hover:font-semibold grid grid-cols-7 gap-1 flex flex-col-reverse">
+              <img class="opacity-75" src="https://ipdata.co/flags/us.png" alt="{{location}}" width="20"/>
+              <a class="text-left col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                <div class="text-xs">{{ shortWallet(addr, 8) }}</div>
               </a>
-              <a :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
-                <div class="text-[14px] text-center pl-10" :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
+              <a class="text-center col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                <div class="text-[14px] text-center " :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
               </a>
             </div>
           </div>
@@ -389,9 +406,43 @@ export default {
 
     <div class="m-auto w-full max-w-md p-8">
 
-      <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
 
       <div class="shadow-xl rounded-xl pt-2 pb-2" :class="dark ? 'bg-gray-700' : 'bg-white'">
+
+        <div class="flex align-center justify-center">
+          <div class="p-8 text-center">
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your numbers</p>
+            <div class="flex justify-center" >
+              <p class="font-bold text-2xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ yourNumbers }}</p>
+            </div>
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
+            <div class="flex justify-center" >
+              <p class="font-bold text-xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ `${yourProbability} %`}}</p>
+            </div>
+          </div>
+
+          <div class="p-8 text-center">
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your numbers</p>
+            <div class="flex justify-center" >
+              <p class="font-bold text-2xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ yourNumbers }}</p>
+            </div>
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
+            <div class="flex justify-center" >
+              <p class="font-bold text-xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ `${yourProbability} %`}}</p>
+            </div>
+          </div>
+        </div>
+  
+        <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
+
         <div class="font-bold text-4xl text-center p-7 rounded-xl m-2 cursor-pointer"
         :class="dark ? 'bg-gray-600 hover:bg-gray-800' : 'bg-gray-50 hover:bg-gray-200'"
         @click="commitNumber"

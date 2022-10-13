@@ -11,6 +11,7 @@
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^2.1.0",
     "@project-serum/anchor": "^0.25.0",
+    "@solana/spl-token": "^0.3.5",
     "@solana/wallet-adapter-wallets": "^0.18.10",
     "@toruslabs/eccrypto": "^1.1.8",
     "@vueuse/core": "^9.3.0",
@@ -19,6 +20,8 @@
     "coin-ticker": "^3.2.0",
     "core-js": "^3.8.3",
     "crypto": "^1.0.1",
+    "dayjs": "^1.11.5",
+    "fs": "^0.0.1-security",
     "json-server": "^0.17.0",
     "solana-wallets-vue": "^0.4.5",
     "stream": "^0.0.2",
@@ -35,7 +38,10 @@
     "eslint-plugin-vue": "^8.0.3"
   },
   "browser": {
-    "crypto": false
+    "crypto": false,
+    "fs": false,
+    "path": false,
+    "os": false
   },
   "eslintConfig": {
     "root": true,

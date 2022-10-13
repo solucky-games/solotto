@@ -1,17 +1,17 @@
 {
   "version": "0.1.0",
-  "name": "learn_anchor_1",
+  "name": "solucky_lotto",
   "instructions": [
     {
-      "name": "create",
+      "name": "sendTicket",
       "accounts": [
         {
-          "name": "baseAccount",
+          "name": "ticket",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "user",
+          "name": "owner",
           "isMut": true,
           "isSigner": true
         },
@@ -21,14 +21,76 @@
           "isSigner": false
         }
       ],
+      "args": [
+        {
+          "name": "number",
+          "type": "i32"
+        },
+        {
+          "name": "country",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "deleteTicket",
+      "accounts": [
+        {
+          "name": "ticket",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
       "args": []
     },
     {
-      "name": "increment",
+      "name": "deleteTickets",
       "accounts": [
         {
-          "name": "baseAccount",
+          "name": "ticket",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close",
+      "accounts": [
+        {
+          "name": "account",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "destination",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "forceDefund",
+      "accounts": [
+        {
+          "name": "account",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "destination",
+          "isMut": false,
           "isSigner": false
         }
       ],
@@ -37,19 +99,31 @@
   ],
   "accounts": [
     {
-      "name": "BaseAccount",
+      "name": "Ticket",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "count",
-            "type": "u64"
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "number",
+            "type": "i32"
+          },
+          {
+            "name": "country",
+            "type": "string"
           }
         ]
       }
     }
   ],
   "metadata": {
-    "address": "G4a37Uh2bxak2teBAox3zbjQWT2Nr6xgD9jkj7Sgpm16"
+    "address": "fH2j1AXaGr14kCroRseuetQsJmi6rij1NNqkBicdksr"
   }
 }
