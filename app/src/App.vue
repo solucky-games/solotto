@@ -1,18 +1,14 @@
 <script>
 
 import { ref, watchEffect } from 'vue'
-//import { useLocalStorage } from '@vueuse/core'
 import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
-//import { Program, AnchorProvider } from '@project-serum/anchor'
 import { WalletMultiButton, useAnchorWallet, useWallet } from 'solana-wallets-vue'
 import CountDown from '@chenfengyuan/vue-countdown';
-//import idl from './idl.json'
 import { Buffer } from 'buffer'
 import coinTicker from 'coin-ticker'
-
-import {sendTicket} from './sendTicket'
-import {getTickets} from './getTickets'
-import {deleteTicket} from './deleteTicket'
+import {sendTicket} from './controller/sendTicket'
+import {getTickets} from './controller/getTickets'
+import {deleteTicket} from './controller/deleteTicket'
 
 
 let tomorrow = new Date();
@@ -71,17 +67,17 @@ export default {
       
     })
 
-    // const location = ref()
-    const flag = ref('US');
-    // fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
-    // .then(function (response) {
-    //     return response.json();
-    // })
-    // .then(function (payload) {
-    //     console.log(payload);
-    //     flag.value = payload.location.country.flag.emoji
-    //     location.value =  payload.location.city;
-    // });
+    const location = ref()
+    const flag = ref('');
+    fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (payload) {
+        console.log(payload);
+        flag.value = payload.location.country.flag.emoji
+        location.value =  payload.location.city;
+    });
 
     const { sendTransaction } = useWallet();
 
@@ -290,13 +286,12 @@ export default {
 
       <button @click="deleteTicket" class="font-bold rounded-full p-2 align-center justify-center relative" 
       :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
-        <img src="../assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
+        <img src="./assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
       </button>
-      <button @click="getTickets" class="font-bold rounded-full p-2 align-center justify-center relative" >ticket</button>
-      <button class="font-bold rounded-full p-2 align-center justify-center relative" 
+      <!-- <button class="font-bold rounded-full p-2 align-center justify-center relative" 
       :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
-      </button>
+      </button> -->
 
       <!-- Dark Button. -->
       <button @click="dark = !dark" class="rounded-full p-3 z-99" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">

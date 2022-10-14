@@ -14,7 +14,7 @@ mod solucky_lotto {
     
     use super::*;
     
-    pub fn sendTicket(ctx: Context<SendTicket>, number: i32, country: String) -> ProgramResult {
+    pub fn send_ticket(ctx: Context<SendTicket>, number: i32, country: String) -> ProgramResult {
         let ticket: &mut Account<Ticket> = &mut ctx.accounts.ticket;
         let owner: &Signer = &ctx.accounts.owner;
         let clock: Clock = Clock::get().unwrap();
@@ -39,6 +39,14 @@ mod solucky_lotto {
     
     // msg!("Transfer completed successfully.");
 
+        Ok(())
+    }
+
+    pub fn delete_ticket(_ctx: Context<DeleteTicket>) -> ProgramResult {
+        Ok(())
+    }
+
+    pub fn delete_tickets(_ctx: Context<DeleteTickets>) -> ProgramResult {
         Ok(())
     }
 
@@ -87,15 +95,17 @@ mod solucky_lotto {
 }
 
 #[derive(Accounts)]
-pub struct Close<'info> {
-    account: Account<'info, Ticket>,
-    destination: AccountInfo<'info>,
+pub struct DeleteTicket<'info> {
+    #[account(mut, has_one = owner, close = owner)]
+    pub ticket: Account<'info, Ticket>,
+    pub owner: Signer<'info>,
 }
 
 #[derive(Accounts)]
-pub struct ForceDefund<'info> {
-    account: AccountInfo<'info>,
-    destination: AccountInfo<'info>,
+pub struct DeleteTickets<'info> {
+    #[account(mut, close = owner)]
+    pub ticket: Account<'info, Ticket>,
+    pub owner: AccountInfo<'info>
 }
 
 #[derive(Accounts)]
@@ -131,4 +141,16 @@ impl Ticket {
         + TIMESTAMP_LENGTH // Timestamp.
         + NUMBER_LENGTH // Number.
         + COUNTRY_LENGTH; // Country.
+}
+
+#[derive(Accounts)]
+pub struct Close<'info> {
+    account: Account<'info, Ticket>,
+    destination: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+pub struct ForceDefund<'info> {
+    account: AccountInfo<'info>,
+    destination: AccountInfo<'info>,
 }

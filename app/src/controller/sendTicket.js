@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { useAnchorWallet } from 'solana-wallets-vue'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Program, AnchorProvider } from '@project-serum/anchor'
-import idl from './idl.json'
+import idl from '../program/idl.json'
 
 
 const clusterUrl = "https://api.devnet.solana.com"

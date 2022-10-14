@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "backend": "json-server --watch db.json --port 5000"
+    "backend": "json-server --watch src/backend/db.json --port 5000"
   },
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^2.1.0",
