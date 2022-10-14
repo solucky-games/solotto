@@ -275,10 +275,10 @@ export default {
 </script>
 
 <template>
-  <div class="h-screen w-screen m-0 flex" :class="dark ? 'bg-black/90 text-gray-100' : 'bg-gray-100 text-gray-700'">
+  <div class="h-screen w-screen m-0 " :class="dark ? 'bg-black/90 text-gray-100' : 'bg-gray-100 text-gray-700'">
 
     <!-- Navar -->
-    <div class="absolute top-0 right-0 p-8 flex space-x-8 justify-center ">
+    <div class="absolute sm:relative top-0 right-0 p-8 flex space-x-8 justify-center ">
       <!-- Solana Wallets Vue. -->
       <WalletMultiButton :dark="dark"></WalletMultiButton>
       <p :class="dark ? 'text-white' : 'text-gray-600'" class="text-sm font-semibold mt-3" v-if="balance">{{`${balance} SOL`}}</p>
@@ -291,42 +291,85 @@ export default {
         <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
       </button> -->
       <!-- Dark Button. -->
-      <button @click="dark = !dark" class="rounded-full p-3 z-99" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
-        <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
+      
+        <button @click="dark = !dark" class="rounded-full p-" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+          <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+     
 
     </div>
 
     <!-- Left Panel. -->
 
-    <div class="m-auto w-full max-w-md p-8">
-      <div class="p-8 text-gray-600 bg-white rounded-xl w-[27rem] text-center shadow-xl">
-        <div class="uppercase text-s mb-7 tracking-widest text-gray-400 font-semibold">Historical winners</div>
-        <lo class="max-h-[30rem] flex flex-col flex-grow overflow-y-auto">
-          <div v-for="x of winners" :key="x.id" >
-            <div class="hover:font-semibold grid grid-cols-10 gap-1 flex justify-center align-center align-middle">
-              <div class="text-xs col-span-2 inline-block align-text-center">{{ x.date }}</div>
-              <div class="text-xs">{{ flag }}</div>
-              <div class="text-xs text-center col-span-2">{{ shortWallet(x.wallet, 4) }}</div>
-              <div class="text-xs text-center col-span-3 "> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
-              <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pr-1"> ◎ </div>{{ x.prize }}</div>
+    <div class="m-auto w-full max-w-md p-4">
+      <div class="p-8 text-gray-600 bg-white rounded-xl text-center shadow-xl">
+        <div class="flex text-center uppercase text-sm tracking-widest font-semibold justify-center">
+          <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</p>
+          <CountDown class="text-xl" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+            {{ hours }} h {{ minutes }} m {{ seconds }} s
+          </CountDown>
+        </div>
+        <div class="flex align-center justify-center">
+          <div class="p-4 text-center">
+            <p class="uppercase text-[17px] tracking-widest text-gray-400 font-semibold">Current prize</p>
+            <div class="flex justify-center mr-3 mt-2 p-1" >
+              <p class="font-bold text-2xl mt-3 mr-1"
+                :class="dark ? 'text-white' : 'text-gray-600'"
+              >◎ </p>
+              <p class="font-bold text-4xl mt-2"
+                :class="dark ? 'text-white' : 'text-gray-600'"
+              > {{prize}}</p>
+            </div>
+            <div class="flex justify-center mt-2 pb-1" >
+              <p class="font-bold text-xl mt-2 mr-1"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              >$ </p>
+              <p class="font-bold text-xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ dollarPrize() }}</p>
             </div>
           </div>
-        </lo>
+          <div class="p-4 text-center ">
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
+            <div class="flex justify-center" >
+              <p class="font-bold text-2xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ yourNumbers }}</p>
+            </div>
+            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Numbers</p>
+            <div class="flex justify-center" >
+              <p class="font-bold text-xl mt-2"
+                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              > {{ Object.keys(db).length }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
+          <lo class="max-h-[30rem] flex flex-col-reverse flex-grow overflow-y-auto">
+            <div v-for="(addr, num) in db" :key="num" >
+              <div class="hover:font-semibold grid grid-cols-7 gap-1 flex flex-col-reverse">
+                <img class="opacity-75" src="https://ipdata.co/flags/us.png" alt="{{location}}" width="20"/>
+                <a class="text-left col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                  <div class="text-xs">{{ shortWallet(addr, 8) }}</div>
+                </a>
+                <a class="text-center col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                  <div class="text-[14px] text-center " :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
+                </a>
+              </div>
+            </div>
+          </lo>
       </div>
     </div>
-
-      
 
     <!-- Centered. -->
     
 
-    <div class="m-auto w-full max-w-md p-8">
+    <div class="m-auto w-full max-w-md p-4">
       <div class="shadow-xl rounded-xl pt-2 pb-2" :class="dark ? 'bg-gray-700' : 'bg-white'">
 
         <div class="flex align-center justify-center">
@@ -397,63 +440,21 @@ export default {
     </div>
 
     <!-- Right Panel -->
-    <div class="m-auto w-full max-w-md">
-      <div class="p-8 text-gray-600 bg-white rounded-xl w-[27rem] text-center shadow-xl">
-        <div class="flex text-center uppercase text-sm tracking-widest font-semibold justify-center">
-          <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</p>
-          <CountDown class="text-xl" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-            {{ hours }} h {{ minutes }} m {{ seconds }} s
-          </CountDown>
-        </div>
-        <div class="flex align-center justify-center">
-          <div class="p-4 text-center">
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Current prize</p>
-            <div class="flex justify-center mr-3 mt-2 p-1" >
-              <p class="font-bold text-2xl mt-3 mr-1"
-                :class="dark ? 'text-white' : 'text-gray-600'"
-              >◎ </p>
-              <p class="font-bold text-4xl mt-2"
-                :class="dark ? 'text-white' : 'text-gray-600'"
-              > {{prize}}</p>
-            </div>
-            <div class="flex justify-center mt-2 pb-1" >
-              <p class="font-bold text-xl mt-2 mr-1"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              >$ </p>
-              <p class="font-bold text-xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ dollarPrize() }}</p>
+
+    <div class="m-auto w-full max-w-md p-4">
+      <div class="p-8 text-gray-600 bg-white rounded-xl text-center shadow-xl">
+        <div class="uppercase text-s mb-7 tracking-widest text-gray-400 font-semibold">Historical winners</div>
+        <lo class="max-h-[30rem] flex flex-col flex-grow overflow-y-auto">
+          <div v-for="x of winners" :key="x.id" >
+            <div class="hover:font-semibold grid grid-cols-10 gap-1 flex justify-center align-center align-middle">
+              <div class="text-xs col-span-2 inline-block align-text-center">{{ x.date }}</div>
+              <div class="text-xs">{{ flag }}</div>
+              <div class="text-xs text-center col-span-2">{{ shortWallet(x.wallet, 4) }}</div>
+              <div class="text-xs text-center col-span-3 "> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
+              <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pr-1"> ◎ </div>{{ x.prize }}</div>
             </div>
           </div>
-          <div class="p-4 text-center">
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
-            <div class="flex justify-center" >
-              <p class="font-bold text-2xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ yourNumbers }}</p>
-            </div>
-            <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Numbers</p>
-            <div class="flex justify-center" >
-              <p class="font-bold text-xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ Object.keys(db).length }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="uppercase text-s mb-7 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
-          <lo class="max-h-[30rem] flex flex-col-reverse flex-grow overflow-y-auto">
-            <div v-for="(addr, num) in db" :key="num" >
-              <div class="hover:font-semibold grid grid-cols-7 gap-1 flex flex-col-reverse">
-                <img class="opacity-75" src="https://ipdata.co/flags/us.png" alt="{{location}}" width="20"/>
-                <a class="text-left col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
-                  <div class="text-xs">{{ shortWallet(addr, 8) }}</div>
-                </a>
-                <a class="text-center col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
-                  <div class="text-[14px] text-center " :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
-                </a>
-              </div>
-            </div>
-          </lo>
+        </lo>
       </div>
     </div>
 
