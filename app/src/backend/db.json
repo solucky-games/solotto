@@ -27,6 +27,27 @@
       "country": "🇳🇪",
       "prize": "244",
       "date": "2022-10-22"
+    },
+    {
+      "id": 938932802,
+      "wallet": "CDmBpzf5NB7q1t6AdAeTeTUr1VQUjWC7y1U19jaeeTJD",
+      "country": "🇭🇳",
+      "prize": "192",
+      "date": "2022-10-20"
+    },
+    {
+      "id": 8003,
+      "wallet": "GEWTDGpR312Uh1wpYwaBBFcQggAo88MjupBPKEgednrt",
+      "country": "🇪🇦",
+      "prize": "323",
+      "date": "2022-10-21"
+    },
+    {
+      "id": 1256643,
+      "wallet": "3H2nTi7PtKZP86BDf9AdrB5o5seVWoNPzkXGZpkfoyRN",
+      "country": "🇳🇪",
+      "prize": "244",
+      "date": "2022-10-22"
     }
   ],
   "tickets": [

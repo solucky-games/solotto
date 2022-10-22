@@ -322,23 +322,24 @@ export default {
             <div class="p-4 text-center">
               <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Today's</p>
               <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Prize</p>
-              <div class="flex justify-center mr-3 mt-2 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+              <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mt-3 mr-1"
                 >◎ </p>
                 <p class="font-bold text-4xl mt-2"
                 > {{prize}}</p>
               </div>
-              <div class="flex justify-center mt-2 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+              <div class="flex justify-center pb-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mr-1"
                 >$ </p>
                 <p class="font-bold text-2xl"
                 > {{ dollarPrize() }}</p>
               </div>
-              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
+
+              <!-- <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
                 <CountDown class="text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
                   {{ hours }} h {{ minutes }} m {{ seconds }} s
                 </CountDown>
-              </div>
+              </div> -->
     
             </div>
           </div>
@@ -389,9 +390,10 @@ export default {
       
 
       <div class="m-auto w-full max-w-md p-4 min-h-full max-h-full h-full">
+
         <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-700' : 'bg-white'">
 
-          <div class="p-4 text-center mt-8">
+          <div class="px-4 text-center mt-8">
             <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
             <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Number</p>
 
@@ -406,7 +408,7 @@ export default {
               </CountDown>
             </div>
 
-            <div class="text-center uppercase tracking-widest font-semibold justify-center m-2 border-1 rounded-xl pb-1 pt-1">
+            <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl pt-4">
               <div class="flex align-center justify-center mb-4">
 
                 <div class="p-4 text-center">
@@ -441,7 +443,7 @@ export default {
               </div>
             </div>
           </div>
-    
+
           <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
 
           <div class="font-bold text-4xl text-center p-7 rounded-xl m-2 cursor-pointer"
@@ -559,7 +561,7 @@ export default {
             </div>
           </div>
 
-          <div class="uppercase text-xs mb-4 mt-8 tracking-widest text-gray-400 font-semibold">Historical winners</div>
+          <div class="uppercase text-xs mb-4 mt-4 tracking-widest text-gray-400 font-semibold">Historical winners</div>
 
           <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
             <div v-for="x of winners" :key="x.id" >
