@@ -486,53 +486,74 @@ export default {
           </div>
 
           <div class="flex align-center justify-center">
-            <div class="p-2 mt-2 text-center">
-
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest Prize</p>
-              <div class="flex justify-center" >
-                <p class="font-bold text-2xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > <span class="text-xl">◎ </span>{{ ` ${323}` }}</p>
-              </div>
-
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-6 pr-2">Yesterday Number</p>
+            <div class="p-4 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Countries</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${nf.format('78439834')}`}}</p>
+                >{{ ` ${12}` }}</p>
               </div>
-              
-            
             </div>
-
-            <div class="p-2 mt-2 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">&nbsp;&nbsp; Average Prize</p>
-              <div class="flex justify-center" >
-                <p class="font-bold text-2xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > <span class="text-xl">◎ </span>{{ 73 }}</p>
-              </div>
-
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-6 pl-2">Yesterday Country</p>
+            <div class="p-4 text-center mr-2">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ '🇯🇵' }}</p>
+                > <span class="text-sm text-gray-400">◎ </span>{{ ` ${323}` }}</p>
               </div>
-              
+            </div>
+            <div class="p-4 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
+              <div class="flex justify-center" >
+                <p class="font-bold text-xl mt-2"
+                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                > <span class="text-sm text-gray-400">◎ </span>{{ ` ${128}` }}</p>
+              </div>
             </div>
           </div>
 
+          <div class="flex align-center justify-center">
+            <div class="p-2 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Highest</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
+              <div class="flex justify-center" >
+                <p class="font-bold text-md mt-2"
+                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                > {{ `${nf.format('78439834').replaceAll(',', ' ')}`}}</p>
+              </div>
+            </div>
+            <div class="p-2 text-center mr-4 ml-4">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
+              <div class="flex justify-center" >
+                <p class="font-bold text-md mt-2"
+                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                > {{ `${nf.format('332983').replaceAll(',', ' ')}`}}</p>
+              </div>
+            </div>
+            <div class="p-2 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Lower</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
+              <div class="flex justify-center" >
+                <p class="font-bold text-md mt-2"
+                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                > {{ `${nf.format('46373').replaceAll(',', ' ')}`}}</p>
+              </div>
+            </div>
+          </div>
 
           <div class="uppercase text-xs mb-4 mt-8 tracking-widest text-gray-400 font-semibold">Historical winners</div>
           <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl  shadow-inner">
             <div v-for="x of winners" :key="x.id" >
-              <div class="hover:font-semibold grid grid-cols-12 gap-1 flex justify-center align-center align-middle">
-                <div class="text-xs col-span-3 inline-block align-text-center">{{ x.date }}</div>
-                <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pr-1"> ◎ </div>{{ x.prize }}</div>
-                <div class="text-xs">{{ flag }}</div>
-                <div class="text-xs text-center col-span-2">{{ shortWallet(x.wallet, 4) }}</div>
-                <div class="text-xs text-center col-span-3 "> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
+              <div class="hover:font-semibold grid grid-cols-12 flex justify-center align-center align-middle">
+                <div class="text-xs text.left   col-span-3">{{ x.date }}</div>
+                <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pl-1 pr-1"> ◎ </div>{{ x.prize }}</div>
+                <div class="text-xs text-center col-span-3">{{ shortWallet(x.wallet, 4) }}</div>
+                <div class="text-xs text-center col-span-1">{{ '🇯🇵' }}</div>
+                <div class="text-xs text-right  col-span-3"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
               </div>
             </div>
           </lo>
