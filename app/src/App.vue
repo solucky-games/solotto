@@ -30,7 +30,7 @@ const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
 const cluster = 'devnet'
 const commitSOL = 1;
 const maxNumber = 1000000000;
-const tickets_url = 'http://localhost:5000/'
+const db_url = 'http://localhost:5000/'
 
 
 export default {
@@ -51,10 +51,6 @@ export default {
     const balance = ref();
 
     watchEffect(async () => {
-      console.log(await getTickets())
-    })
-
-    watchEffect(async () => {
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri*100)/100;
       coinTicker('bitstamp', 'SOL_USD').then((tick) => { SOL_USD.value = tick.last })
@@ -63,7 +59,6 @@ export default {
     watchEffect(async () => {
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
-      
     })
 
     const location = ref()
@@ -109,7 +104,7 @@ export default {
       await connection.confirmTransaction(signature, number.value);// processed');
 
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
-      prize.value = Math.floor(pri*100)/100;
+      prize.value = Math.floor(pri);
 
       await sendTicket(number.value, flag.value); // Commit Number Account
 
@@ -123,8 +118,8 @@ export default {
     }
 
     async function postNumber () {
-      const post = { "id": number.value, "wallet": wallet.value.publicKey.toBase58() }
-      const res = await fetch(tickets_url+'tickets/', {
+      const post = { "id": number.value, "wallet": wallet.value.publicKey.toBase58(), "country": flag.value }
+      const res = await fetch(db_url+'tickets/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(post)
@@ -137,7 +132,7 @@ export default {
     }
 
     async function chechNumber (id) {
-      const res = await fetch(tickets_url+'tickets/'+id)
+      const res = await fetch(db_url+'tickets/'+id)
       if (res.status==200) 
         return false
       return true
@@ -167,7 +162,7 @@ export default {
     }
 
     async function getWinners () {
-      const res = await fetch(tickets_url+'winners')
+      const res = await fetch(db_url+'winners')
       const data = await res.json()
       return data;
     }
@@ -177,25 +172,27 @@ export default {
     });
 
     async function getTickets () {
-      const res = await fetch(tickets_url+'tickets')
+      const res = await fetch(db_url+'tickets')
       const data = await res.json()
-      return Array(data)
+      return data
     }
-    const tickets = ref([]);
+    const tickets = ref({});
     const nNumbers = ref(0);
     const nPlayers = ref(0);
     watchEffect(async () => {
       tickets.value = await getTickets()
+      console.log(tickets.value)
       const uniqueWallets = [];
-      for (const ticket of tickets.value)
+      for (const ticket of tickets) {
         if ( !uniqueWallets.includes(ticket.wallet) )
           uniqueWallets.push(ticket.wallet);
-      nNumbers.value = tickets.value.length;
+      }
+      nNumbers.value = Object.keys(tickets.value).length;
       nPlayers.value = uniqueWallets.length;
     });
 
-    function shortWallet (wallet, n) {
-      return wallet.slice(0, n)+'...'+wallet.slice(-n)
+    function shortWallet (addrs, n) {
+      return addrs.slice(0, n)+'...'+addrs.slice(-n)
     }
 
     // const players = ref(0);
@@ -321,14 +318,8 @@ export default {
           
           <div class="flex align-center justify-center">
             <div class="p-4 text-center">
-              <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Today's</p>
+              <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-4">Today's</p>
               <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Prize</p>
-
-              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
-                <CountDown class="text-xl  text-gray-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-                  {{ hours }} h {{ minutes }} m {{ seconds }} s
-                </CountDown>
-              </div>
 
               <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mt-3 mr-1"
@@ -342,6 +333,12 @@ export default {
                 >$ </p>
                 <p class="font-bold text-2xl"
                 > {{ dollarPrize() }}</p>
+              </div>
+
+              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
+                <CountDown class="text-xl  text-gray-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+                  {{ hours }} h {{ minutes }} m {{ seconds }} s
+                </CountDown>
               </div>
     
             </div>
@@ -370,18 +367,19 @@ export default {
 
           <!-- commited numbers -->
           <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
-            <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
+            
+            <lo class="max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
 
-              <div v-for="ticket of tickets" :key="ticket" >
-                <div class="hover:font-semibold grid grid-cols-8 gap-1 flex flex-col-reverse">
-                  <a class="col-span-3" :href="'https://google.com/'+ticket.country" target="_blank" :class="markWallet(ticket.wallet)">
-                    <div class="text-xs">{{ shortWallet(ticket.wallet, 8) }}</div>
+              <div v-for="x of tickets" :key="x.id" >
+                <div class="hover:font-semib old grid grid-cols-8 gap-1 flex flex-col">
+                  <a class="col-span-1" :href="'https://https://www.google.com/search?q='+x.country" target="_blank">
+                    <div class="text-xs">{{ "🇺🇸" }}</div>
                   </a>
-                  <a class="col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(ticket.wallet)">
-                    <div class="text-xs">{{ shortWallet(ticket.wallet, 8) }}</div>
+                  <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
+                    <div class="text-xs text-left">{{ shortWallet(x.wallet, 4) }}</div>
                   </a>
-                  <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(ticket.wallet)">
-                    <div class="text-[13px]" :class="markWallet(ticket.wallet)"> {{ nf.format(ticket.id).replaceAll(',', ' ') }}</div>
+                  <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
+                    <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
                   </a>
                 </div>
               </div>
@@ -502,7 +500,7 @@ export default {
             </div>
           </div>
 
-          <div class="flex align-center justify-center">
+          <div class="flex align-center justify-center mt-2">
 
             <div class="p-4 text-center">
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
@@ -535,7 +533,7 @@ export default {
             </div>
           </div>
 
-          <div class="flex align-center justify-center">
+          <!-- <div class="flex align-center justify-center">
             <div class="p-2 text-center">
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Highest</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
@@ -563,7 +561,7 @@ export default {
                 > {{ `${nf.format('46373').replaceAll(',', ' ')}`}}</p>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="uppercase text-xs mb-4 mt-4 tracking-widest text-gray-400 font-semibold">Historical winners</div>
 
