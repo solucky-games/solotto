@@ -473,30 +473,31 @@ export default {
       <div class="m-auto w-full max-w-md p-4">
         <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
 
+          <div class="uppercase text-xl mt-8 tracking-widest text-gray-400 font-semibold">Record Stats</div>
+
           <div class="flex align-center justify-center">
             <div class="p-8 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your numbers</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest prize</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-2xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
                 > {{ yourNumbers }}</p>
               </div>
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Last Prize</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
                 > {{ `${yourProbability} %`}}</p>
               </div>
             </div>
-
             <div class="p-8 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your numbers</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total lottos</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-2xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
                 > {{ yourNumbers }}</p>
               </div>
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Probability</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Last Number</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
