@@ -207,7 +207,7 @@ export default {
     function updateYourNumbers () {
       const address = wallet.value.publicKey.toBase58();
       const arr = [];
-      for ( const [key, value] of Object.entries(tickets.value)) {
+      for (const [key, value] of Object.entries(tickets.value)) {
         if (value === address)
           arr.push(key);
       }
@@ -223,7 +223,6 @@ export default {
     function updateYourROI () {
       yourROI.value = Math.floor((prize.value/yourNumbers.value-1)*10000)/100;
     }
-
 
     watchEffect(async () => {
       updateYourNumbers();
@@ -284,21 +283,21 @@ export default {
   <div class="h-screen w-screen m-0 " :class="dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
 
     <!-- Navar -->
-    <div class="absolute top-0 right-0 p-8 flex space-x-8 justify-center ">
+    <div class="absolute top-0 right-0 pt-8 pr-8 flex space-x-8 justify-center ">
       <!-- Solana Wallets Vue. -->
       <WalletMultiButton :dark="dark"></WalletMultiButton>
       <p :class="dark ? 'text-white' : 'text-gray-600'" class="text-sm font-semibold mt-3" v-if="balance">{{`${balance} SOL`}}</p>
-      <button @click="deleteTicket" class="font-bold rounded-full p-2 align-center justify-center relative" 
+      <!-- <button @click="deleteTicket" class="font-bold rounded-full p-2 align-center justify-center relative" 
       :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         <img src="./assets/i.png" alt="Information" width="30" height="30" style="z-index:100; padding:-2px" />
-      </button>
+      </button> -->
       <!-- <button class="font-bold rounded-full p-2 align-center justify-center relative" 
       :class="dark ? 'bg-black/10 hover:bg-black/20 text-gray-600' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         <a href="https://twitter.com/SOLuckyLotto?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false" ></a>
       </button> -->
       <!-- Dark Button. -->
       
-        <button @click="dark = !dark" class="rounded-full p-" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+        <button @click="dark = !dark" class="rounded-full p-3" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
           <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
@@ -313,30 +312,34 @@ export default {
       <!-- Left Panel. -->
 
       <div class="m-auto w-full max-w-md p-4 min-h-full max-h-full h-full">
-        <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
-          
+
+        <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">          
           
           <div class="flex align-center justify-center">
             <div class="p-4 text-center">
               <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-4">Today's</p>
               <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Prize</p>
 
-              <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-                <p class="font-bold text-2xl mt-3 mr-1"
-                >◎ </p>
-                <p class="font-bold text-4xl mt-2"
-                > {{prize}}</p>
-              </div>
-              
-              <div class="flex justify-center pb-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-                <p class="font-bold text-2xl mr-1"
-                >$ </p>
-                <p class="font-bold text-2xl"
-                > {{ dollarPrize() }}</p>
+              <div class="flex ">
+                <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+                  <p class="font-bold text-2xl mt-3 mr-1"
+                  >◎ </p>
+                  <p class="font-bold text-4xl mt-2"
+                  > {{prize}}</p>
+                </div>
+
+                <div class=" text-4xl mt-2 mr-4 text-gray-400">/</div>
+
+                <div class="flex justify-center pt-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+                  <p class="font-bold text-2xl mr-1"
+                  >$ </p>
+                  <p class="font-bold text-2xl"
+                  > {{ dollarPrize() }}</p>
+                </div>
               </div>
 
-              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
-                <CountDown class="text-xl  text-gray-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1"  :class="dark ? 'text-gray-200' : 'text-gray-800'">
+                <CountDown class="text-xl" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
                   {{ hours }} h {{ minutes }} m {{ seconds }} s
                 </CountDown>
               </div>
@@ -368,12 +371,12 @@ export default {
           <!-- commited numbers -->
           <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
             
-            <lo class="max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
+            <lo class="max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
 
-              <div v-for="x of tickets" :key="x.id" >
+              <div v-for="x of tickets" :key="x.id" class="flex-grow" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
                 <div class="hover:font-semib old grid grid-cols-8 gap-1 flex flex-col">
                   <a class="col-span-1" :href="'https://https://www.google.com/search?q='+x.country" target="_blank">
-                    <div class="text-xs">{{ "🇺🇸" }}</div>
+                    <div class="text-xs">{{ x.country }}</div>
                   </a>
                   <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
                     <div class="text-xs text-left">{{ shortWallet(x.wallet, 4) }}</div>
@@ -392,7 +395,7 @@ export default {
 
       <div class="m-auto w-full max-w-md p-4 min-h-full max-h-full h-full">
 
-        <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-700' : 'bg-white'">
+        <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-800' : 'bg-white'">
 
           <div class="px-4 text-center mt-8">
             <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
@@ -401,7 +404,7 @@ export default {
             <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
                 <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                   <div class="uppercase text-xl text-gray-400 font-semibold m-4">Win</div>
-                  <div class="font-bold text-4xl mt-2"> {{prize}}<span  class="font-bold text-xl mt-4">SOL</span></div>
+                  <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{prize}}<span  class="font-bold text-xl mt-4">SOL</span></div>
                   <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
                 </div>
               <CountDown class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
@@ -487,7 +490,7 @@ export default {
       <!-- Right Panel -->
 
       <div class="m-auto w-full max-w-md p-4">
-        <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
+        <div class="p-4 text-gray-600 rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">
 
           <div class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-8">Blockchain</div>
           <div class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">History</div>
@@ -495,7 +498,7 @@ export default {
           <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
             <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
               <div class="uppercase text-xl font-semibold m-4">&nbsp;&nbsp; Total</div>
-              <div class="font-bold text-4xl mt-2"> {{27}}</div>
+              <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{'11'}}</div>
               <div class="uppercase text-xl font-semibold m-4">Games</div>
             </div>
           </div>
@@ -565,9 +568,9 @@ export default {
 
           <div class="uppercase text-xs mb-4 mt-4 tracking-widest text-gray-400 font-semibold">Historical winners</div>
 
-          <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
+          <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-text-gray-200'">
             <div v-for="x of winners" :key="x.id" >
-              <div class="hover:font-semibold grid grid-cols-12 flex justify-center align-center align-middle">
+              <div class="hover:font-semibold grid grid-cols-12 flex justify-center align-center align-middle"  :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
                 <div class="text-xs text.left   col-span-3">{{ x.date }}</div>
                 <div class="text-xs text-right col-span-2 flex"><div class="text-xs mb-3 pl-1 pr-1"> ◎ </div>{{ x.prize }}</div>
                 <div class="text-xs text-left col-span-3">{{ shortWallet(x.wallet, 4) }}</div>
