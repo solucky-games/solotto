@@ -105,29 +105,53 @@ export default {
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri);
 
-      await sendTicket(number.value, flag.value); // Commit Number Account
-
       await postNumber();
-
-      tickets.value = await getTickets();
 
       updateYourNumbers();
       updateYourProbability();
+      updateYourROI();
 
+      if (await sendTicket(number.value, flag.value)) // Commit Number Account
+        await verifyNumber();
+
+      tickets.value = await getTickets();
     }
 
     async function postNumber () {
-      const post = { "id": number.value, "wallet": wallet.value.publicKey.toBase58(), "country": flag.value }
+      const now = new Date();
+      let hour = now.getUTCHours();
+      let minutes = now.getMinutes();
+      const post = {  "id": number.value, 
+                      "wallet": wallet.value.publicKey.toBase58(), 
+                      "country": flag.value,
+                      "hour": `${hour} : ${minutes}`,
+                      "verified": false
+                    }
       const res = await fetch(db_url+'tickets/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(post)
       })
+      if (res.status==304)
+        return alert(`${number.value} commited succesfully!`)
+      else
+        return alert('Number commitment failed! Please try again.')
+    }
+
+    async function verifyNumber () {
+      const post = {  "id": number.value, 
+                      "verified": true
+                    }
+      const res = await fetch(db_url+'tickets/', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post)
+      });
       console.log(res);
       // if (res.status==201)
-      //   return alert(`${number.value} commited succefully!`)
+      //   return cons(`${number.value} verified succesfully!`)
       // else
-      //   return alert('Number commitment failed! Please try again.')
+      //   return alert('Number verfication failed! Please try again.')
     }
 
     async function chechNumber (id) {
@@ -175,7 +199,7 @@ export default {
       const data = await res.json()
       return data
     }
-    const tickets = ref({});
+    const tickets = ref([]);
     const nNumbers = ref(0);
     const nPlayers = ref(0);
     watchEffect(async () => {
@@ -215,7 +239,7 @@ export default {
 
     const yourProbability = ref(0);
     function updateYourProbability () {
-      yourProbability.value = Math.floor((yourNumbers.value/Object.keys(tickets.value).length)*10000)/100;
+      yourProbability.value = Math.floor((yourNumbers.value/tickets.value.length)*10000)/100;
     }
 
     const yourROI = ref(0);
@@ -230,7 +254,8 @@ export default {
     });
 
     function markWallet(address){
-      if( wallet.value.publicKey.toBase58() == address ) return 'font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600';
+      if( wallet.value.publicKey.toBase58() == address ) 
+        return 'font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600';
     }
 
     function dollarPrize () {
@@ -386,12 +411,16 @@ export default {
                     <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
                   </a>
                   <a class="text-right col-span-2" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
-                    <div class="text-[13px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(x.wallet)"> {{ '✔️' }}</div>
+                    <div v-if="x.verified" class="text-[13px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(x.wallet)"> {{ '✔️' }}</div>
                   </a>
                 </div>
               </div>
             </lo>
-        </div>
+          </div>
+
+          <div class="flex">
+            <div class="text-xl"></div>
+          </div>
       </div>
 
       <!-- Centered. -->
@@ -483,6 +512,8 @@ export default {
           </div>
 
         </div>
+
+        
         <!-- <div class="text-sm mt-8">
           <p class="text-xs font-semibold text-gray-400">Your wallet:</p>
           <p>{{ $wallet.publicKey.value?.toBase58() ?? 'Not connected' }}</p>
@@ -496,7 +527,7 @@ export default {
       <div class="m-auto w-full max-w-md p-4">
         <div class="p-4 text-gray-600 rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">
 
-          <div class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-8">Blockchain</div>
+          <div class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-8">SOLucky</div>
           <div class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">History</div>
           
           <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
