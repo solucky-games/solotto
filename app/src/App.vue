@@ -7,7 +7,6 @@ import CountDown from '@chenfengyuan/vue-countdown';
 import { Buffer } from 'buffer'
 import coinTicker from 'coin-ticker'
 import {sendTicket} from './controller/sendTicket'
-import {getTickets} from './controller/getTickets'
 import {deleteTicket} from './controller/deleteTicket'
 
 
@@ -31,7 +30,7 @@ const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
 const cluster = 'devnet'
 const commitSOL = 1;
 const maxNumber = 1000000000;
-const db_url = 'http://localhost:5000/'
+const tickets_url = 'http://localhost:5000/'
 
 
 export default {
@@ -87,10 +86,8 @@ export default {
         return alert('Connect your wallet first!')
       } 
 
-      if ( db.value[number.value] && chechNumber(number.value) )
+      if ( tickets.value[number.value] && chechNumber(number.value) )
         return alert('This number is already commited! Try another one.')
-
-      await sendTicket(number.value, flag.value);
 
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
 
@@ -114,9 +111,11 @@ export default {
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
       prize.value = Math.floor(pri*100)/100;
 
+      await sendTicket(number.value, flag.value); // Commit Number Account
+
       await postNumber();
 
-      db.value = await getNumbers();
+      tickets.value = await getTickets();
 
       updateYourNumbers();
       updateYourProbability();
@@ -125,7 +124,7 @@ export default {
 
     async function postNumber () {
       const post = { "id": number.value, "wallet": wallet.value.publicKey.toBase58() }
-      const res = await fetch(db_url+'numbers/', {
+      const res = await fetch(tickets_url+'tickets/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(post)
@@ -138,7 +137,7 @@ export default {
     }
 
     async function chechNumber (id) {
-      const res = await fetch(db_url+'numbers/'+id)
+      const res = await fetch(tickets_url+'tickets/'+id)
       if (res.status==200) 
         return false
       return true
@@ -168,31 +167,32 @@ export default {
     }
 
     async function getWinners () {
-      const res = await fetch(db_url+'winners')
+      const res = await fetch(tickets_url+'winners')
       const data = await res.json()
       console.log(data);
       return data;
     }
-
     const winners = ref({});
     watchEffect(async () => {
       winners.value = await getWinners()
     });
 
-    async function getNumbers () {
-      const res = await fetch(db_url+'numbers')
-      const data = await res.json()
-      const dict = {}
-      for (let x of data) {
-        dict[Number(x['id'])] = x['wallet']
-      }
-      return dict
+    async function getTickets () {
+      const res = await fetch(tickets_url+'tickets')
+      console.log(res);
+      return res
     }
-
-    const db = ref({});
+    const tickets = ref([]);
+    const nNumbers = ref(0);
+    const nPlayers = ref(0);
     watchEffect(async () => {
-      db.value = await getNumbers()
-      console.log(Object.keys(db.value).length);
+      tickets.value = await getTickets()
+      const uniqueWallets = [];
+      for (const ticket of tickets.value)
+        if ( !uniqueWallets.includes(ticket.wallet) )
+          uniqueWallets.push(ticket.wallet);
+      nNumbers.value = tickets.value.length;
+      nPlayers.value = uniqueWallets.length;
     });
 
     function shortWallet (wallet, n) {
@@ -201,7 +201,7 @@ export default {
 
     // const players = ref(0);
     // function countPlayers () {
-    //   for ( const [key, value] of Object.entries(db.value)) {
+    //   for ( const [key, value] of Object.entries(tickets.value)) {
     //     if (value === address)
     //       arr.push(key);
     //   }
@@ -211,7 +211,7 @@ export default {
     function updateYourNumbers () {
       const address = wallet.value.publicKey.toBase58();
       const arr = [];
-      for ( const [key, value] of Object.entries(db.value)) {
+      for ( const [key, value] of Object.entries(tickets.value)) {
         if (value === address)
           arr.push(key);
       }
@@ -220,16 +220,23 @@ export default {
 
     const yourProbability = ref(0);
     function updateYourProbability () {
-      yourProbability.value = Math.floor((yourNumbers.value/Object.keys(db.value).length)*10000)/100;
+      yourProbability.value = Math.floor((yourNumbers.value/Object.keys(tickets.value).length)*10000)/100;
     }
+
+    const yourROI = ref(0);
+    function updateYourROI () {
+      yourROI.value = Math.floor((prize.value/yourNumbers.value-1)*10000)/100;
+    }
+
 
     watchEffect(async () => {
       updateYourNumbers();
       updateYourProbability();
+      updateYourROI();
     });
 
     function markWallet(address){
-      if( wallet.value.publicKey.toBase58() == address ) return 'font-semibold text-green-500';
+      if( wallet.value.publicKey.toBase58() == address ) return 'font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600';
     }
 
     function dollarPrize () {
@@ -252,7 +259,7 @@ export default {
       resetNum,
       number,
       nf,
-      db,
+      tickets,
       shortWallet,
       yourNumbers,
       yourProbability,
@@ -263,7 +270,10 @@ export default {
       flag,
       winners,
       deleteTicket,
-      getTickets
+      getTickets,
+      yourROI,
+      nNumbers,
+      nPlayers
     }
   },
   data() {
@@ -275,7 +285,7 @@ export default {
 </script>
 
 <template>
-  <div class="h-screen w-screen m-0 " :class="dark ? 'bg-black/90 text-gray-100' : 'bg-gray-100 text-gray-700'">
+  <div class="h-screen w-screen m-0 " :class="dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
 
     <!-- Navar -->
     <div class="absolute top-0 right-0 p-8 flex space-x-8 justify-center ">
@@ -302,8 +312,7 @@ export default {
         </button>
     </div>
 
-    <div class="flex flex-wrap top-24 left-0 right-0 absolute" :class="dark ? 'bg-black/90 text-gray-100' : 'bg-gray-100 text-gray-700'">
-
+    <div class="flex flex-wrap top-24 left-0 right-0 absolute" :class="dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
 
       <!-- Left Panel. -->
 
@@ -312,54 +321,59 @@ export default {
           
           <div class="flex align-center justify-center">
             <div class="p-4 text-center">
-              <p class="uppercase text-[17px] tracking-widest text-gray-400 font-semibold">Current prize</p>
-              <div class="flex justify-center mr-3 mt-2 p-1" >
+              <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Today's</p>
+              <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Prize</p>
+              <div class="flex justify-center mr-3 mt-2 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mt-3 mr-1"
-                  :class="dark ? 'text-white' : 'text-gray-600'"
                 >◎ </p>
                 <p class="font-bold text-4xl mt-2"
-                  :class="dark ? 'text-white' : 'text-gray-600'"
                 > {{prize}}</p>
               </div>
-              <div class="flex justify-center mt-2 pb-1" >
-                <p class="font-bold text-xl mt-2 mr-1"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+              <div class="flex justify-center mt-2 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+                <p class="font-bold text-2xl mr-1"
                 >$ </p>
-                <p class="font-bold text-xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                <p class="font-bold text-2xl"
                 > {{ dollarPrize() }}</p>
               </div>
+              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
+                <CountDown class="text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+                  {{ hours }} h {{ minutes }} m {{ seconds }} s
+                </CountDown>
+              </div>
+    
             </div>
           </div>
           <div class="flex align-center justify-center">
-            <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
+            <div class="p-2 mr-1 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+              <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold">Numbers</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-2xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{yourProbability}}</p>
+                > {{nNumbers}}</p>
               </div>
             </div>
 
-            <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
+            <div class="p-2 ml-1 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+              <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold">Players</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-2xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${prize}`}}</p>
+                > {{ `${nPlayers}`}}</p>
               </div>
             </div>
           </div>
           <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
             <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
-              <div v-for="(addr, num) in db" :key="num" >
-                <div class="hover:font-semibold grid grid-cols-7 gap-1 flex flex-col-reverse">
+              <div v-for="(ticket) in tickets" :key="ticket" >
+                <div class="hover:font-semibold grid grid-cols-8 gap-1 flex flex-col-reverse">
                   <img class="opacity-75" src="https://ipdata.co/flags/us.png" alt="{{location}}" width="20"/>
-                  <a class="text-left col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                  <a class="col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
                     <div class="text-xs">{{ shortWallet(addr, 8) }}</div>
                   </a>
-                  <a class="text-center col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
-                    <div class="text-[14px] text-center " :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
+                  <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
+                    <div class="text-[13px]" :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
                   </a>
                 </div>
               </div>
@@ -374,28 +388,43 @@ export default {
         <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-700' : 'bg-white'">
 
           <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center p-4 mt-8">
-            <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</p>
-            <CountDown class="text-3xl" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+            <h1 class="uppercase text-xl tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</h1>
+            <CountDown class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
               {{ hours }} h {{ minutes }} m {{ seconds }} s
             </CountDown>
           </div>
 
-          <div class="flex align-center justify-center mb-4">
-            <div class="p-8 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Probability</p>
-              <div class="flex justify-center" >
-                <p class="font-bold text-2xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${yourProbability} %`}}</p>
-              </div>
-            </div>
+          <div class="text-center uppercase tracking-widest font-semibold justify-center m-2 border-1 rounded-xl pb-1 pt-1">
+            <div class="flex align-center justify-center mb-4">
 
-            <div class="p-8 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">ROI</p>
-              <div class="flex justify-center" >
-                <p class="font-bold text-2xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${yourProbability} %`}}</p>
+              <div class="p-4 text-center">
+                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Commited</p>
+                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
+                <div class="flex justify-center" >
+                  <p class="lowercase font-bold text-xl mt-2"
+                    :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                  > {{ `x${yourNumbers}`}}</p>
+                </div>
+              </div>
+
+              <div class="p-4 text-center">
+                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your Winning</p>
+                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Probability</p>
+                <div class="flex justify-center" >
+                  <p class="font-bold text-xl mt-2"
+                    :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                  > {{ `${yourProbability}%`}}</p>
+                </div>
+              </div>
+
+              <div class="p-4 text-center">
+                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
+                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">ROI</p>
+                <div class="flex justify-center" >
+                  <p class="font-bold text-xl mt-2"
+                    :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                  > {{ `${nf.format(yourROI)}%`}}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -407,7 +436,11 @@ export default {
           @click="commitNumber"
           @mouseover="commitHover=true"
           @mouseleave="commitHover=false">
-            <div class="text-2xl py-2 mr-10" v-if="commitHover"><a class="text-gray-400 text-xl mr-5">Commit 🚀 </a>{{nf.format(number)}}</div>
+            <div class="text-2xl py-2 mr-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" v-if="commitHover">
+              <a class="text-xl mr-5 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                Commit 🚀 </a>
+              {{nf.format(number)}}
+            </div>
             <div v-else>{{ nf.format(number).replaceAll(',', ' ') }}</div>
           </div>
           

@@ -1,4 +1,3 @@
-
 //import { computed } from 'vue'
 import { useAnchorWallet } from 'solana-wallets-vue'
 import { Connection, Transaction } from '@solana/web3.js'
@@ -9,10 +8,6 @@ import { getTickets } from './getTickets'
 import { web3 } from '@project-serum/anchor'
 
 import { TOKEN_PROGRAM_ID, Token } from "@solana/spl-token";
-
-
-
-
 
 const clusterUrl = "https://api.devnet.solana.com"
 //const preflightCommitment = 'processed'
