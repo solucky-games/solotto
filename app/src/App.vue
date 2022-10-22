@@ -555,7 +555,7 @@ export default {
               </div>
             </div>
             <div class="p-2 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Lower</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Lowest</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-md mt-2"
