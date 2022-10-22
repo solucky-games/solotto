@@ -4,8 +4,8 @@
     /* Buttons. */
     --swv-button-background-color: rgb(154, 45, 243);
     --swv-button-text-color: white;
-    --swv-button-outline-color: rgba(130, 34, 209, 0.719);
-    --swv-button-hover-background-color: rgb(243, 45, 243);
+    --swv-button-outline-color: rgba(130, 34, 209, 0.938);
+    --swv-button-hover-background-color: rgba(161, 38, 209, 0.945);
     --swv-button-disabled-background-color: #475569;
     --swv-button-disabled-text-color: #94a3b8;
 
