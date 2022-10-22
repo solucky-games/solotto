@@ -391,45 +391,52 @@ export default {
       <div class="m-auto w-full max-w-md p-4 min-h-full max-h-full h-full">
         <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-700' : 'bg-white'">
 
-          <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center p-4 mt-8">
+          <div class="p-4 text-center mt-8">
+            <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
+            <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Number</p>
 
-            <h1 class="uppercase text-xl tracking-widest text-gray-400 font-semibold mb-2">Prize in</h1>
-
-            <CountDown class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-              {{ hours }} h {{ minutes }} m {{ seconds }} s
-            </CountDown>
-          </div>
-
-          <div class="text-center uppercase tracking-widest font-semibold justify-center m-2 border-1 rounded-xl pb-1 pt-1">
-            <div class="flex align-center justify-center mb-4">
-
-              <div class="p-4 text-center">
-                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Commited</p>
-                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
-                <div class="flex justify-center" >
-                  <p class="lowercase font-bold text-xl mt-2"
-                    :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                  > {{ `x${yourNumbers}`}}</p>
+            <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
+                <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+                  <div class="uppercase text-xl text-gray-400 font-semibold m-4">Win</div>
+                  <div class="font-bold text-4xl mt-2"> {{prize}}<span  class="font-bold text-xl mt-4">SOL</span></div>
+                  <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
                 </div>
-              </div>
+              <CountDown class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+                {{ hours }} h {{ minutes }} m {{ seconds }} s
+              </CountDown>
+            </div>
 
-              <div class="p-4 text-center">
-                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
-                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Probability</p>
-                <div class="flex justify-center" >
-                  <p class="font-bold text-xl mt-2"
-                    :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                  > {{ `${yourProbability}%`}}</p>
+            <div class="text-center uppercase tracking-widest font-semibold justify-center m-2 border-1 rounded-xl pb-1 pt-1">
+              <div class="flex align-center justify-center mb-4">
+
+                <div class="p-4 text-center">
+                  <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Commited</p>
+                  <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
+                  <div class="flex justify-center" >
+                    <p class="lowercase font-bold text-xl mt-2"
+                      :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                    > {{ `x${yourNumbers}`}}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div class="p-4 text-center">
-                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
-                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">ROI</p>
-                <div class="flex justify-center" >
-                  <p class="font-bold text-xl mt-2"
-                    :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                  > {{ `${nf.format(yourROI)}%`}}</p>
+                <div class="p-4 text-center">
+                  <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
+                  <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Probability</p>
+                  <div class="flex justify-center" >
+                    <p class="font-bold text-xl mt-2"
+                      :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                    > {{ `${yourProbability}%`}}</p>
+                  </div>
+                </div>
+
+                <div class="p-4 text-center">
+                  <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
+                  <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">ROI</p>
+                  <div class="flex justify-center" >
+                    <p class="font-bold text-xl mt-2"
+                      :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                    > {{ `${nf.format(yourROI)}%`}}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -479,13 +486,18 @@ export default {
       <div class="m-auto w-full max-w-md p-4">
         <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
 
-          <div class="uppercase text-2xl mt-8 tracking-widest text-gray-400 font-semibold">History</div>
-          <div class="uppercase flex justify-center mr-3 mt-2 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-            <p class="font-bold text-4xl mb-2"
-            > {{27}} <span class="text-sm">Games</span></p>
+          <div class="uppercase text-xl mt-10 tracking-widest text-gray-400 font-semibold">Blockchain History</div>
+          
+          <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
+            <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+              <div class="uppercase text-xl font-semibold m-4">Total</div>
+              <div class="font-bold text-4xl mt-2"> {{27}}</div>
+              <div class="uppercase text-xl font-semibold m-4">Games</div>
+            </div>
           </div>
 
           <div class="flex align-center justify-center">
+
             <div class="p-4 text-center">
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Countries</p>
@@ -495,6 +507,7 @@ export default {
                 >{{ ` ${12}` }}</p>
               </div>
             </div>
+
             <div class="p-4 text-center mr-2">
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
@@ -504,6 +517,7 @@ export default {
                 > <span class="text-sm text-gray-400">◎ </span>{{ ` ${323}` }}</p>
               </div>
             </div>
+
             <div class="p-4 text-center">
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
@@ -546,14 +560,15 @@ export default {
           </div>
 
           <div class="uppercase text-xs mb-4 mt-8 tracking-widest text-gray-400 font-semibold">Historical winners</div>
-          <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl  shadow-inner">
+
+          <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
             <div v-for="x of winners" :key="x.id" >
               <div class="hover:font-semibold grid grid-cols-12 flex justify-center align-center align-middle">
                 <div class="text-xs text.left   col-span-3">{{ x.date }}</div>
-                <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pl-1 pr-1"> ◎ </div>{{ x.prize }}</div>
-                <div class="text-xs text-center col-span-3">{{ shortWallet(x.wallet, 4) }}</div>
-                <div class="text-xs text-center col-span-1">{{ '🇯🇵' }}</div>
-                <div class="text-xs text-right  col-span-3"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
+                <div class="text-xs text-right col-span-2 flex"><div class="text-xs mb-3 pl-1 pr-1"> ◎ </div>{{ x.prize }}</div>
+                <div class="text-xs text-left col-span-3">{{ shortWallet(x.wallet, 4) }}</div>
+                <div class="text-xs text-center col-span-1">{{ x.country }}</div>
+                <div class="text-xs text-center col-span-3"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
               </div>
             </div>
           </lo>
