@@ -3,7 +3,7 @@ import App from './App.vue';
 import SolanaWallets from 'solana-wallets-vue';
 
 // You can either import the default styles or create your own.
-import 'solana-wallets-vue/styles.css';
+import './styles.css';
 
 import {
   PhantomWalletAdapter,
