@@ -169,7 +169,6 @@ export default {
     async function getWinners () {
       const res = await fetch(tickets_url+'winners')
       const data = await res.json()
-      console.log(data);
       return data;
     }
     const winners = ref({});
@@ -179,8 +178,8 @@ export default {
 
     async function getTickets () {
       const res = await fetch(tickets_url+'tickets')
-      console.log(res);
-      return res
+      const data = await res.json()
+      return Array(data)
     }
     const tickets = ref([]);
     const nNumbers = ref(0);
@@ -364,16 +363,21 @@ export default {
               </div>
             </div>
           </div>
+
+          <!-- commited numbers -->
           <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
             <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner">
-              <div v-for="(ticket) in tickets" :key="ticket" >
+
+              <div v-for="ticket of tickets" :key="ticket" >
                 <div class="hover:font-semibold grid grid-cols-8 gap-1 flex flex-col-reverse">
-                  <img class="opacity-75" src="https://ipdata.co/flags/us.png" alt="{{location}}" width="20"/>
-                  <a class="col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
-                    <div class="text-xs">{{ shortWallet(addr, 8) }}</div>
+                  <a class="col-span-3" :href="'https://google.com/'+ticket.country" target="_blank" :class="markWallet(ticket.wallet)">
+                    <div class="text-xs">{{ shortWallet(ticket.wallet, 8) }}</div>
                   </a>
-                  <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(addr)">
-                    <div class="text-[13px]" :class="markWallet(addr)"> {{ nf.format(num).replaceAll(',', ' ') }}</div>
+                  <a class="col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(ticket.wallet)">
+                    <div class="text-xs">{{ shortWallet(ticket.wallet, 8) }}</div>
+                  </a>
+                  <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+addr+'?cluster='+cluster" target="_blank" :class="markWallet(ticket.wallet)">
+                    <div class="text-[13px]" :class="markWallet(ticket.wallet)"> {{ nf.format(ticket.id).replaceAll(',', ' ') }}</div>
                   </a>
                 </div>
               </div>
@@ -388,7 +392,9 @@ export default {
         <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-700' : 'bg-white'">
 
           <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center p-4 mt-8">
-            <h1 class="uppercase text-xl tracking-widest text-gray-400 font-semibold mr-5 mb-2">Prize in</h1>
+
+            <h1 class="uppercase text-xl tracking-widest text-gray-400 font-semibold mb-2">Prize in</h1>
+
             <CountDown class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
               {{ hours }} h {{ minutes }} m {{ seconds }} s
             </CountDown>
@@ -474,40 +480,51 @@ export default {
         <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
 
           <div class="uppercase text-xl mt-8 tracking-widest text-gray-400 font-semibold">Record Stats</div>
+          <div class="flex justify-center mr-3 mt-2 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+            <p class="font-bold text-4xl mt-2"
+            > {{27}}</p>
+          </div>
 
           <div class="flex align-center justify-center">
             <div class="p-8 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest prize</p>
+
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest Prize</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-2xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ yourNumbers }}</p>
+                > <span class="text-xl">◎ </span>{{ ` ${323}` }}</p>
               </div>
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Last Prize</p>
+
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-8">Yesterday Number</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${yourProbability} %`}}</p>
+                > {{ `${nf.format('78439834')}`}}</p>
               </div>
+              
+            
             </div>
+
             <div class="p-8 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total lottos</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average Prize</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-2xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ yourNumbers }}</p>
+                > <span class="text-xl">◎ </span>{{ 73 }}</p>
               </div>
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-4">Last Number</p>
+
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-8">Yesterday Country</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${yourProbability} %`}}</p>
+                > {{ '🇯🇵' }}</p>
               </div>
+              
             </div>
           </div>
 
 
-          <div class="uppercase text-s mb-7 tracking-widest text-gray-400 font-semibold">Historical winners</div>
+          <div class="uppercase text-xs mb-4 tracking-widest text-gray-400 font-semibold">Historical winners</div>
           <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl  shadow-inner">
             <div v-for="x of winners" :key="x.id" >
               <div class="hover:font-semibold grid grid-cols-10 gap-1 flex justify-center align-center align-middle">
