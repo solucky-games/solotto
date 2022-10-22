@@ -414,7 +414,7 @@ export default {
               </div>
 
               <div class="p-4 text-center">
-                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your Winning</p>
+                <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
                 <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Probability</p>
                 <div class="flex justify-center" >
                   <p class="font-bold text-xl mt-2"
@@ -479,14 +479,14 @@ export default {
       <div class="m-auto w-full max-w-md p-4">
         <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
 
-          <div class="uppercase text-xl mt-8 tracking-widest text-gray-400 font-semibold">Record Stats</div>
-          <div class="flex justify-center mr-3 mt-2 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-            <p class="font-bold text-4xl mt-2"
-            > {{27}}</p>
+          <div class="uppercase text-2xl mt-8 tracking-widest text-gray-400 font-semibold">History</div>
+          <div class="uppercase flex justify-center mr-3 mt-2 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+            <p class="font-bold text-4xl mb-2"
+            > {{27}} <span class="text-sm">Games</span></p>
           </div>
 
           <div class="flex align-center justify-center">
-            <div class="p-8 text-center">
+            <div class="p-2 mt-2 text-center">
 
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest Prize</p>
               <div class="flex justify-center" >
@@ -495,7 +495,7 @@ export default {
                 > <span class="text-xl">◎ </span>{{ ` ${323}` }}</p>
               </div>
 
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-8">Yesterday Number</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-6 pr-2">Yesterday Number</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
@@ -505,15 +505,15 @@ export default {
             
             </div>
 
-            <div class="p-8 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average Prize</p>
+            <div class="p-2 mt-2 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">&nbsp;&nbsp; Average Prize</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-2xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
                 > <span class="text-xl">◎ </span>{{ 73 }}</p>
               </div>
 
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-8">Yesterday Country</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold mt-6 pl-2">Yesterday Country</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
@@ -524,15 +524,15 @@ export default {
           </div>
 
 
-          <div class="uppercase text-xs mb-4 tracking-widest text-gray-400 font-semibold">Historical winners</div>
+          <div class="uppercase text-xs mb-4 mt-8 tracking-widest text-gray-400 font-semibold">Historical winners</div>
           <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl  shadow-inner">
             <div v-for="x of winners" :key="x.id" >
-              <div class="hover:font-semibold grid grid-cols-10 gap-1 flex justify-center align-center align-middle">
-                <div class="text-xs col-span-2 inline-block align-text-center">{{ x.date }}</div>
+              <div class="hover:font-semibold grid grid-cols-12 gap-1 flex justify-center align-center align-middle">
+                <div class="text-xs col-span-3 inline-block align-text-center">{{ x.date }}</div>
+                <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pr-1"> ◎ </div>{{ x.prize }}</div>
                 <div class="text-xs">{{ flag }}</div>
                 <div class="text-xs text-center col-span-2">{{ shortWallet(x.wallet, 4) }}</div>
                 <div class="text-xs text-center col-span-3 "> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
-                <div class="text-xs text-center col-span-2 flex"><div class="text-xs mb-3 pr-1"> ◎ </div>{{ x.prize }}</div>
               </div>
             </div>
           </lo>
