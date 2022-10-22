@@ -318,28 +318,31 @@ export default {
       <div class="m-auto w-full max-w-md p-4 min-h-full max-h-full h-full">
         <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
           
+          
           <div class="flex align-center justify-center">
             <div class="p-4 text-center">
               <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Today's</p>
               <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Prize</p>
+
+              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
+                <CountDown class="text-xl  text-gray-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
+                  {{ hours }} h {{ minutes }} m {{ seconds }} s
+                </CountDown>
+              </div>
+
               <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mt-3 mr-1"
                 >◎ </p>
                 <p class="font-bold text-4xl mt-2"
                 > {{prize}}</p>
               </div>
+              
               <div class="flex justify-center pb-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mr-1"
                 >$ </p>
                 <p class="font-bold text-2xl"
                 > {{ dollarPrize() }}</p>
               </div>
-
-              <!-- <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1">
-                <CountDown class="text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-                  {{ hours }} h {{ minutes }} m {{ seconds }} s
-                </CountDown>
-              </div> -->
     
             </div>
           </div>
@@ -488,11 +491,12 @@ export default {
       <div class="m-auto w-full max-w-md p-4">
         <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl">
 
-          <div class="uppercase text-xl mt-10 tracking-widest text-gray-400 font-semibold">Blockchain History</div>
+          <div class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-8">Blockchain</div>
+          <div class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">History</div>
           
           <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
             <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-              <div class="uppercase text-xl font-semibold m-4">Total</div>
+              <div class="uppercase text-xl font-semibold m-4">&nbsp;&nbsp; Total</div>
               <div class="font-bold text-4xl mt-2"> {{27}}</div>
               <div class="uppercase text-xl font-semibold m-4">Games</div>
             </div>
