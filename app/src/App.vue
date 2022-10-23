@@ -423,7 +423,7 @@ export default {
                     <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
                   </a>
                   <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
-                    <div v-if="x.verified" class="text-[13px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(x.wallet)"> {{ '✔️' }}</div>
+                    <div v-if="x.verified" class="text-[10px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(x.wallet)"> {{ '✔️' }}</div>
                   </a>
                 </div>
               </div>
@@ -438,7 +438,7 @@ export default {
       <!-- Centered. -->
       
 
-      <div class="m-auto w-full max-w-md p-4 min-h-full max-h-full h-full">
+      <div class="m-auto w-full max-w-md p-2 min-h-full max-h-full h-full">
 
         <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-800' : 'bg-white'">
 
@@ -657,13 +657,13 @@ export default {
 ::-webkit-scrollbar-track {
   background-color: rgba(187, 187, 187, 0);
   border-radius: 0.75rem;
-  margin: 0.5rem;
+  margin: 0.4rem;
   border-left: 1px solid rgba(211, 211, 211, 0);
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 20px;
-  background:  linear-gradient(30deg, #d31bb47c, #ae0ce08e);
-  box-shadow: inset 0 0 6px #c41bd3, 
+  background:  linear-gradient(30deg, #d31bb47c, #ae0ce05d);
+  box-shadow: inset 0 0 6px #c41bd3,
 }
 </style>
