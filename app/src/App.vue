@@ -398,7 +398,7 @@ export default {
             
             <lo class="max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
 
-              <div v-for="x of tickets" :key="x.id" class="flex-grow" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
+              <div v-for="x of tickets" :key="x.id" class="py-1" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
                 <div class="hover:font-semib old grid grid-cols-10 gap-3 flex flex-col">
                   <div class="text-xs col-span-2">{{ x.hour }}</div>
                   <a class="col-span-1" :href="'https://https://www.google.com/search?q='+x.country" target="_blank">
