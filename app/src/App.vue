@@ -399,8 +399,8 @@ export default {
             <lo class="max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
 
               <div v-for="x of tickets" :key="x.id" class="flex-grow" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
-                <div class="hover:font-semib old grid grid-cols-10 gap-1 flex flex-col">
-                  <div class="text-xs">{{ x.hour }}</div>
+                <div class="hover:font-semib old grid grid-cols-10 gap-3 flex flex-col">
+                  <div class="text-xs col-span-2">{{ x.hour }}</div>
                   <a class="col-span-1" :href="'https://https://www.google.com/search?q='+x.country" target="_blank">
                     <div class="text-xs">{{ x.country }}</div>
                   </a>
@@ -410,7 +410,7 @@ export default {
                   <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
                     <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
                   </a>
-                  <a class="text-right col-span-2" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
+                  <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
                     <div v-if="x.verified" class="text-[13px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(x.wallet)"> {{ '✔️' }}</div>
                   </a>
                 </div>
@@ -483,7 +483,7 @@ export default {
 
           <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
 
-          <div class="font-bold text-4xl text-center p-7 rounded-xl m-2 cursor-pointer"
+          <div class="font-bold text-4xl text-center p-7 rounded-xl m-4 cursor-pointer"
           :class="dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
           @click="commitNumber"
           @mouseover="commitHover=true"
@@ -496,7 +496,7 @@ export default {
             <div v-else>{{ nf.format(number).replaceAll(',', ' ') }}</div>
           </div>
           
-          <div class="grid grid-cols-3 gap-1 text-s font-semibold text-center py-4 px-2 rounded-xl">
+          <div class="grid grid-cols-3 gap-1 text-s font-semibold text-center py-4 px-4 rounded-xl">
             <button @click="clickNum(1)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tl-xl align-middle relative">1</button>
             <button @click="clickNum(2)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">2</button>
             <button @click="clickNum(3)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tr-xl align-middle relative">3</button>
@@ -607,7 +607,7 @@ export default {
             <div v-for="x of winners" :key="x.id" >
               <div class="hover:font-semibold grid grid-cols-12 flex justify-center align-center align-middle"  :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
                 <div class="text-xs text.left   col-span-3">{{ x.date }}</div>
-                <div class="text-xs text-right col-span-2 flex"><div class="text-xs mb-3 pl-1 pr-1"> ◎ </div>{{ x.prize }}</div>
+                <div class="text-xs text-right col-span-2 font-semibold flex text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"><div class="text-xs mb-3 pl-1 pr-1"> ◎ </div>{{ x.prize }}</div>
                 <div class="text-xs text-left col-span-3">{{ shortWallet(x.wallet, 4) }}</div>
                 <div class="text-xs text-center col-span-1">{{ x.country }}</div>
                 <div class="text-xs text-center col-span-3"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
