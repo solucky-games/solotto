@@ -9,6 +9,9 @@ import coinTicker from 'coin-ticker'
 import {sendTicket} from './controller/sendTicket'
 import {deleteTicket} from './controller/deleteTicket'
 
+import PopCommit from './components/PopCommit.vue'
+
+
 
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getUTCDate() + 1);
@@ -36,7 +39,8 @@ export default {
   components: {
     WalletMultiButton,
     CountDown,
-  },
+    PopCommit
+},
   setup () {
     
     const wallet = useAnchorWallet()
@@ -107,14 +111,17 @@ export default {
 
       await postNumber();
 
+      commitPop.value = true;
+
+      tickets.value = await getTickets();
+
       updateYourNumbers();
       updateYourProbability();
       updateYourROI();
+    }
 
-      if (await sendTicket(number.value, flag.value)) // Commit Number Account
-        await verifyNumber();
-
-      tickets.value = await getTickets();
+    async function verifyNumber() {
+      sendTicket(number.value, flag.value)
     }
 
     async function postNumber () {
@@ -132,10 +139,10 @@ export default {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(post)
       })
-      if (res.status==304)
-        return alert(`${number.value} commited succesfully!`)
-      else
-        return alert('Number commitment failed! Please try again.')
+      // if (res.status==304)
+      //   return alert(`${number.value} commited succesfully!`)
+      // else
+      //   return alert('Number commitment failed! Please try again.')
     }
 
     async function verifyNumber () {
@@ -225,6 +232,8 @@ export default {
     //       arr.push(key);
     //   }
     // }
+
+    const commitPop = ref(false);
     
     const yourNumbers = ref(0);
     function updateYourNumbers () {
@@ -291,7 +300,9 @@ export default {
       getTickets,
       yourROI,
       nNumbers,
-      nPlayers
+      nPlayers,
+      commitPop,
+      verifyNumber
     }
   },
   data() {
@@ -396,16 +407,17 @@ export default {
           <!-- commited numbers -->
           <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
             
-            <lo class="max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
+            <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
 
               <div v-for="x of tickets" :key="x.id" class="py-1" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
                 <div class="hover:font-semib old grid grid-cols-10 gap-3 flex flex-col">
-                  <div class="text-xs col-span-2">{{ x.hour }}</div>
-                  <a class="col-span-1" :href="'https://https://www.google.com/search?q='+x.country" target="_blank">
-                    <div class="text-xs">{{ x.country }}</div>
-                  </a>
+                  <div class="text-xs col-span-2"  :class="markWallet(x.wallet) ? 'text-purple-400 font-bold' : 'text-grey-600'">{{ x.hour }}</div>
+                  
                   <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
                     <div class="text-xs text-left">{{ shortWallet(x.wallet, 4) }}</div>
+                  </a>
+                  <a class="col-span-1" :href="'https://google.com/search?q='+x.country" target="_blank">
+                    <div class="text-xs">{{ x.country }}</div>
                   </a>
                   <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
                     <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
@@ -554,7 +566,7 @@ export default {
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
               <div class="flex justify-center" >
-                <p class="font-bold text-xl mt-2"
+                <p class="font-bold text-xl mt-2 mr-4"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
                 > <span class="text-sm text-gray-400">◎ </span>{{ ` ${323}` }}</p>
               </div>
@@ -562,11 +574,11 @@ export default {
 
             <div class="p-4 text-center">
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
               <div class="flex justify-center" >
-                <p class="font-bold text-xl mt-2"
+                <p class="font-bold text-md pt-2 mt-1"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > <span class="text-sm text-gray-400">◎ </span>{{ ` ${128}` }}</p>
+                > {{ nf.format(9044309).replaceAll(',', ' ') }}</p>
               </div>
             </div>
           </div>
@@ -619,26 +631,39 @@ export default {
 
     </div>
 
+    <PopCommit v-if="commitPop" @click="commitPop = false">
+      <div class="font-semibold flex text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+        Commit 🚀 completed!
+      </div>
+      <div class="rounded-full p-3" @click="dark = !dark" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+        {{ number }}
+      </div>
+      <button class="rounded-full p-3" @click="verifyNumber()" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+      <div class="font-semibold flex text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+        Verify Number</div>
+      </button>
+    </PopCommit>
+
+
   </div>
 </template>
 
 <style scoped>
 
 ::-webkit-scrollbar {
-  width: 10px;
-
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
   background-color: rgba(187, 187, 187, 0);
   border-radius: 0.75rem;
-  margin: 0.1rem;
+  margin: 0.5rem;
   border-left: 1px solid rgba(211, 211, 211, 0);
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 0.75rem;
-  box-shadow: inset 0 0 6px rgba(228, 100, 228, 0.89);
-
+  border-radius: 20px;
+  background:  linear-gradient(30deg, #d31bb47c, #ae0ce08e);
+  box-shadow: inset 0 0 6px #c41bd3, 
 }
 </style>

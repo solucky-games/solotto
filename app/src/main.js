@@ -1,11 +1,13 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import SolanaWallets from 'solana-wallets-vue';
+import unoverlay from 'unoverlay-vue';
 
 // You can either import the default styles or create your own.
 import './styles.css';
 
 import {
+  GlowWalletAdapter,
   PhantomWalletAdapter,
   SlopeWalletAdapter,
   SolflareWalletAdapter,
@@ -20,6 +22,7 @@ const walletOptions = {
     new PhantomWalletAdapter(),
     new SlopeWalletAdapter(),
     new SolflareWalletAdapter({ network: 'devnet' }),
+    new GlowWalletAdapter({ network: 'devnet' }),
     new TorusWalletAdapter(),
     new SolletWalletAdapter({ network: 'devnet' }),
     new SolletExtensionWalletAdapter({ network: 'devnet' }),
@@ -29,6 +32,7 @@ const walletOptions = {
 
 createApp(App)
   .use(SolanaWallets, walletOptions)
+  .use(unoverlay)
   .mount('#app');
 
 
