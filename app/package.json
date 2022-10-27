@@ -27,7 +27,8 @@
     "stream": "^0.0.2",
     "unoverlay-vue": "^0.2.2",
     "vue": "^3.2.40",
-    "vue-countdown": "^1.0.4"
+    "vue-countdown": "^1.0.4",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

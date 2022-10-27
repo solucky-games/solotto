@@ -6,10 +6,11 @@ import { WalletMultiButton, useAnchorWallet, useWallet } from 'solana-wallets-vu
 import CountDown from '@chenfengyuan/vue-countdown';
 import { Buffer } from 'buffer'
 import coinTicker from 'coin-ticker'
-import {sendTicket} from './controller/sendTicket'
+//import {sendTicket} from './controller/sendTicket'
 import {deleteTicket} from './controller/deleteTicket'
 
 import PopCommit from './components/PopCommit.vue'
+
 
 
 
@@ -39,7 +40,7 @@ export default {
   components: {
     WalletMultiButton,
     CountDown,
-    PopCommit
+    PopCommit,
 },
   setup () {
     
@@ -104,6 +105,9 @@ export default {
 
       const signature = await sendTransaction(transaction, connection);
 
+      console.log(signature);
+      
+
       await connection.confirmTransaction(signature, number.value);// processed');
 
       const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
@@ -120,9 +124,9 @@ export default {
       updateYourROI();
     }
 
-    async function verifyNumber() {
-      sendTicket(number.value, flag.value)
-    }
+    // async function verifyNumber() {
+    //   sendTicket(number.value, flag.value)
+    // }
 
     async function postNumber () {
       const now = new Date();
@@ -139,27 +143,31 @@ export default {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(post)
       })
+      console.log(res.status)
       // if (res.status==304)
       //   return alert(`${number.value} commited succesfully!`)
       // else
       //   return alert('Number commitment failed! Please try again.')
     }
 
-    async function verifyNumber () {
-      const post = {  "id": number.value, 
-                      "verified": true
-                    }
-      const res = await fetch(db_url+'tickets/', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(post)
-      });
-      console.log(res);
+    // async function verifyNumber () {
+    //   const post = {  "id": number.value, 
+    //                   "wallet": wallet.value.publicKey.toBase58(), 
+    //                   "country": flag.value,
+    //                   "hour": `${hour} : ${minutes}`,
+    //                   "verified": true
+    //                 }
+    //   const res = await fetch(db_url+'tickets/', {
+    //     method: 'PUT',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(post)
+    //   });
+    //   console.log(res);
       // if (res.status==201)
       //   return cons(`${number.value} verified succesfully!`)
       // else
       //   return alert('Number verfication failed! Please try again.')
-    }
+    //}
 
     async function chechNumber (id) {
       const res = await fetch(db_url+'tickets/'+id)
@@ -302,13 +310,13 @@ export default {
       nNumbers,
       nPlayers,
       commitPop,
-      verifyNumber
     }
   },
   data() {
     return {
       dark: false,
-      commitHover: false
+      commitHover: false,
+      commiting: false,
     }
   }
 }
@@ -354,7 +362,7 @@ export default {
           <div class="flex align-center justify-center">
             <div class="p-4 text-center">
               <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-4">Today's</p>
-              <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Prize</p>
+              <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Pot</p>
 
               <div class="flex ">
                 <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
@@ -408,7 +416,6 @@ export default {
           <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
             
             <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
-
               <div v-for="x of tickets" :key="x.id" class="py-1" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
                 <div class="hover:font-semib old grid grid-cols-10 gap-3 flex flex-col">
                   <div class="text-xs col-span-2"  :class="markWallet(x.wallet) ? 'text-purple-400 font-bold' : 'text-grey-600'">{{ x.hour }}</div>
@@ -428,6 +435,7 @@ export default {
                 </div>
               </div>
             </lo>
+
           </div>
 
           <div class="flex">
@@ -436,7 +444,6 @@ export default {
       </div>
 
       <!-- Centered. -->
-      
 
       <div class="m-auto w-full max-w-md p-2 min-h-full max-h-full h-full">
 
@@ -530,9 +537,18 @@ export default {
           <p class="text-xs font-semibold text-gray-400">Your wallet:</p>
           <p>{{ $wallet.publicKey.value?.toBase58() ?? 'Not connected' }}</p>
           <p class="text-xs font-semibold text-gray-400 mt-4">Master wallet:</p>
-          <p>{{ masterWallet ?? 'Not created' }}</p>
+          <p>{{ masterWallet ?º? 'Not created' }}</p>
         </div> -->
       </div>
+
+      <PopCommit v-if="commiting" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+        <div class="font-semibold flex text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+          Commiting... 🚀
+        </div>
+        <div class="rounded-full p-4" @click="dark = !dark" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+          {{ number }}
+        </div>
+      </PopCommit>
 
       <!-- Right Panel -->
 
@@ -638,7 +654,7 @@ export default {
       <div class="rounded-full p-3" @click="dark = !dark" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
         {{ number }}
       </div>
-      <button class="rounded-full p-3" @click="verifyNumber()" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+      <button class="rounded-full p-3" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
       <div class="font-semibold flex text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
         Verify Number</div>
       </button>
