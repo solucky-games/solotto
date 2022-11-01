@@ -1,36 +1,51 @@
 <template>
-  <header class="sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
+  <header class="sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3"  >
+
     <div class="flex items-center justify-between px-4 py-3 sm:p-0">
-      <div>
+      <!-- Logo -->
+      <!-- <div class="pr-8 mr-8">
         <img class="h-8" src="../assets/logo.png" alt="Workcation">
+      </div> -->
+      <!-- Wallet Connect -->
+      <div class="flex items-center justify-center">
+        <wallet-multi-button :dark="dark"></wallet-multi-button>
+        <div>
+          <p v-if="balance" :class="dark ? 'text-gray-300' : 'text-gray-600'" class="ml-4 pr-4 text-sm font-semibold uppercase" >{{balance}} SOL</p>
+          <p v-if="balance" :class="dark ? 'text-gray-400' : 'text-gray-500'" class="ml-4 pr-4 text-xs font-semibold uppercase" >DevNet</p>
+        </div>
       </div>
+      <!-- Toogle nav -->
       <div class="sm:hidden">
-        <button @click="isOpen = !isOpen" type="button" class="block text-gray-500 hover:text-white focus:text-white focus:outline-none">
-          <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
-            <path v-if="isOpen" fill-rule="evenodd" d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"/>
-            <path v-if="!isOpen" fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
+        <button @click="isOpen = !isOpen" type="button" :class="dark ? 'text-gray-200' : 'text-gray-500'" class="block text-gray-500">
+          <svg v-if="!isOpen" class="h-6 w-6 fill-current" viewBox="0 0 24 24" >
+            <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
+          </svg>
+          <svg v-if="isOpen" class="h-6 w-6 fill-current" viewBox="0 0 24 24" >
+            <path fill-rule="evenodd" d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"/>
           </svg>
         </button>
       </div>
     </div>
+    
     <nav :class="isOpen ? 'block' : 'hidden'" class="px-2 pt-2 pb-4 sm:flex sm:p-0">
-      <!-- Wallet Connect -->
-      <wallet-multi-button></wallet-multi-button>
-      <div class="flex justify-center items-center">
+
+      <div class="flex justify-center items-center rounded-xl ">
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
-            <img :src="twitter_img" class="h-8 w-8"/>
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
+            
+            <img :src="twitter_img" class="h-6 w-6"/>
           </button>
         </a>
         <!-- Discord Button -->
         <a :href="discord_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
-            <img :src="discord_img" class="h-8 w-8"/>
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
+            <img :src="discord_img" class="h-7 w-7"/>
           </button>
         </a>
+
         <!-- Dark Button -->
-        <button class="rounded-full h-8 w-8 m-2 flex justify-center items-center ml-4" @click="dark = !dark" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
+        <button class="rounded-full h-8 w-8 m-2 ml-4 flex justify-center items-center" @click="dark=!dark; darkMode(dark)" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-white' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
           <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
@@ -38,27 +53,57 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
           </svg>
         </button>
-      </div>
-    
+
+      </div>    
     </nav>
+
   </header>
 </template>
 
 <script>
-import { WalletMultiButton } from 'solana-wallets-vue';
+
+
+import { ref, watchEffect } from 'vue'
+import { Connection, clusterApiUrl } from '@solana/web3.js'
+import { WalletMultiButton, useAnchorWallet } from 'solana-wallets-vue'
 
 
 export default {
+  setup() {
+
+    const wallet = useAnchorWallet()
+    
+    const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed')
+
+    const balance = ref();
+
+
+    watchEffect(async () => {
+      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
+      balance.value = Math.floor(bal*100)/100;
+    })
+
+    return {
+      balance
+    }
+
+  },
   data() {
     return {
       isOpen: false,
-      dark: true,
+      dark: false,
       twitter_img: require("../assets/ico/twitter.svg"),
       twitter_gif: require("../assets/ico/twitter.gif"),
       twitter_url: process.env.VUE_APP_TWITTER_URL,
       discord_img: require("../assets/ico/discord.png"),
       discord_gif: require("../assets/ico/discord.gif"),
       discord_url: process.env.VUE_APP_TWITTER_URL
+    }
+  },
+  methods:{
+    darkMode(dark)
+    {
+      this.$emit('dark', dark)
     }
   },
   components: {
