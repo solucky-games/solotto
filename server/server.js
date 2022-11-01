@@ -1,13 +1,20 @@
-// require the express moule
+
+require('dotenv').config();
+
 const express = require('express');
-// create a new express application
-const app = express();
-// require the http module
+const app = new express()
+
 const http = require('http').Server(app);
-// require the socket.io module
 const io = require('socket.io');
-// create an event listener
 const socket = io(http);
+
+const router = require("./db/router");
+const cors = require('cors')
+
+app.use(cors());
+app.use(router);
+
+
 
 // to listen to messages
 socket.on('connection', (socket) => {
@@ -62,5 +69,5 @@ http.listen(PORT, () => {
 });
 
 // database connection
-const  Ticket  = require("./models/Ticket");
-const  connect  = require("./db/dbconnect");
+const  Ticket  = require("./db/models/Ticket");
+const  connect  = require("./dbconnect");

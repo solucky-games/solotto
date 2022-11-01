@@ -1,33 +1,52 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import SolanaWallets from 'solana-wallets-vue';
 import unoverlay from 'unoverlay-vue';
-
-// You can either import the default styles or create your own.
+import SolanaWallets from 'solana-wallets-vue';
 import './styles.css';
 
 import {
-  GlowWalletAdapter,
   PhantomWalletAdapter,
   SlopeWalletAdapter,
+  CoinbaseWalletAdapter,
+  BraveWalletAdapter,
+  TrustWalletAdapter,
+  HyperPayWalletAdapter,
   SolflareWalletAdapter,
+  GlowWalletAdapter,
   SolletExtensionWalletAdapter,
   SolletWalletAdapter,
   TorusWalletAdapter,
+  ExodusWalletAdapter,
+  Coin98WalletAdapter,
+  SolongWalletAdapter,
+  StrikeWalletAdapter,
+  WalletConnectWalletAdapter,
+  MathWalletAdapter,
+  LedgerWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-
 
 const walletOptions = {
   wallets: [
     new PhantomWalletAdapter(),
     new SlopeWalletAdapter(),
-    new SolflareWalletAdapter({ network: 'devnet' }),
-    new GlowWalletAdapter({ network: 'devnet' }),
+    new CoinbaseWalletAdapter(),
+    new BraveWalletAdapter(),
+    new TrustWalletAdapter(),
+    new HyperPayWalletAdapter(),
+    new SolflareWalletAdapter(),
+    new GlowWalletAdapter(),
+    new SolletWalletAdapter(),
+    new SolletExtensionWalletAdapter(),
     new TorusWalletAdapter(),
-    new SolletWalletAdapter({ network: 'devnet' }),
-    new SolletExtensionWalletAdapter({ network: 'devnet' }),
+    new ExodusWalletAdapter(),
+    new Coin98WalletAdapter(),
+    new SolongWalletAdapter(),
+    new StrikeWalletAdapter(),
+    new WalletConnectWalletAdapter({ network: 'devnet'}),
+    new MathWalletAdapter(),
+    new LedgerWalletAdapter()
   ],
-  autoConnect: true,
+  autoConnect: true
 }
 
 createApp(App)

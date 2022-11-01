@@ -1,15 +1,19 @@
 <script>
+import CountDown from './components/CountDown.vue';
 
 import { ref, watchEffect } from 'vue'
 import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
 import { WalletMultiButton, useAnchorWallet, useWallet } from 'solana-wallets-vue'
-import CountDown from '@chenfengyuan/vue-countdown';
+
 import { Buffer } from 'buffer'
 import coinTicker from 'coin-ticker'
 //import {sendTicket} from './controller/sendTicket'
 import {deleteTicket} from './controller/deleteTicket'
 
-import PopCommit from './components/PopCommit.vue'
+import PopCommit from './components/modals/PopCommit.vue'
+
+import TodaysPot from './components/TodaysPot.vue';
+
 
 
 
@@ -41,7 +45,8 @@ export default {
     WalletMultiButton,
     CountDown,
     PopCommit,
-},
+    TodaysPot
+  },
   setup () {
     
     const wallet = useAnchorWallet()
@@ -69,12 +74,12 @@ export default {
     const flag = ref('');
     fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
     .then(function (response) {
-        return response.json();
+      return response.json();
     })
     .then(function (payload) {
-        console.log(payload);
-        flag.value = payload.location.country.flag.emoji
-        location.value =  payload.location.city;
+      console.log(payload);
+      flag.value = payload.location.country.flag.emoji
+      location.value =  payload.location.city;
     });
 
     const { sendTransaction } = useWallet();
@@ -360,35 +365,7 @@ export default {
         <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">          
           
           <div class="flex align-center justify-center">
-            <div class="p-4 text-center">
-              <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-4">Today's</p>
-              <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Pot</p>
-
-              <div class="flex ">
-                <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-                  <p class="font-bold text-2xl mt-3 mr-1"
-                  >◎ </p>
-                  <p class="font-bold text-4xl mt-2"
-                  > {{prize}}</p>
-                </div>
-
-                <div class=" text-4xl mt-2 mr-4 text-gray-400">/</div>
-
-                <div class="flex justify-center pt-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-                  <p class="font-bold text-2xl mr-1"
-                  >$ </p>
-                  <p class="font-bold text-2xl"
-                  > {{ dollarPrize() }}</p>
-                </div>
-              </div>
-
-              <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1"  :class="dark ? 'text-gray-200' : 'text-gray-800'">
-                <CountDown class="text-xl" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-                  {{ hours }} h {{ minutes }} m {{ seconds }} s
-                </CountDown>
-              </div>
-    
-            </div>
+            <TodaysPot/>
           </div>
           <div class="flex align-center justify-center">
             <div class="p-2 mr-1 text-center">
