@@ -1,5 +1,3 @@
-
-
 <template>
   <header class="sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
     <div class="flex items-center justify-between px-4 py-3 sm:p-0">
@@ -14,23 +12,24 @@
           </svg>
         </button>
       </div>
-      
     </div>
     <nav :class="isOpen ? 'block' : 'hidden'" class="px-2 pt-2 pb-4 sm:flex sm:p-0">
+      <!-- Wallet Connect -->
+      <wallet-multi-button></wallet-multi-button>
       <div class="flex justify-center items-center">
-        <!-- Twitter Button. -->
+        <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/twitter.svg')">
-            <img :src="twitter_img" class="h-7 w-7"/>
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
+            <img :src="twitter_img" class="h-8 w-8"/>
           </button>
         </a>
-        <!-- Discord Button. -->
+        <!-- Discord Button -->
         <a :href="discord_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/discord.png')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
             <img :src="discord_img" class="h-8 w-8"/>
           </button>
         </a>
-        <!-- Dark Button. -->
+        <!-- Dark Button -->
         <button class="rounded-full h-8 w-8 m-2 flex justify-center items-center ml-4" @click="dark = !dark" :class="dark ? 'bg-white/10 hover:bg-white/20 text-gray-200' : 'bg-black/10 hover:bg-black/20 text-gray-600'">
           <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -46,6 +45,7 @@
 </template>
 
 <script>
+import { WalletMultiButton } from 'solana-wallets-vue';
 
 
 export default {
@@ -53,13 +53,16 @@ export default {
     return {
       isOpen: false,
       dark: true,
-      twitter_img: require("../assets/twitter.svg"),
-      twitter_gif: require("../assets/twitter.gif"),
+      twitter_img: require("../assets/ico/twitter.svg"),
+      twitter_gif: require("../assets/ico/twitter.gif"),
       twitter_url: process.env.VUE_APP_TWITTER_URL,
-      discord_img: require("../assets/discord.png"),
-      discord_gif: require("../assets/discord.gif"),
+      discord_img: require("../assets/ico/discord.png"),
+      discord_gif: require("../assets/ico/discord.gif"),
       discord_url: process.env.VUE_APP_TWITTER_URL
     }
   },
+  components: {
+    WalletMultiButton
+  }
 }
 </script>
