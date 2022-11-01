@@ -1,7 +1,7 @@
 <template>
       <!-- Left Panel. -->
 
-      <div class="m-auto w-full max-w-md p-4 min-h-full max-h-full h-full">
+    <div class="m-auto w-full max-w-md p-4">
 
       <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">          
         
@@ -15,7 +15,7 @@
                 <p class="font-bold text-2xl mt-3 mr-1"
                 >◎ </p>
                 <p class="font-bold text-4xl mt-2"
-                > {{prize}}</p>
+                > {{ potSOL }}</p>
               </div>
 
               <div class=" text-4xl mt-2 mr-4 text-gray-400">/</div>
@@ -24,14 +24,12 @@
                 <p class="font-bold text-2xl mr-1"
                 >$ </p>
                 <p class="font-bold text-2xl"
-                > {{ dollarPrize() }}</p>
+                > {{ potUSD }}</p>
               </div>
             </div>
 
-            <div class="text-center uppercase text-xl tracking-widest font-semibold justify-center p-1"  :class="dark ? 'text-gray-200' : 'text-gray-800'">
-              <CountDown class="text-xl" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-                {{ hours }} h {{ minutes }} m {{ seconds }} s
-              </CountDown>
+            <div class="mt-4 pl-2">
+              <CountDown class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="dark ? 'text-gray-200' : 'text-gray-800'"/>
             </div>
   
           </div>
@@ -84,27 +82,40 @@
 
         </div>
 
-        <div class="flex">
-          <div class="text-xl"></div>
-        </div>
     </div>
 </template>
 
 <script>
-import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js';
-
+import { ref, watchEffect } from 'vue';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import coinTicker from 'coin-ticker';
 import CountDown from './CountDown.vue';
+import { shortWallet } from './utils';
 
-const preflightCommitment = 'processed'
-
-const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
 
 export default ({
   components: {
     CountDown
   },
+  methods: {
+    shortWallet
+  },
   setup() {
-    const connection = new Connection(clusterApiUrl(cluster), preflightCommitment);
+    const connection = new Connection(clusterApiUrl(process.env.VUE_APP_CLUSTER), 'processed');
+    const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
+    const nf = Intl.NumberFormat();
+
+    const potSOL = ref(0);
+    const potUSD = ref(0);
+    
+    watchEffect(async () => {
+      potSOL.value = await connection.getBalance(masterPubKey)/1000000000;
+      potSOL.value = Math.floor(potSOL.value*100)/100;
+      console.log('SOLUSD exchange: ',process.env.VUE_APP_EXCHANGE)
+      coinTicker(process.env.VUE_APP_EXCHANGE, 'SOL_USD').then( (price) => { 
+        potUSD.value = nf.format(potSOL.value*price.last).split('.')[0];
+      });
+    });
 
     async function getTickets () {
       const res = await fetch(process.env.APP_VUE_DB_URL+'/tickets/')
@@ -114,6 +125,7 @@ export default ({
     const tickets = ref([]);
     const nNumbers = ref(0);
     const nPlayers = ref(0);
+
     watchEffect(async () => {
       tickets.value = await getTickets()
       console.log(tickets.value)
@@ -126,10 +138,13 @@ export default ({
       nPlayers.value = uniqueWallets.length;
     });
 
-    function shortWallet (addrs, n) {
-      return addrs.slice(0, n)+'...'+addrs.slice(-n)
+    return {
+      potSOL,
+      potUSD,
+      tickets,
+      nNumbers,
+      nPlayers
     }
-
     
   },
 })

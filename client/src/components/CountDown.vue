@@ -1,12 +1,11 @@
 <template>
   <CountDown :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-    {{ hours }} h {{ minutes }} m {{ seconds }} s
+    {{ hours }}h {{ minutes }}m {{ seconds }}s
   </CountDown>
 </template>
 
 <script>
   import CountDown from '@chenfengyuan/vue-countdown';
-
   function getTime() {
     let tomorrow = new Date();
     tomorrow.setDate(tomorrow.getUTCDate() + 1);
@@ -18,7 +17,6 @@
     return expires.getTime()-now;
   }
   const time = getTime();
-
   export default ({ 
     components: {
       CountDown

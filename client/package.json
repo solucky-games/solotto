@@ -8,10 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@chenfengyuan/vue-countdown": "^2.1.0",
     "@solana/wallet-adapter-wallets": "^0.19.5",
     "@toruslabs/eccrypto": "^1.1.8",
     "autoprefixer": "^10",
     "cipher-base": "^1.0.4",
+    "coin-ticker": "^3.2.0",
     "core-js": "^3.8.3",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "postcss": "^8",
