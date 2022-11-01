@@ -28,8 +28,8 @@
               </div>
             </div>
 
-            <div class="mt-4 pl-2">
-              <CountDown class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="dark ? 'text-gray-200' : 'text-gray-800'"/>
+            <div class="mt-2 pl-2">
+              <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="dark ? 'text-gray-200' : 'text-gray-800'"/>
             </div>
   
           </div>

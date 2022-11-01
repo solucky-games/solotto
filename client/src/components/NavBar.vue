@@ -9,9 +9,9 @@
       <!-- Wallet Connect -->
       <div class="flex items-center justify-center">
         <wallet-multi-button :dark="dark"></wallet-multi-button>
-        <div>
-          <p v-if="balance" :class="dark ? 'text-gray-300' : 'text-gray-600'" class="ml-4 pr-4 text-sm font-semibold uppercase" >{{balance}} SOL</p>
-          <p v-if="balance" :class="dark ? 'text-gray-400' : 'text-gray-500'" class="ml-4 pr-4 text-xs font-semibold uppercase" >DevNet</p>
+        <div class="">
+          <p v-if="balance" class="ml-4 pr-4 text-sm font-semibold uppercase text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >{{balance}} SOL</p>
+          <p v-if="balance" class="ml-4 pr-4 text-xs font-semibold uppercase text-gray-400" >DevNet</p>
         </div>
       </div>
       <!-- Toogle nav -->
@@ -32,20 +32,20 @@
       <div class="flex justify-center items-center rounded-xl ">
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-black/10 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
             
             <img :src="twitter_img" class="h-6 w-6"/>
           </button>
         </a>
         <!-- Discord Button -->
         <a :href="discord_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-black/10 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
             <img :src="discord_img" class="h-7 w-7"/>
           </button>
         </a>
 
         <!-- Dark Button -->
-        <button class="rounded-full h-8 w-8 m-2 ml-4 flex justify-center items-center shadow-xl border " @click="dark=!dark; darkMode(dark)" :class="dark ? 'bg-white/10 border-white/20 hover:bg-gray-600 text-white' : 'bg-white hover:bg-black/20 border-gray-200 text-gray-600'">
+        <button class="rounded-full h-8 w-8 m-2 ml-4 flex justify-center items-center shadow-xl border " @click="dark=!dark; darkMode(dark)" :class="dark ? 'bg-white/10 border-white/20 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-200 border-gray-100 text-gray-600'">
           <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
@@ -70,11 +70,8 @@ export default {
   setup() {
 
     const wallet = useAnchorWallet()
-    
     const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed')
-
     const balance = ref();
-
 
     watchEffect(async () => {
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;

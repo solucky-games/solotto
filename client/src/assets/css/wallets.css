@@ -2,7 +2,7 @@
 
 :root {
     /* Buttons. */
-    --swv-button-background-color: rgb(154, 45, 243);
+    --swv-button-background-color: transparent;
     --swv-button-text-color: white;
     --swv-button-outline-color: rgba(130, 34, 209, 0.938);
     --swv-button-hover-background-color: rgba(161, 38, 209, 0.945);
@@ -34,6 +34,9 @@
     --swv-modal-radius: 10px;
     --swv-dropdown-radius: 10px;
     --swv-dropdown-item-radius: 6px;
+
+    /* Border */
+    --swv-button-border: rgba(255, 255, 255, 0.3);
 }
 
 .swv-dark {
@@ -54,11 +57,14 @@
     --swv-dropdown-text-color: white;
 
     /* Shadows. */
-    --swm-modal-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6);
+    --sw-modal-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6);
+
+    /* Border */
+    --swv-button-border: rgba(0, 0, 0, 0.3);
 }
 
 .swv-button {
-    background-color: transparent;
+    background: linear-gradient(90deg, #c084fc, #db2777);
     border: none;
     color: var(--swv-button-text-color);
     cursor: pointer;
@@ -71,6 +77,8 @@
     line-height: 48px;
     padding: 0 24px;
     border-radius: var(--swv-button-radius);
+    border: 1px solid var(--swv-button-border);
+
 }
 
 .swv-button > * + * {
