@@ -1,8 +1,12 @@
+# Enverimont files
 .env
+.env.local
+.env.production
 
 .DS_Store
 package-lock.json
 
+# Videos
 *.mp4
 
 # Logs
