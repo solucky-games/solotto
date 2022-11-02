@@ -1,5 +1,5 @@
 <template>
-      <!-- Left Panel. -->
+      <!-- Pot Panel. -->
 
     <div class="m-auto w-full max-w-md p-4">
 

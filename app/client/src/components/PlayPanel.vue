@@ -1,10 +1,10 @@
 <template>
-  <!-- Centered. -->
+  <!-- Play Panel. -->
 
   <div class="m-auto w-full max-w-md p-2">
 
     <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-800' : 'bg-white'">
-
+      <!-- Title Box -->
       <div class="px-4 text-center mt-8">
         <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
         <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Number</p>
@@ -15,9 +15,7 @@
               <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{prize}}<span  class="font-bold text-xl mt-4">SOL</span></div>
               <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
             </div>
-          <CountDown class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :time=time :transform="transformSlotProps" v-slot="{ hours, minutes, seconds }">
-            {{ hours }} h {{ minutes }} m {{ seconds }} s
-          </CountDown>
+          <CountDown class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"/>
         </div>
 
         <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl pt-4">
@@ -101,11 +99,10 @@ import { useAnchorWallet, useWallet } from 'solana-wallets-vue'
 
 import coinTicker from 'coin-ticker'
 //import {sendTicket} from './controller/sendTicket'
-import {deleteTicket} from './controller/deleteTicket'
+import {deleteTicket} from '../services/deleteTicket'
 
-import PopCommit from './components/modals/PopCommit.vue'
 
-import TodaysPot from './components/TodaysPot.vue';
+
 
 // @ts-ignore
 window.Buffer = Buffer;
@@ -122,8 +119,8 @@ const db_url = 'http://localhost:5000/'
 export default {
   components: [
     CountDown,
-    PopCommit,
-    TodaysPot
+    // PopCommit,
+    // TodaysPot,
   ],
   setup () {
 
