@@ -1,22 +1,29 @@
 <template>
   <!-- Play Panel. -->
 
-  <div class="m-auto w-full max-w-md p-2">
+  <div class="m-auto w-full max-w-md p-4">
 
-    <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-800' : 'bg-white'">
+    <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="this.dark ? 'bg-gray-800' : 'bg-white'">
       <!-- Title Box -->
       <div class="px-4 text-center mt-8">
         <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
         <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Number</p>
 
         <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
-            <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
-              <div class="uppercase text-xl text-gray-400 font-semibold m-4">Win</div>
-              <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{prize}}<span  class="font-bold text-xl mt-4">SOL</span></div>
-              <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
-            </div>
-          <CountDown class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"/>
+          <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+            <div class="uppercase text-xl text-gray-400 font-semibold m-4">Win</div>
+            <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{prize}}<span  class="font-bold text-xl mt-4">SOL</span></div>
+            <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
+          </div>
+          <div class="mt-2 pl-2">
+            <CountDown :_date="false" class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"/>
+          </div>
         </div>
+
+        <div class="mt-2 pl-2">
+          <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="dark ? 'text-gray-200' : 'text-gray-800'"/>
+        </div>
+
 
         <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl pt-4">
           <div class="flex align-center justify-center mb-4">
@@ -27,7 +34,7 @@
               <div class="flex justify-center" >
                 <p class="lowercase font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `x${yourNumbers}`}}</p>
+                > {{ `x${12}`}}</p>
               </div>
             </div>
 
@@ -37,7 +44,7 @@
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${yourProbability}%`}}</p>
+                > {{ `${8.25}%`}}</p>
               </div>
             </div>
 
@@ -47,7 +54,7 @@
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${nf.format(yourROI)}%`}}</p>
+                > {{ `${nf.format(10000)}%`}}</p>
               </div>
             </div>
           </div>
@@ -87,7 +94,7 @@
     </div>
   </div>
 
-</template>
+</template>dark
 
 <script>
 
@@ -105,7 +112,7 @@ import {deleteTicket} from '../services/deleteTicket'
 
 
 // @ts-ignore
-window.Buffer = Buffer;
+// window.Buffer = Buffer;
 
 //const programID = new PublicKey(idl.metadata.address)
 const preflightCommitment = 'processed'
@@ -117,6 +124,7 @@ const maxNumber = 1000000000;
 const db_url = 'http://localhost:5000/'
 
 export default {
+  props: ['dark'],
   components: [
     CountDown,
     // PopCommit,
@@ -390,7 +398,6 @@ export default {
   },
   data() {
     return {
-      dark: false,
       commitHover: false,
       commiting: false,
     }
