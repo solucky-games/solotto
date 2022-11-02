@@ -4,6 +4,7 @@
     <NavBar @dark="darkMode($event)" :dark="dark"/>
 
     <PotPanel :dark="dark"/>
+    <PlayPanel :dark="dark"/>
 
   </div>
 </div>
@@ -12,12 +13,14 @@
 <script>
 import NavBar from './components/NavBar.vue';
 import PotPanel from './components/PotPanel.vue';
+import PlayPanel from './components/PlayPanel.vue';
 
 export default {
   name: 'App',
   components: {
     NavBar,
-    PotPanel
+    PotPanel,
+    PlayPanel
   },
   data() {
     return {
