@@ -17,9 +17,10 @@
   const year = tomorrow.getUTCFullYear();
   const month = tomorrow.getUTCMonth();
   const day = tomorrow.getUTCDate();
+  const dd = String(day).length == 1 ? '0'+String(day) : String(day)
   const expires = new Date(Date.UTC(year, month, day));
   const now = new Date().getTime();
-  const date = `${year}-${month}-${day}`;
+  const date = `${year}-${month}-${dd}`;
   const time = expires.getTime()-now; 
 
   export default ({
