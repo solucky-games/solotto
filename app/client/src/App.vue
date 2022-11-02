@@ -6,6 +6,7 @@
     <div class="flex flex-wrap top-24 left-0 right-0" :class="dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <PotPanel :dark="this.dark"/>
       <PlayPanel :dark="this.dark"/>
+      <HistoryPanel :dark="this.dark"/>
     </div>
 
   </div>
@@ -16,13 +17,15 @@
 import NavBar from './components/NavBar.vue';
 import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
+import HistoryPanel from './components/HistoryPanel.vue';
 
 export default {
   name: 'App',
   components: {
     NavBar,
     PotPanel,
-    PlayPanel
+    PlayPanel,
+    HistoryPanel,
   },
   data() {
     return {

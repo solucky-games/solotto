@@ -48,41 +48,11 @@
         </div>
       </div>
 
-      <!-- <div class="flex align-center justify-center">
-        <div class="p-2 text-center">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Highest</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
-          <div class="flex justify-center" >
-            <p class="font-bold text-md mt-2"
-              :class="dark ? 'text-gray-300' : 'text-gray-600'"
-            > {{ `${nf.format('78439834').replaceAll(',', ' ')}`}}</p>
-          </div>
-        </div>
-        <div class="p-2 text-center mr-4 ml-4">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
-          <div class="flex justify-center" >
-            <p class="font-bold text-md mt-2"
-              :class="dark ? 'text-gray-300' : 'text-gray-600'"
-            > {{ `${nf.format('332983').replaceAll(',', ' ')}`}}</p>
-          </div>
-        </div>
-        <div class="p-2 text-center">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Lowest</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
-          <div class="flex justify-center" >
-            <p class="font-bold text-md mt-2"
-              :class="dark ? 'text-gray-300' : 'text-gray-600'"
-            > {{ `${nf.format('46373').replaceAll(',', ' ')}`}}</p>
-          </div>
-        </div>
-      </div> -->
-
       <div class="uppercase text-xs mb-4 mt-4 tracking-widest text-gray-400 font-semibold">Historical winners</div>
 
       <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-text-gray-200'">
         <div v-for="x of winners" :key="x.id" >
-          <div class="hover:font-semibold grid grid-cols-12 flex justify-center align-center align-middle"  :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
+          <div class="hover:font-semibold grid grid-cols-12 justify-center align-center align-middle"  :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
             <div class="text-xs text.left   col-span-3">{{ x.date }}</div>
             <div class="text-xs text-right col-span-2 font-semibold flex text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"><div class="text-xs mb-3 pl-1 pr-1"> ◎ </div>{{ x.prize }}</div>
             <div class="text-xs text-left col-span-3">{{ shortWallet(x.wallet, 4) }}</div>
@@ -94,5 +64,32 @@
     </div>
   </div>
 
-</div>
 </template>
+
+<script>
+import { ref, watchEffect } from 'vue';
+
+const nf = Intl.NumberFormat();
+
+export default {
+  props: ['dark'],
+  setup () {
+
+    async function getWinners () {
+      const res = await fetch(process.env.VUE_APP_DB_WINNERS_URL+'winners')
+      const data = await res.json()
+      return data;
+    }
+
+    const winners = ref({});
+    watchEffect(async () => {
+      winners.value = await getWinners()
+    });
+
+    return { 
+      winners,
+      nf
+    }
+  }
+}
+</script>
