@@ -1,9 +1,9 @@
 <template>
   <div>
   <div class="h-screen w-screen m-0 -mb-12" :class="this.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-    <NavBar @dark="darkMode($event)"/>
+    <NavBar @dark="darkMode($event)" :dark="dark"/>
 
-    <PotPanel />
+    <PotPanel :dark="dark"/>
 
   </div>
 </div>

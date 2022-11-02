@@ -68,25 +68,20 @@ import { WalletMultiButton, useAnchorWallet } from 'solana-wallets-vue'
 
 export default {
   setup() {
-
     const wallet = useAnchorWallet()
     const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed')
     const balance = ref();
-
     watchEffect(async () => {
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
     })
-
     return {
       balance
     }
-
   },
   data() {
     return {
       isOpen: false,
-      dark: false,
       twitter_img: require("../assets/ico/twitter.svg"),
       twitter_gif: require("../assets/ico/twitter.gif"),
       twitter_url: process.env.VUE_APP_TWITTER_URL,

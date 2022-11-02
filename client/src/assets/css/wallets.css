@@ -33,7 +33,7 @@
     --swv-button-radius: 6px;
     --swv-modal-radius: 10px;
     --swv-dropdown-radius: 10px;
-    --swv-dropdown-item-radius: 6px;
+    --swv-dropdown-item-radius: 24px;
 
     /* Border */
     --swv-button-border: rgba(255, 255, 255, 0.3);
@@ -78,7 +78,6 @@
     padding: 0 24px;
     border-radius: var(--swv-button-radius);
     border: 1px solid var(--swv-button-border);
-
 }
 
 .swv-button > * + * {
@@ -136,12 +135,14 @@
     visibility: hidden;
     transition: opacity 200ms ease, transform 200ms ease, visibility 200ms;
     font-family: 'DM Sans', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    border-radius: var(--swv-button-radius);
 }
 
 .swv-dropdown-list-active {
     opacity: 1;
     visibility: visible;
     transform: translateY(10px);
+    border-radius: 24px;
 }
 
 .swv-dropdown-list-item {
@@ -210,7 +211,7 @@
     position: absolute;
     top: 18px;
     right: 18px;
-    padding: 12px;
+    padding: 6px;
     cursor: pointer;
     background: var(--swv-modal-close-button-background-color);
     color: var(--swv-modal-close-button-text-color);
@@ -274,6 +275,7 @@
 .swv-modal-wrapper .swv-button {
     width: 100%;
     color: var(--swv-modal-button-text-color);
+    background: transparent;
 }
 
 .swv-modal-wrapper .swv-button:not([disabled]):hover {
@@ -300,18 +302,19 @@
 }
 
 .swv-modal-list {
-    margin: 0 0 12px 0;
+    margin: 0;
     padding: 0;
     width: 100%;
     list-style: none;
 }
 
 .swv-modal-list .swv-button {
-    font-weight: 400;
+    font-weight: 600;
     border-radius: 0;
     font-size: 16px;
     text-align: left;
-    justify-content: space-between;
+    justify-content: center;
+    font-size: 14px;
 }
 
 .swv-modal-list .swv-button-icon,
