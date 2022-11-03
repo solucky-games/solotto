@@ -3,7 +3,7 @@
 
     <div class="m-auto w-full max-w-md p-4">
 
-      <div class="p-4 text-gray-600 bg-white rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">          
+      <div class="p-4 text-gray-600 rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">          
         
         <div class="flex align-center justify-center">
           <div class="p-4 text-center">

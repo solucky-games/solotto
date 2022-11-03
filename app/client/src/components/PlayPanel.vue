@@ -12,7 +12,7 @@
         <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
           <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
             <div class="uppercase text-xl text-gray-400 font-semibold m-4">Win</div>
-            <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{prize}}<span  class="font-bold text-xl mt-4">SOL</span></div>
+            <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{potSOL}}<span  class="font-bold text-xl mt-4">SOL</span></div>
             <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
           </div>
           <div class="mt-2 pl-2">
@@ -44,7 +44,7 @@
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${8.25}%`}}</p>
+                > {{ `${yourProbability}%`}}</p>
               </div>
             </div>
 
@@ -104,17 +104,13 @@ import { ref, watchEffect } from 'vue'
 import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
 import { useAnchorWallet, useWallet } from 'solana-wallets-vue'
 
-import coinTicker from 'coin-ticker'
 //import {sendTicket} from './controller/sendTicket'
-import {deleteTicket} from '../services/deleteTicket'
-
-
-
-
+//import {deleteTicket} from '../services/deleteTicket'
 // @ts-ignore
 // window.Buffer = Buffer;
 
 //const programID = new PublicKey(idl.metadata.address)
+
 const preflightCommitment = 'processed'
 
 const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
@@ -132,47 +128,59 @@ export default {
   ],
   setup () {
 
+    // Get current pot
+    const potSOL = ref(0);
+    const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
+    watchEffect(async () => {
+      potSOL.value = await connection.getBalance(masterPubKey)/1000000000 * process.env.VUE_APP_COMISSION;
+      potSOL.value = Math.floor(potSOL.value);
+    });
+
+    async function getTickets () {
+      const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
+      const data = await res.json();
+      return data
+    }
+    const tickets = ref([]);
+    watchEffect(async () => {
+      tickets.value = await getTickets()
+    });
+    
+
+    // User wallet
     const wallet = useAnchorWallet();
     const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed');
-    //const provider = computed(() => new AnchorProvider(connection, wallet.value, { preflightCommitment }))
-    //const program = computed(() => new Program(idl, programID, provider.value))
-
-    const prize = ref(0);
-    const SOL_USD = ref();
-    const balance = ref();
-
+    const userBalance = ref();
     watchEffect(async () => {
-      const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
-      prize.value = Math.floor(pri*100)/100;
-      coinTicker('bitstamp', 'SOL_USD').then((tick) => { SOL_USD.value = tick.last })
+      const balance = await connection.getBalance(wallet.value.publicKey)/1000000000;
+      userBalance.value = Math.floor(balance*100)/100;
     })
 
-    watchEffect(async () => {
-      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
-      balance.value = Math.floor(bal*100)/100;
-    })
-
-    const location = ref()
+    // User location
     const flag = ref('');
+    const country = ref('');
+    const city = ref('');
     fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
     .then(function (response) {
       return response.json();
     })
     .then(function (payload) {
       console.log(payload);
-      flag.value = payload.location.country.flag.emoji
-      location.value =  payload.location.city;
+      flag.value = payload.location.country.flag.emoji;
+      country.value =  payload.location.country.code;
+      city.value =  payload.city.country;
     });
 
-    const { sendTransaction } = useWallet();
-
+    
     async function commitNumber () {
+
+      const { sendTransaction } = useWallet();
 
       if (! wallet.value) {
         return alert('Connect your wallet first!')
       } 
 
-      if ( tickets.value[number.value] && chechNumber(number.value) )
+      if ( tickets.value[number.value] && checkNumber(number.value) )
         return alert('This number is already commited! Try another one.')
 
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
@@ -191,19 +199,12 @@ export default {
       )
 
       const signature = await sendTransaction(transaction, connection);
-
       console.log(signature);
       
-
       await connection.confirmTransaction(signature, number.value);// processed');
-
-      const pri = await connection.getBalance(new PublicKey(masterWallet))/1000000000;
-      prize.value = Math.floor(pri);
-
-      await postNumber();
+      await postTicket(false);
 
       commitPop.value = true;
-
       tickets.value = await getTickets();
 
       updateYourNumbers();
@@ -211,55 +212,43 @@ export default {
       updateYourROI();
     }
 
-    // async function verifyNumber() {
-    //   sendTicket(number.value, flag.value)
-    // }
-
-    async function postNumber () {
-      const now = new Date();
-      let hour = now.getUTCHours();
-      let minutes = now.getMinutes();
-      const post = {  "id": number.value, 
-                      "wallet": wallet.value.publicKey.toBase58(), 
-                      "country": flag.value,
-                      "hour": `${hour} : ${minutes}`,
-                      "verified": false
-                    }
-      const res = await fetch(db_url+'tickets/', {
+    async function postTicket(verify) {
+      const date = new Date();
+      const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours())
+      const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes())
+      const ticket = {
+        date: date.getUTCDate(),
+        hour: `${hour}:${minutes}`,
+        wallet: wallet.value.publicKey.toBase58(),
+        number: number.value,
+        verified: verify,
+        country: country.value,
+        flag: flag.value,
+        twitter: ''
+      };
+      const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(post)
-      })
-      console.log(res.status)
-      // if (res.status==304)
-      //   return alert(`${number.value} commited succesfully!`)
-      // else
-      //   return alert('Number commitment failed! Please try again.')
+        body: JSON.stringify(ticket)
+      };
+      console.log(ticket);
+      const server_url = process.env.VUE_APP_DB_TICKETS_URL;
+      const response = await fetch(server_url, requestOptions); 
+      const res = await response.json();
+      console.log(res)
+
     }
 
-    // async function verifyNumber () {
-    //   const post = {  "id": number.value, 
-    //                   "wallet": wallet.value.publicKey.toBase58(), 
-    //                   "country": flag.value,
-    //                   "hour": `${hour} : ${minutes}`,
-    //                   "verified": true
-    //                 }
-    //   const res = await fetch(db_url+'tickets/', {
-    //     method: 'PUT',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(post)
-    //   });
-    //   console.log(res);
-      // if (res.status==201)
-      //   return cons(`${number.value} verified succesfully!`)
-      // else
-      //   return alert('Number verfication failed! Please try again.')
-    //}
 
-    async function chechNumber (id) {
-      const res = await fetch(process.env.APP_+'tickets/'+id)
-      if (res.status==200) 
-        return false
+
+    // async function verifyNumber() {
+    //   sendTicket(number.value, flag.value)
+  
+    async function checkNumber (num) {
+      for (const ticket in tickets.value) {
+        if (ticket.number == num)
+          return false
+      }
       return true
     }
 
@@ -296,16 +285,9 @@ export default {
       winners.value = await getWinners()
     });
 
-    async function getTickets () {
-      const res = await fetch(db_url+'tickets')
-      const data = await res.json()
-      return data
-    }
-    const tickets = ref([]);
     const nNumbers = ref(0);
     const nPlayers = ref(0);
     watchEffect(async () => {
-      tickets.value = await getTickets()
       console.log(tickets.value)
       const uniqueWallets = [];
       for (const ticket of tickets) {
@@ -320,16 +302,10 @@ export default {
       return addrs.slice(0, n)+'...'+addrs.slice(-n)
     }
 
-    // const players = ref(0);
-    // function countPlayers () {
-    //   for ( const [key, value] of Object.entries(tickets.value)) {
-    //     if (value === address)
-    //       arr.push(key);
-    //   }
-    // }
-
     const commitPop = ref(false);
     
+
+
     const yourNumbers = ref(0);
     function updateYourNumbers () {
       const address = wallet.value.publicKey.toBase58();
@@ -340,17 +316,14 @@ export default {
       }
       yourNumbers.value = arr.length;
     }
-
     const yourProbability = ref(0);
     function updateYourProbability () {
       yourProbability.value = Math.floor((yourNumbers.value/tickets.value.length)*10000)/100;
     }
-
     const yourROI = ref(0);
     function updateYourROI () {
-      yourROI.value = Math.floor((prize.value/yourNumbers.value-1)*10000)/100;
+      yourROI.value = Math.floor((potSOL.value/yourNumbers.value-1)*10000)/100;
     }
-
     watchEffect(async () => {
       updateYourNumbers();
       updateYourProbability();
@@ -361,18 +334,9 @@ export default {
       if( wallet.value.publicKey.toBase58() == address ) 
         return 'font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600';
     }
-
-    function dollarPrize () {
-      const ret = nf.format(prize.value*SOL_USD.value).split('.')[0];
-      if ( !ret )
-        dollarPrize();
-      else return ret;
-    }
     
     return { 
-      balance,
-      prize,
-      SOL_USD,
+      potSOL,
       commitNumber,
       clickNum,
       deleteNum,
@@ -384,11 +348,8 @@ export default {
       yourNumbers,
       yourProbability,
       markWallet,
-      dollarPrize,
       location,
       flag,
-      winners,
-      deleteTicket,
       getTickets,
       yourROI,
       nNumbers,

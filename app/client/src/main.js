@@ -6,10 +6,10 @@ import './assets/css/tailwind.css'
 import './assets/css/wallets.css';
 
 import {
-  PhantomWalletAdapter,
-  SlopeWalletAdapter,
-  CoinbaseWalletAdapter,
   BraveWalletAdapter,
+  PhantomWalletAdapter,
+  CoinbaseWalletAdapter,
+  SlopeWalletAdapter,
   TrustWalletAdapter,
   HyperPayWalletAdapter,
   SolflareWalletAdapter,
@@ -28,13 +28,15 @@ import {
 
 const walletOptions = {
   wallets: [
-    new PhantomWalletAdapter(),
-    new SlopeWalletAdapter(),
-    new CoinbaseWalletAdapter(),
     new BraveWalletAdapter(),
-    new TrustWalletAdapter(),
-    new HyperPayWalletAdapter(),
+    new PhantomWalletAdapter(),
+    new CoinbaseWalletAdapter(),
     new SolflareWalletAdapter(),
+    new SlopeWalletAdapter(),
+    
+    new HyperPayWalletAdapter(),
+    new TrustWalletAdapter(),
+    
     new GlowWalletAdapter(),
     new SolletWalletAdapter(),
     new SolletExtensionWalletAdapter(),
