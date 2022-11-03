@@ -61,17 +61,17 @@
           
           <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
             <div v-for="x of tickets" :key="x.id" class="py-1" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
-              <div class="hover:font-semibold grid grid-cols-10 gap-3 flex flex-col">
-                <div class="text-xs col-span-2"  :class="markWallet(x.wallet) ? 'text-purple-400 font-bold' : 'text-grey-600'">{{ x.hour }}</div>
+              <div class="hover:font-semibold grid grid-cols-10 gap-3">
+                <div class="text-xs col-span-2"  :class="markWallet(user, x.wallet) ? 'text-purple-400 font-bold' : 'text-grey-600'">{{ x.hour }}</div>
                 
                 <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
                   <div class="text-xs text-left">{{ shortWallet(x.wallet, 4) }}</div>
                 </a>
                 <a class="col-span-1" :href="'https://google.com/search?q='+x.country" target="_blank">
-                  <div class="text-xs">{{ x.country }}</div>
+                  <div class="text-xs">{{ x.flag }}</div>
                 </a>
                 <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
-                  <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.id).replaceAll(',', ' ') }}</div>
+                  <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.number).replaceAll(',', ' ') }}</div>
                 </a>
                 <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
                   <div v-if="x.verified" class="text-[10px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(x.wallet)"> {{ '✔️' }}</div>
@@ -90,7 +90,8 @@ import { ref, watchEffect } from 'vue';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import coinTicker from 'coin-ticker';
 import CountDown from './CountDown.vue';
-import { shortWallet } from './utils';
+import { shortWallet, markWallet } from './utils';
+// import { useAnchorWallet } from 'solana-wallets-vue'
 
 
 export default ({
@@ -99,10 +100,15 @@ export default ({
     CountDown
   },
   methods: {
-    shortWallet
+    shortWallet,
+    markWallet
   },
   setup() {
-    const connection = new Connection(clusterApiUrl(process.env.VUE_APP_CLUSTER), 'processed');
+
+    const user = '';
+
+    const cluster = process.env.VUE_APP_CLUSTER;
+    const connection = new Connection(clusterApiUrl(cluster), 'processed');
     const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
     const nf = Intl.NumberFormat();
 
@@ -118,18 +124,30 @@ export default ({
       });
     });
 
-    async function getTickets () {
-      const res = await fetch(process.env.APP_VUE_DB_URL+'/tickets/')
-      const data = await res.json()
-      return data
-    }
+    const nTickets = ref();
     const tickets = ref([]);
+    watchEffect(async () => {
+      const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
+      const data = await res.json();
+      const arr = [];
+      let k;
+      for (const [key, value] of Object.entries(data.data)) {
+        k = key
+        arr.push(value)
+      }
+
+      nTickets.value = k + 1;
+      console.log('eoooo', arr);
+      tickets.value = arr;
+      console.log(tickets)
+      //tickets.value = data
+      
+    });
     const nNumbers = ref(0);
     const nPlayers = ref(0);
 
     watchEffect(async () => {
-      tickets.value = await getTickets()
-      console.log(tickets.value)
+      console.log(tickets, tickets.value)
       const uniqueWallets = [];
       for (const ticket of tickets) {
         if ( !uniqueWallets.includes(ticket.wallet) )
@@ -140,11 +158,14 @@ export default ({
     });
 
     return {
+      nf,
+      user,
       potSOL,
       potUSD,
       tickets,
       nNumbers,
-      nPlayers
+      nPlayers,
+      cluster
     }
     
   },

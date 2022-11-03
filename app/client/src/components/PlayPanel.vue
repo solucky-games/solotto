@@ -3,7 +3,7 @@
 
   <div class="m-auto w-full max-w-md p-4">
 
-    <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="this.dark ? 'bg-gray-800' : 'bg-white'">
+    <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-800' : 'bg-white'">
       <!-- Title Box -->
       <div class="px-4 text-center mt-8">
         <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
@@ -113,11 +113,10 @@ import { useAnchorWallet, useWallet } from 'solana-wallets-vue'
 
 const preflightCommitment = 'processed'
 
-const masterWallet = '6i1zfRMWVEErVPkH4JUtEBj5PFk2VZgshAENhZi1Dj1k'
+
 const cluster = 'devnet'
 const commitSOL = 1;
 const maxNumber = 1000000000;
-const db_url = 'http://localhost:5000/'
 
 export default {
   props: ['dark'],
@@ -136,14 +135,23 @@ export default {
       potSOL.value = Math.floor(potSOL.value);
     });
 
-    async function getTickets () {
-      const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
-      const data = await res.json();
-      return data
-    }
+    const nTickets = ref();
     const tickets = ref([]);
     watchEffect(async () => {
-      tickets.value = await getTickets()
+      const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
+      const data = await res.json();
+      const arr = [];
+      let k;
+      for (const [key, value] of Object.entries(data.data)) {
+        k = key
+        arr.push(value)
+      }
+
+      nTickets.value = k + 1;
+      console.log('eoooo', arr);
+      tickets.value = arr;
+      //tickets.value = data
+      console.log(Array(data.data))
     });
     
 
@@ -193,7 +201,7 @@ export default {
       const transaction = new Transaction().add(
           SystemProgram.transfer({
               fromPubkey: wallet.value.publicKey,
-              toPubkey: new PublicKey(masterWallet),
+              toPubkey: new PublicKey(masterPubKey),
               lamports: commitSOL*1000000000,
               message: number.value})
       )
@@ -202,10 +210,9 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
-      await postTicket(false);
+      await postTicket(true);
 
       commitPop.value = true;
-      tickets.value = await getTickets();
 
       updateYourNumbers();
       updateYourProbability();
@@ -276,7 +283,7 @@ export default {
     }
 
     async function getWinners () {
-      const res = await fetch(db_url+'winners')
+      const res = await fetch(process.env.VUE_APP_DB_WINNERS_URL)
       const data = await res.json()
       return data;
     }
@@ -304,8 +311,6 @@ export default {
 
     const commitPop = ref(false);
     
-
-
     const yourNumbers = ref(0);
     function updateYourNumbers () {
       const address = wallet.value.publicKey.toBase58();
@@ -350,7 +355,6 @@ export default {
       markWallet,
       location,
       flag,
-      getTickets,
       yourROI,
       nNumbers,
       nPlayers,

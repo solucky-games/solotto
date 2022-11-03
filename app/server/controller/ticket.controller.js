@@ -9,7 +9,7 @@ const postTicket = (req, res) => {
   if (!body) {
       return res.status(400).json({
         success: false,
-        error: 'You must provide a Ticket object...',
+        error: 'You must provide a Ticket object',
       })
   }
 
@@ -29,8 +29,8 @@ const postTicket = (req, res) => {
     })
     .catch(error => {
       return res.status(400).json({
-        error,
-        message: 'Ticket not added! Pls, try again.',
+          error,
+          message: 'Ticket not added! Pls, try again.',
       })
     })
 }
@@ -43,7 +43,7 @@ const getTickets = async (req, res) => {
     if (!tickets.length) {
       return res
         .status(404)
-        .json({ success: false, error: `Tickets db empty.` })
+        .json({ success: false, error: `Ticket empty` })
     }
     return res.status(200).json({ success: true, data: tickets })
   }).catch(err => console.log(err))

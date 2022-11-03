@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="h-screen w-screen m-0 -mb-12" :class="this.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-      <NavBar @dark="darkMode($event)" :dark="dark" />
+      <NavBar @dark="darkMode($event)" :dark="this.dark" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :dark="this.dark" />
         <PlayPanel :dark="this.dark" />
@@ -28,7 +28,7 @@ export default {
   },
   data() {
     return {
-      dark: false,
+      dark: this.dark,
     }
   },
   methods: {

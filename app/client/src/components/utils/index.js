@@ -3,6 +3,8 @@ export function shortWallet (addrs, n) {
 }
 
 export function markWallet(address, wallet){
-  if( wallet.value.publicKey.toBase58() == address ) 
+  if( wallet == address ) 
     return 'font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600';
+  else
+    return false;
 }
