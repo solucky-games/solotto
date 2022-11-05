@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node server2.js",
+    "dev": "nodemon server2.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +13,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.7.1"
+    "mongodb": "^4.11.0",
+    "mongoose": "^6.7.1",
+    "socket.io": "^4.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

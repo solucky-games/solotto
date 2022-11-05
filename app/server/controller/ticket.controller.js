@@ -45,8 +45,8 @@ const getTickets = async (req, res) => {
         .status(404)
         .json({ success: false, error: `Ticket empty` })
     }
-    return res.status(200).json({ success: true, data: tickets })
-  }).catch(err => console.log(err))
+    return res.status(200).json(tickets)
+  }).clone().catch(err => console.log(err))
 }
 
 module.exports = {

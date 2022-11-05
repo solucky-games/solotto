@@ -94,7 +94,7 @@
     </div>
   </div>
 
-</template>dark
+</template>
 
 <script>
 
@@ -135,23 +135,14 @@ export default {
       potSOL.value = Math.floor(potSOL.value);
     });
 
-    const nTickets = ref();
+    const nTickets = ref(0);
     const tickets = ref([]);
     watchEffect(async () => {
       const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
       const data = await res.json();
-      const arr = [];
-      let k;
-      for (const [key, value] of Object.entries(data.data)) {
-        k = key
-        arr.push(value)
-      }
-
-      nTickets.value = k + 1;
-      console.log('eoooo', arr);
-      tickets.value = arr;
-      //tickets.value = data
-      console.log(Array(data.data))
+      tickets.value = data.reverse();
+      console.log(tickets.value)
+      nTickets.value = tickets.value.length;
     });
     
 
@@ -176,7 +167,7 @@ export default {
       console.log(payload);
       flag.value = payload.location.country.flag.emoji;
       country.value =  payload.location.country.code;
-      city.value =  payload.city.country;
+      city.value =  payload.city;
     });
 
     
@@ -282,29 +273,6 @@ export default {
       number.value = '0';
     }
 
-    async function getWinners () {
-      const res = await fetch(process.env.VUE_APP_DB_WINNERS_URL)
-      const data = await res.json()
-      return data;
-    }
-    const winners = ref({});
-    watchEffect(async () => {
-      winners.value = await getWinners()
-    });
-
-    const nNumbers = ref(0);
-    const nPlayers = ref(0);
-    watchEffect(async () => {
-      console.log(tickets.value)
-      const uniqueWallets = [];
-      for (const ticket of tickets) {
-        if ( !uniqueWallets.includes(ticket.wallet) )
-          uniqueWallets.push(ticket.wallet);
-      }
-      nNumbers.value = Object.keys(tickets.value).length;
-      nPlayers.value = uniqueWallets.length;
-    });
-
     function shortWallet (addrs, n) {
       return addrs.slice(0, n)+'...'+addrs.slice(-n)
     }
@@ -356,8 +324,6 @@ export default {
       location,
       flag,
       yourROI,
-      nNumbers,
-      nPlayers,
       commitPop,
     }
   },
