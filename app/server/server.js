@@ -1,50 +1,51 @@
+'use strict';
 
-const io = require('socket.io')
-const client = io.listen(4000).sockets;
+const express = require('express');
+const app = express();
+const cors = require('cors');
 
-const mongo = require('mongodb').MongoClient;
-//const Ticket = require('./model/ticket.model');
+const dates = ['2022-11-05', '2022-11-06']
 
-mongo.connect('mongodb://127.0.0.1:27017/tickets', function(err, db) {
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+app.use(cors());
 
-  if(err){
-    throw err;
+const server = require('http').createServer(app);
+const PORT = 5001;
+
+
+// socket.io 
+const io = require('socket.io')(server, {
+  cors: {
+    origin: 'https://localhost:8080',
+    methods: ['GET', 'POST']
   }
-
-
-  client.on('connection', function() {
-    let tickets = db.collection('tickets') 
-
-    sendStatus = function(s){
-      socket.emit('status', s);
-    };
-
-    tickets.find().toArray( function(err, res) {
-      if(err){
-        throw err;
-      }
-      socket.emit('output', res);
-    });
-
-    socket.on('input', function(data){
-      // let date = data.date;
-      // let time = data.time;
-      // let number = data.number;
-      // let owner = data.owner;
-      // let verified = data.verified;
-      // let country = data.country;
-      // let flag = data.flag;
-      // let twitter = data.twitter;
-      tickets.insert(data, function(){
-        client.emit('output', [data]);
-        sendStatus({
-          ticket: 'Number commited!',
-          clear: true
-        });
-      });
-
-    });
-
-  });
-
 });
+
+
+// run server
+server.listen(PORT, ()=> {
+  console.log('listening on port', PORT);
+
+  setInterval( function() {
+    const time = getTime();
+    console.log(time);
+  }, 1000);
+
+  console.log('anything else?')
+})
+
+
+// functions
+
+const getTime = () => {
+  const date = new Date
+  const hours = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours());
+  const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes());
+  const seconds = String(date.getSeconds()).length < 2 ? '0' + String(date.getSeconds()) : String(date.getSeconds());
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+const potTime = (time) => {
+
+}
