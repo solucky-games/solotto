@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CommitModal />
     <div class="h-screen w-screen m-0 -mb-12" :class="this.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavBar @dark="darkMode($event)" :dark="this.dark" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
@@ -7,8 +8,8 @@
         <PlayPanel :dark="this.dark" />
         <HistoryPanel :dark="this.dark" />
       </div>
-
     </div>
+    
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import NavBar from './components/NavBar.vue';
 import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
+import CommitModal from './components/CommitModal.vue';
 
 export default {
   name: 'App',
@@ -25,6 +27,7 @@ export default {
     PotPanel,
     PlayPanel,
     HistoryPanel,
+    CommitModal
   },
   data() {
     return {

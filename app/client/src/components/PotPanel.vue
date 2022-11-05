@@ -116,7 +116,7 @@ export default ({
     const potUSD = ref(0);
     
     watchEffect(async () => {
-      potSOL.value = await connection.getBalance(masterPubKey)/1000000000 * process.env.VUE_APP_COMISSION;
+      potSOL.value = await connection.getBalance(masterPubKey)/1000000000;
       potSOL.value = Math.floor(potSOL.value);
       console.log('SOLUSD exchange: ',process.env.VUE_APP_EXCHANGE)
       coinTicker(process.env.VUE_APP_EXCHANGE, 'SOL_USD').then( (price) => { 

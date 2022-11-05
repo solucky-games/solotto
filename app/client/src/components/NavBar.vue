@@ -27,7 +27,7 @@
       </div>
     </div>
     
-    <nav :class="isOpen ? 'block' : 'hidden'" class="z-50 px-2 pt-2 pb-4  sm:flex sm:p-0">
+    <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0">
 
       <div class="flex justify-center items-center rounded-xl">
         <!-- Twitter Button -->
