@@ -8,7 +8,7 @@
       </div> -->
       <!-- Wallet Connect -->
       <div class="flex items-center justify-center">
-        <wallet-multi-button :dark="dark"></wallet-multi-button>
+        <wallet-multi-button :dark="this.$store.state.dark"></wallet-multi-button>
         <div class="">
           <p v-if="balance" class="ml-4 pr-4 text-sm font-semibold uppercase text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >{{balance}} SOL</p>
           <p v-if="balance" class="ml-4 pr-4 text-xs font-semibold uppercase text-gray-400" >DevNet</p>
@@ -16,7 +16,7 @@
       </div>
       <!-- Toogle nav -->
       <div class="sm:hidden">
-        <button @click="isOpen = !isOpen" type="button" :class="dark ? 'text-gray-200' : 'text-gray-500'" class="block text-gray-500">
+        <button @click="isOpen = !isOpen" type="button" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-500'" class="block text-gray-500">
           <svg v-if="!isOpen" class="h-6 w-6 fill-current" viewBox="0 0 24 24" >
             <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
           </svg>
@@ -32,22 +32,22 @@
       <div class="flex justify-center items-center rounded-xl">
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
             
             <img :src="twitter_img" class="h-6 w-6"/>
           </button>
         </a>
         <!-- Discord Button -->
         <a :href="discord_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
             <img :src="discord_img" class="h-7 w-7"/>
           </button>
         </a>
 
         <diV class="ml-8">
         <!-- Dark Button -->
-        <button class="rounded-full h-8 w-8 m-2 flex justify-center items-center shadow-xl border " @click="dark=!dark; darkMode(dark)" :class="dark ? 'bg-white/10 border-white/20 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-200 border-gray-100 text-gray-600'">
-          <svg v-if="dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button class="rounded-full h-8 w-8 m-2 flex justify-center items-center shadow-xl border " @click="this.$store.dispatch('darkMode')" :class="this.$store.state.dark ? 'bg-white/10 border-white/20 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-200 border-gray-100 text-gray-600'">
+          <svg v-if="this.$store.state.dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
           <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,23 +58,20 @@
 
       </div>    
     </nav>
-
   </header>
 </template>
 
 <script>
 import { ref, watchEffect } from 'vue'
-import { Connection, clusterApiUrl } from '@solana/web3.js'
-import { WalletMultiButton, useAnchorWallet } from 'solana-wallets-vue'
-
+import { WalletMultiButton } from 'solana-wallets-vue'
+import { useWorkspace } from '@/services/useWorkspace';
 
 export default {
   setup() {
-    const wallet = useAnchorWallet()
-    const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed')
+    const workspace = useWorkspace();
     const balance = ref();
     watchEffect(async () => {
-      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
+      const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
     })
     return {
@@ -92,11 +89,10 @@ export default {
       discord_url: process.env.VUE_APP_TWITTER_URL
     }
   },
-  methods:{
-    darkMode(dark)
-    {
-      this.$emit('dark', dark)
-    }
+  mounted () {
+    this.$store.dispatch('updateBalance', this.balance);
+    console.log('eoooo');
+
   },
   components: {
     WalletMultiButton

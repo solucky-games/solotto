@@ -1,7 +1,9 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import store from './store';
 import unoverlay from 'unoverlay-vue';
 import SolanaWallets from 'solana-wallets-vue';
+import useWorkspace from './services/useWorkspace';
 import './assets/css/tailwind.css'
 import './assets/css/wallets.css';
 
@@ -33,10 +35,8 @@ const walletOptions = {
     new CoinbaseWalletAdapter(),
     new SolflareWalletAdapter(),
     new SlopeWalletAdapter(),
-    
     new HyperPayWalletAdapter(),
     new TrustWalletAdapter(),
-    
     new GlowWalletAdapter(),
     new SolletWalletAdapter(),
     new SolletExtensionWalletAdapter(),
@@ -53,6 +53,9 @@ const walletOptions = {
 }
 
 createApp(App)
+  .use(useWorkspace)
+  .use(store)
   .use(SolanaWallets, walletOptions)
   .use(unoverlay)
   .mount('#app');
+

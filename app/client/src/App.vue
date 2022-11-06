@@ -1,14 +1,14 @@
 <template>
   <div>
-    <CommitModal />
-    <div class="h-screen w-screen m-0 -mb-12" :class="this.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-      <NavBar @dark="darkMode($event)" :dark="this.dark" />
-      <div class="flex flex-wrap top-24 left-0 right-0" :class="dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :dark="this.dark" />
-        <PlayPanel :dark="this.dark" />
-        <HistoryPanel :dark="this.dark" />
+    <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
+      <NavBar />
+      <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
+        <PotPanel />
+        <PlayPanel />
+        <HistoryPanel />
       </div>
     </div>
+    <!-- <CommitModal class="invisible hidden"/> -->
     
   </div>
 </template>
@@ -18,7 +18,19 @@ import NavBar from './components/NavBar.vue';
 import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
-import CommitModal from './components/CommitModal.vue';
+// import CommitModal from './components/CommitModal.vue';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { initWallet } from 'solana-wallets-vue';
+import { initWorkspace } from './services/useWorkspace';
+
+const wallets = [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter(),
+]
+
+initWallet({ wallets, autoConnect: true })
+initWorkspace()
+
 
 export default {
   name: 'App',
@@ -27,17 +39,7 @@ export default {
     PotPanel,
     PlayPanel,
     HistoryPanel,
-    CommitModal
-  },
-  data() {
-    return {
-      dark: this.dark,
-    }
-  },
-  methods: {
-    darkMode(dark) {
-      this.dark = dark
-    }
+    // CommitModal
   }
 }
 </script>

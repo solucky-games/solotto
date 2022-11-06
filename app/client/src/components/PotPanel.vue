@@ -3,7 +3,7 @@
 
     <div class="m-auto w-full max-w-md p-4">
 
-      <div class="p-4 text-gray-600 rounded-xl text-center shadow-xl" :class="dark ? 'bg-gray-800' : 'bg-white'">          
+      <div class="p-4 text-gray-600 rounded-xl text-center shadow-xl" :class="this.$store.state.dark ? 'bg-gray-800' : 'bg-white'">          
         
         <div class="flex align-center justify-center">
           <div class="p-4 text-center">
@@ -29,7 +29,7 @@
             </div>
 
             <div class="mt-2 pl-2">
-              <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="dark ? 'text-gray-200' : 'text-gray-800'"/>
+              <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"/>
             </div>
   
           </div>
@@ -40,7 +40,7 @@
             <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold">Numbers</p>
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
               > {{nTickets}}</p>
             </div>
           </div>
@@ -50,7 +50,7 @@
             <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold">Players</p>
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
-                :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
               > {{ `${nPlayers}`}}</p>
             </div>
           </div>
@@ -59,8 +59,8 @@
         <!-- commited numbers -->
         <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
           
-          <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="dark ? 'bg-gray-700' : 'bg-gray-100'">
-            <div v-for="x in tickets" :key="x.id" class="py-1" :class="dark ? 'text-gray-200' : 'bg-text-gray-800'">
+          <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-gray-100'">
+            <div v-for="x in tickets" :key="x.id" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
               <div class="hover:font-semibold grid grid-cols-10 gap-3">
                 <div class="text-xs col-span-2"  :class="markWallet(user, x.wallet) ? 'text-purple-400 font-bold' : 'text-grey-600'">{{ x.hour }}</div>
                 
@@ -87,15 +87,14 @@
 
 <script>
 import { ref, watchEffect } from 'vue';
-import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import coinTicker from 'coin-ticker';
 import CountDown from './CountDown.vue';
 import { shortWallet, markWallet } from './utils';
-// import { useAnchorWallet } from 'solana-wallets-vue'
+import { useWorkspace } from '@/services/useWorkspace';
 
 
 export default ({
-  props: ['dark'],
   components: {
     CountDown
   },
@@ -104,26 +103,19 @@ export default ({
     markWallet
   },
   setup() {
-
     const user = '';
-
-    const cluster = process.env.VUE_APP_CLUSTER;
-    const connection = new Connection(clusterApiUrl(cluster), 'processed');
+    const workspace = useWorkspace();
     const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
     const nf = Intl.NumberFormat();
-
     const potSOL = ref(0);
     const potUSD = ref(0);
-    
     watchEffect(async () => {
-      potSOL.value = await connection.getBalance(masterPubKey)/1000000000;
+      potSOL.value = await workspace.connection.getBalance(masterPubKey)/1000000000;
       potSOL.value = Math.floor(potSOL.value);
-      console.log('SOLUSD exchange: ',process.env.VUE_APP_EXCHANGE)
       coinTicker(process.env.VUE_APP_EXCHANGE, 'SOL_USD').then( (price) => { 
         potUSD.value = nf.format(potSOL.value*price.last).split('.')[0];
       });
     });
-
     const nTickets = ref(0);
     const tickets = ref([]);
     const nPlayers = ref(0);
@@ -143,7 +135,6 @@ export default ({
       nPlayers.value = uniqueWallets.length;
     });
 
-
     return {
       nf,
       user,
@@ -152,7 +143,7 @@ export default ({
       tickets,
       nTickets,
       nPlayers,
-      cluster
+      
     }
     
   },

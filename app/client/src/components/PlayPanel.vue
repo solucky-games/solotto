@@ -3,7 +3,7 @@
 
   <div class="m-auto w-full max-w-md p-4">
 
-    <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="dark ? 'bg-gray-800' : 'bg-white'">
+    <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="this.$store.state.dark ? 'bg-gray-800' : 'bg-white'">
       <!-- Title Box -->
       <div class="px-4 text-center mt-8">
         <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
@@ -12,18 +12,13 @@
         <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
           <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
             <div class="uppercase text-xl text-gray-400 font-semibold m-4">Win</div>
-            <div class="font-bold text-4xl mt-2" :class="dark ? 'text-gray-200' : 'text-gray-800'"> {{potSOL}}<span  class="font-bold text-xl mt-4">SOL</span></div>
+            <div class="font-bold text-4xl mt-2" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"> {{potSOL}}<span  class="font-bold text-xl mt-4">SOL</span></div>
             <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
           </div>
-          <div class="mt-2 pl-2">
-            <CountDown :_date="false" class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"/>
-          </div>
+          <div class="pl-2">
+            <CountDown :_date="false" class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" />
+          </div>      
         </div>
-
-        <div class="mt-2 pl-2">
-          <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="dark ? 'text-gray-200' : 'text-gray-800'"/>
-        </div>
-
 
         <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl pt-4">
           <div class="flex align-center justify-center mb-4">
@@ -33,7 +28,7 @@
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
               <div class="flex justify-center" >
                 <p class="lowercase font-bold text-xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                  :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
                 > {{ `x${12}`}}</p>
               </div>
             </div>
@@ -43,7 +38,7 @@
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Probability</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                  :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
                 > {{ `${yourProbability}%`}}</p>
               </div>
             </div>
@@ -53,7 +48,7 @@
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">ROI</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
-                  :class="dark ? 'text-gray-300' : 'text-gray-600'"
+                  :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
                 > {{ `${nf.format(10000)}%`}}</p>
               </div>
             </div>
@@ -64,7 +59,7 @@
       <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
 
       <div class="font-bold text-4xl text-center p-7 rounded-xl m-4 cursor-pointer"
-      :class="dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
+      :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
       @click="commitNumber"
       @mouseover="commitHover=true"
       @mouseleave="commitHover=false">
@@ -77,18 +72,18 @@
       </div>
       
       <div class="grid grid-cols-3 gap-1 text-s font-semibold text-center py-4 px-4 rounded-xl">
-        <button @click="clickNum(1)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tl-xl align-middle relative">1</button>
-        <button @click="clickNum(2)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">2</button>
-        <button @click="clickNum(3)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tr-xl align-middle relative">3</button>
-        <button @click="clickNum(4)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">4</button>
-        <button @click="clickNum(5)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">5</button>
-        <button @click="clickNum(6)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">6</button>
-        <button @click="clickNum(7)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-bl-xl align-middle relative">7</button>
-        <button @click="clickNum(8)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">8</button>
-        <button @click="clickNum(9)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-br-xl align-middle relative">9</button>
-        <button @click="resetNum()"  :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-3 px-2 rounded-3xl m-3 align-middle relative">↻</button>
-        <button @click="clickNum(0)" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-b-xl align-middle relative">0</button>
-        <button @click="deleteNum()" :class="dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-3 px-2 rounded-3xl m-3 align-middle relative">⇐</button>          <div/>
+        <button @click="clickNum(1)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tl-xl align-middle relative">1</button>
+        <button @click="clickNum(2)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">2</button>
+        <button @click="clickNum(3)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-tr-xl align-middle relative">3</button>
+        <button @click="clickNum(4)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">4</button>
+        <button @click="clickNum(5)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">5</button>
+        <button @click="clickNum(6)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">6</button>
+        <button @click="clickNum(7)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-bl-xl align-middle relative">7</button>
+        <button @click="clickNum(8)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 align-middle relative">8</button>
+        <button @click="clickNum(9)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-br-xl align-middle relative">9</button>
+        <button @click="resetNum()"  :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-3 px-2 rounded-3xl m-3 align-middle relative">↻</button>
+        <button @click="clickNum(0)" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-6 px-2 rounded-b-xl align-middle relative">0</button>
+        <button @click="deleteNum()" :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-400' : 'bg-gray-50 hover:bg-gray-200'" class="py-3 px-2 rounded-3xl m-3 align-middle relative">⇐</button>          <div/>
       </div>
 
     </div>
@@ -98,11 +93,11 @@
 
 <script>
 
-import CountDown from './CountDown.vue';
 
 import { ref, watchEffect } from 'vue'
 import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
 import { useAnchorWallet, useWallet } from 'solana-wallets-vue'
+import CountDown from './CountDown.vue';
 
 //import {sendTicket} from './controller/sendTicket'
 //import {deleteTicket} from '../services/deleteTicket'
@@ -119,19 +114,18 @@ const commitSOL = 1;
 const maxNumber = 1000000000;
 
 export default {
-  props: ['dark'],
-  components: [
+  components: {
     CountDown,
     // PopCommit,
     // TodaysPot,
-  ],
+  },
   setup () {
 
     // Get current pot
     const potSOL = ref(0);
     const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
     watchEffect(async () => {
-      potSOL.value = await connection.getBalance(masterPubKey)/1000000000 * process.env.VUE_APP_COMISSION;
+      potSOL.value = await connection.getBalance(masterPubKey)/1000000000;
       potSOL.value = Math.floor(potSOL.value);
     });
 
