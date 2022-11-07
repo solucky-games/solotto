@@ -165,7 +165,6 @@ export default {
       });
       return { flag, country, city };
     }
-
     
     async function commitNumber () {
 

@@ -45,11 +45,12 @@ export default {
   },
   created() {
     SocketioService.setupSocketConnection();
-    
+
   },
   beforeUnmount() {
     SocketioService.disconnect();
-  }
+  },
+ 
 }
 </script>
 

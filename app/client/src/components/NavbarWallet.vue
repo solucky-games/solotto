@@ -30,10 +30,13 @@
     <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0">
 
       <div class="flex justify-center items-center rounded-xl">
+
+        <!-- Socket Users -->
+        <div>USERS: {{users}}</div>
+
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
           <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
-            
             <img :src="twitter_img" class="h-6 w-6"/>
           </button>
         </a>
@@ -65,9 +68,11 @@
 import { ref, watchEffect } from 'vue'
 import { WalletMultiButton } from 'solana-wallets-vue'
 import { useWorkspace } from '@/services/useWorkspace';
+import SocketioService from '@/services/socketio.service';
 
 export default {
   setup() {
+    const users = SocketioService.getSocketUsers();
     const workspace = useWorkspace();
     const balance = ref();
     watchEffect(async () => {
@@ -75,7 +80,8 @@ export default {
       balance.value = Math.floor(bal*100)/100;
     })
     return {
-      balance
+      balance,
+      users
     }
   },
   data() {
