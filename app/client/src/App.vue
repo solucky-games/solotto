@@ -1,20 +1,20 @@
 <template>
   <div>
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-      <NavbarWallet />
+      <NavbarWallet :users="users" :balance="balance"/>
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel />
-        <PlayPanel />
+        <PotPanel :countdown="countdown" />
+        <PlayPanel :countdown="countdown"/>
         <HistoryPanel />
       </div>
     </div>
+
     <!-- <CommitModal class="invisible hidden"/> -->
     
   </div>
 </template>
 
 <script>
-
 import NavbarWallet from './components/NavbarWallet.vue';
 import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
@@ -23,7 +23,10 @@ import HistoryPanel from './components/HistoryPanel.vue';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { initWallet } from 'solana-wallets-vue';
 import { initWorkspace } from './services/useWorkspace';
-import SocketioService from './services/socketio.service.js';
+// import SocketioService from './services/socketio.service.js';
+import { ref, watchEffect } from 'vue';
+import { io } from 'socket.io-client';
+import { useWorkspace } from './services/useWorkspace';
 
 const wallets = [
     new PhantomWalletAdapter(),
@@ -43,13 +46,58 @@ export default {
     HistoryPanel,
     // CommitModal
   },
-  created() {
-    SocketioService.setupSocketConnection();
+  // created() {
+  //   SocketioService.setupSocketConnection();
 
-  },
-  beforeUnmount() {
-    SocketioService.disconnect();
-  },
+  // },
+  // beforeUnmount() {
+  //   SocketioService.disconnect();
+  // },
+  data() {
+    const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
+    const users = ref();
+    socket.on('UserNumber', (data) => {
+      console.log(data);
+      users.value = String(data).split(' ')[1];
+      return data;
+    });
+
+    // Countdown
+    const countdown = ref('');
+    socket.on('getCountDown', (data) => {
+      console.log(data);
+      countdown.value = String(data);
+      return data;
+    });
+
+
+    // User wallet
+    const workspace = useWorkspace();
+    const balance = ref();
+    // setInterval( () => {
+    //   watchEffect(async () => {
+    //   const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
+    //   balance.value = Math.floor(bal*100)/100;
+    //   console.log(balance);
+    //   })
+    // }, 1000)
+
+    watchEffect(async () => {
+      const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
+      balance.value = Math.floor(bal*100)/100;
+    })
+
+
+    
+
+
+
+    return {
+      users,
+      balance,
+      countdown
+    }
+  }
  
 }
 </script>

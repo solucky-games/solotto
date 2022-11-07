@@ -1,11 +1,16 @@
 <template>
   <header class="sm:pl-24 sm:pr-24 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3"  >
 
+
     <div class="flex items-center justify-between px-4 py-3 sm:p-0">
+
       <!-- Logo -->
-      <!-- <div class="pr-8 mr-8">
-        <img class="h-8" src="../assets/logo.png" alt="Workcation">
-      </div> -->
+      <a :href="discord_url" target="_blank">
+        <button class="rounded-full h-10 flex justify-center items-center sm:mr-8">
+          <img class="h-12" src="../assets/logo.png" alt="Workcation">
+        </button>
+      </a>
+      
       <!-- Wallet Connect -->
       <div class="flex items-center justify-center">
         <wallet-multi-button :dark="this.$store.state.dark"></wallet-multi-button>
@@ -14,6 +19,7 @@
           <p v-if="balance" class="ml-4 pr-4 text-xs font-semibold uppercase text-gray-400" >DevNet</p>
         </div>
       </div>
+       
       <!-- Toogle nav -->
       <div class="sm:hidden">
         <button @click="isOpen = !isOpen" type="button" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-500'" class="block text-gray-500">
@@ -30,9 +36,11 @@
     <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0">
 
       <div class="flex justify-center items-center rounded-xl">
+        <!-- Users connected -->
+        <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400"><span class="text-xs">CONNECTED: </span>{{users}}</div>
+      </div>
 
-        <!-- Socket Users -->
-        <div>USERS: {{users}}</div>
+      <div class="flex justify-center items-center rounded-xl">
 
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
@@ -65,25 +73,13 @@
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue'
 import { WalletMultiButton } from 'solana-wallets-vue'
-import { useWorkspace } from '@/services/useWorkspace';
-import SocketioService from '@/services/socketio.service';
 
 export default {
-  setup() {
-    const users = SocketioService.getSocketUsers();
-    const workspace = useWorkspace();
-    const balance = ref();
-    watchEffect(async () => {
-      const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
-      balance.value = Math.floor(bal*100)/100;
-    })
-    return {
-      balance,
-      users
-    }
-  },
+  props: [
+    'users',
+    'balance'
+  ],
   data() {
     return {
       isOpen: false,
@@ -94,11 +90,6 @@ export default {
       discord_gif: require("../assets/ico/discord.gif"),
       discord_url: process.env.VUE_APP_TWITTER_URL
     }
-  },
-  mounted () {
-    this.$store.dispatch('updateBalance', this.balance);
-    console.log('eoooo');
-
   },
   components: {
     WalletMultiButton

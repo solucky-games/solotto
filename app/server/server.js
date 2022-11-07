@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     const time = getTime();
     if ( time.split(':')[2] == 0 )
       io.emit('getTime', `server_time: ${time}`);
-    io.emit('getCountDown', `prize_in: ${countDown()}`);
+    io.emit('getCountDown', `${countDown()}`);
   }, 1000);
 
 

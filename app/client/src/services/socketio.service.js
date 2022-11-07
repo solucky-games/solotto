@@ -1,6 +1,5 @@
 import { io } from 'socket.io-client';
 
-
 class SocketioService {
   socket;
   constructor() {
@@ -26,10 +25,13 @@ class SocketioService {
   }
 
   getSocketUsers() {
+    const users = '';
     this.socket.on('UserNumber', (data) => {
       console.log(data);
+      users.value = data;
       return data;
     });
+    return users;
   }
 
   disconnect() {

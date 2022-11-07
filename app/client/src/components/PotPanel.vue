@@ -29,7 +29,11 @@
             </div>
 
             <div class="mt-2 pl-2">
-              <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"/>
+
+              <!-- <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"/> -->
+              <div class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'">
+                {{countdown}}
+              </div>
             </div>
   
           </div>
@@ -41,7 +45,7 @@
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
                 :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{socket}}</p>
+              > {{users}}</p>
             </div>
           </div>
 
@@ -89,21 +93,27 @@
 import { ref, watchEffect } from 'vue';
 import { PublicKey } from '@solana/web3.js';
 import coinTicker from 'coin-ticker';
-import CountDown from './CountDown.vue';
+// import CountDown from './CountDown.vue';
 import { shortWallet, markWallet } from './utils';
 import { useWorkspace } from '@/services/useWorkspace';
-import SocketioService from '@/services/socketio.service';
+//import SocketioService from '@/services/socketio.service';
+//import { io } from 'socket.io-client';
+// import SocketioService from '@/services/socketio.service.js';
+
+
 
 export default ({
+  props: [
+    'countdown'
+  ],
   components: {
-    CountDown
+    //CountDown
   },
   methods: {
     shortWallet,
     markWallet
   },
   setup() {
-    const socket = SocketioService.countdown
     const user = '';
     const workspace = useWorkspace();
     const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
@@ -144,9 +154,22 @@ export default ({
       tickets,
       nTickets,
       nPlayers,
-      socket
     }
-    
   },
+  data() {
+    // const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
+    // const users = ref();
+    // socket.on('UserNumber', (data) => {
+    //   console.log(data);
+    //   users.value = String(data).split(' ')[1];
+    //   return data;
+    // });
+
+    // const users = SocketioService.getSocketUsers();
+
+    // return {
+    //   users
+    // }
+  }
 })
 </script>
