@@ -41,7 +41,7 @@
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
                 :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{nTickets}}</p>
+              > {{socket}}</p>
             </div>
           </div>
 
@@ -92,7 +92,7 @@ import coinTicker from 'coin-ticker';
 import CountDown from './CountDown.vue';
 import { shortWallet, markWallet } from './utils';
 import { useWorkspace } from '@/services/useWorkspace';
-
+import SocketioService from '@/services/socketio.service';
 
 export default ({
   components: {
@@ -103,6 +103,7 @@ export default ({
     markWallet
   },
   setup() {
+    const socket = SocketioService.countdown
     const user = '';
     const workspace = useWorkspace();
     const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
@@ -143,7 +144,7 @@ export default ({
       tickets,
       nTickets,
       nPlayers,
-      
+      socket
     }
     
   },

@@ -1,4 +1,4 @@
-
+'use strict';
 require('dotenv').config();
 
 const express = require('express');
@@ -13,8 +13,6 @@ const cors = require('cors')
 
 app.use(cors());
 app.use(router);
-
-
 
 // to listen to messages
 socket.on('connection', (socket) => {

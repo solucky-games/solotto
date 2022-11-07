@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-      <NavBar />
+      <NavbarWallet />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel />
         <PlayPanel />
@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue';
+
+import NavbarWallet from './components/NavbarWallet.vue';
 import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
@@ -22,6 +23,7 @@ import HistoryPanel from './components/HistoryPanel.vue';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { initWallet } from 'solana-wallets-vue';
 import { initWorkspace } from './services/useWorkspace';
+import SocketioService from './services/socketio.service.js';
 
 const wallets = [
     new PhantomWalletAdapter(),
@@ -35,11 +37,18 @@ initWorkspace()
 export default {
   name: 'App',
   components: {
-    NavBar,
+    NavbarWallet,
     PotPanel,
     PlayPanel,
     HistoryPanel,
     // CommitModal
+  },
+  created() {
+    SocketioService.setupSocketConnection();
+    
+  },
+  beforeUnmount() {
+    SocketioService.disconnect();
   }
 }
 </script>

@@ -138,7 +138,6 @@ export default {
       console.log(tickets.value)
       nTickets.value = tickets.value.length;
     });
-    
 
     // User wallet
     const wallet = useAnchorWallet();
@@ -150,22 +149,27 @@ export default {
     })
 
     // User location
-    const flag = ref('');
-    const country = ref('');
-    const city = ref('');
-    fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (payload) {
-      console.log(payload);
-      flag.value = payload.location.country.flag.emoji;
-      country.value =  payload.location.country.code;
-      city.value =  payload.city;
-    });
+    function userLocation () {
+      const flag = ref('');
+      const country = ref('');
+      const city = ref('');
+      fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (payload) {
+        console.log(payload);
+        flag.value = payload.location.country.flag.emoji;
+        country.value =  payload.location.country.code;
+        city.value =  payload.city;
+      });
+      return { flag, country, city };
+    }
 
     
     async function commitNumber () {
+
+      const location = userLocation();
 
       const { sendTransaction } = useWallet();
 
@@ -195,7 +199,7 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
-      await postTicket(true);
+      await postTicket(false, location);
 
       commitPop.value = true;
 
@@ -204,7 +208,7 @@ export default {
       updateYourROI();
     }
 
-    async function postTicket(verify) {
+    async function postTicket(verify, location, twitter, discord) {
       const date = new Date();
       const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours())
       const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes())
@@ -214,9 +218,11 @@ export default {
         wallet: wallet.value.publicKey.toBase58(),
         number: number.value,
         verified: verify,
-        country: country.value,
-        flag: flag.value,
-        twitter: ''
+        country: location.country,
+        flag: location.flag,
+        city: location.city,
+        twitter: twitter || null,
+        discord: discord || null,
       };
       const requestOptions = {
         method: 'POST',
@@ -316,7 +322,6 @@ export default {
       yourProbability,
       markWallet,
       location,
-      flag,
       yourROI,
       commitPop,
     }
