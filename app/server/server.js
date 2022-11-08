@@ -1,7 +1,7 @@
 'use strict';
 
 
-const TicketCtrl = require('./controller/ticket.controller');
+//const TicketCtrl = require('./controller/ticket.controller');
 // const Ticket = require('./model/ticket.model');
 const express = require('express');
 const router = express.Router();
@@ -68,50 +68,67 @@ app.get('/', (req, res) => {
 
 const { Client } = require('pg');
 
-const conString = "postgresql://solucky:dSb24bEYcIe0Eqi73klvDg@free-tier13.aws-eu-central-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full&options=--cluster%3Dsolucky-4329" //Can be found in the Details page
+const conString = "postgres://zlrmcwid:07bjXoJQKL2_LqGjZHjI6vR9ro8GM6UP@lucky.db.elephantsql.com/zlrmcwid" //Can be found in the Details page
 const client = new Client(conString);
 
 client.connect(function(err) {
   if(err) {
     return console.error('could not connect to postgres', err);
   } else {
-    console.log('DB connected successfully');
+    console.log('DB connected successfully\n');
+    
+    createTable();  
+    insertTicket();
+
+    //getTickets();
   }
 });
 
 function createTable() {
   const date = getDateSQL();
-  const schema = 'INDEX id int, owner varchar(255), flag varchar(50), hour varchar(50), timestamp int'
+  const schema = 'id int PRIMARY KEY, owner varchar(255), flag varchar(50), hour varchar(50), timestamp int'
   const query = `CREATE TABLE ${date} ( ${schema} )`
-  console.log(query);
   client.query(query, function(err, result) {
     if(err) {
-      return console.error('error running query', err);
+      // return console.error('error running query', err);
     }
     console.log(result);
     // >> output: 2018-08-23T14:02:57.117Z
-    client.end();
+    //client.end();
   });
   }
 
 function insertTicket() {
   const date = getDateSQL();
   const schema = "id, owner, flag, hour, timestamp";
-  const values = "22, 'jhkjadhkjahjksa', 'US', '03:21', 329303290923";
+  const values = "2, 'jhkjadhkjahjksa', 'US', '03:21', 3290923";
   const query = `INSERT INTO ${date} ( ${schema} ) VALUES ( ${values} )`;
-  console.log('eoeo', query)
   client.query(query, function(err, result) {
     if(err) {
       return console.error('error running query', err);
     }
-    console.log(result);
+    // console.log(result);
     // >> output: 2018-08-23T14:02:57.117Z
-    client.end();
+    //client.end();
   });
 }
 
-createTable();
-insertTicket();
+function getTickets() {
+
+  const date = getDateSQL();
+  const query = `SELECT * FROM ${date}`;
+  client.query(query, function(err, result) {
+    if(err) {
+      return console.error('error running query', err);
+    }
+    console.log('\n\n\n', result.rows);
+    // >> output: 2018-08-23T14:02:57.117Z
+    //client.end();
+  });
+
+}
+
+
 
 
 // socket.io 
