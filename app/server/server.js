@@ -1,88 +1,58 @@
 'use strict';
 
 
-const TicketCtrl = require('./controllers/ticket.controller');
-const Ticket = require('./models/ticket.model');
+//const TicketCtrl = require('./controller/ticket.controller');
+// const Ticket = require('./model/ticket.model');
 const express = require('express');
 const router = express.Router();
 const app = express();
 const cors = require('cors');
 
-const dates = ['2022-11-05', '2022-11-06']
+// const utils = require('./utils');
 
 
-const postTicket = async (req, res) => {
-
-  try {
-  
-    const body = req.body
-
-    //console.log(body, 'aaaa')
-
-    if (!body) {
-        return res.status(400).json({
-          success: false,
-          error: 'You must provide a Ticket object',
-        })
-    }
-
-    const ticket = await Ticket.create({date: body.date, hour: body.hour, owner: body.owner, number: Number(body.number)})
-
-    if (!ticket) {
-      return res.status(400).json({ success: false, error: err })
-    }
-
-    await getTickets();
-    console.log('ticket', ticket)
-    io.emit('getNewTicket', ticket);
-    res.status(201).json({
-      success: true,
-      id: ticket._id,
-      message: 'New ticket added!',
-    })
-  } catch (error) {
-      console.log(error, 'errorrrr')
-      res.status(400).json({
-        error,
-        message: 'Ticket not added! Pls, try again.',
-    })
-  }
+const formatTime = (num) => {
+  if (String(num).length < 2) 
+    return '0' + String(num);
+  else if (String(num).length < 1) 
+    return '00';
+  return String(num);
 }
 
-const axios = require('axios');
-const data = JSON.stringify({
-    "collection": "tickets",
-    "database": "solucky",
-    "dataSource": "solucky",
-    "projection": {
-        "_id": 1
-    }
-});
-            
-const config = {
-    method: 'get',
-    url: 'https://data.mongodb-api.com/app/data-gogby/endpoint/data/v1/action/findOne',
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Request-Headers': '*',
-      'api-key': 'eqE865bfFIChh7AI617nMi09aAosCRyMcMWJpYgNAtdNWPHRq7j6meukYQiXJIU5',
-    },
-    data: data
-};
-            
-const getTickets = async (req, res) => {
-  axios(config)
-    .then(function (response) {
-        io.emit('getTickets', JSON.stringify(response.data));
-        return JSON.stringify(response.data);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+const getTime = () => {
+  const date = new Date
+  const hours = formatTime(date.getUTCHours());
+  const minutes = formatTime(date.getMinutes());
+  const seconds = formatTime(date.getSeconds());
+  return `${hours}:${minutes}:${seconds}`;
 }
 
-router.post('/api/tickets', postTicket);
-router.get ('/api/tickets', getTickets);
+const getDate = () => {
+  const date = new Date
+  const year = formatTime(date.getUTCFullYear());
+  const month = formatTime(date.getUTCMonth()+1);
+  const day = formatTime(date.getUTCDate());
+  return `${year}-${month}-${day}`;
+}
+
+const countDown = () => {
+  const time = getTime().split(':');
+  const hours = formatTime(23-time[0]);
+  const minutes = formatTime(59-time[1]);
+  const seconds = formatTime(59-time[2]);
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function getDateSQL () {
+  const date = new Date
+  const year = formatTime(date.getUTCFullYear());
+  const month = formatTime(date.getUTCMonth()+1);
+  const day = formatTime(date.getUTCDate());
+  return `_${year}_${month}_${day}_`;
+}
+
+// router.post('/api/tickets', postTicket);
+// router.get ('/api/tickets', getTickets);
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -98,47 +68,67 @@ app.get('/', (req, res) => {
 
 const { Client } = require('pg');
 
-const conString = "postgresql://solucky:dSb24bEYcIe0Eqi73klvDg@free-tier13.aws-eu-central-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full&options=--cluster%3Dsolucky-4329" //Can be found in the Details page
+const conString = "postgres://zlrmcwid:07bjXoJQKL2_LqGjZHjI6vR9ro8GM6UP@lucky.db.elephantsql.com/zlrmcwid" //Can be found in the Details page
 const client = new Client(conString);
 
+client.connect(function(err) {
+  if(err) {
+    return console.error('could not connect to postgres', err);
+  } else {
+    console.log('DB connected successfully\n');
+    
+    createTable();  
+    insertTicket();
+
+    getTickets();
+  }
+});
+
 function createTable() {
-  client.connect(function(err) {
+  const date = getDateSQL();
+  const schema = 'id int PRIMARY KEY, owner varchar(255), flag varchar(50), hour varchar(50), timestamp int'
+  const query = `CREATE TABLE ${date} ( ${schema} )`
+  client.query(query, function(err, result) {
     if(err) {
-      return console.error('could not connect to postgres', err);
+      // return console.error('error running query', err);
     }
-    const date = getDateSQL();
-    const schema = 'INDEX id int, owner varchar(255), flag varchar(50), hour varchar(50), timestamp int'
-    client.query(`CREATE TABLE ${date} ( ${schema} )`, function(err, result) {
-      if(err) {
-        return console.error('error running query', err);
-      }
-      console.log(result);
-      // >> output: 2018-08-23T14:02:57.117Z
-      client.end();
-    });
+    console.log(result);
+    // >> output: 2018-08-23T14:02:57.117Z
+    //client.end();
   });
-}
+  }
 
 function insertTicket() {
-  client.connect(function(err) {
+  const date = getDateSQL();
+  const schema = "id, owner, flag, hour, timestamp";
+  const values = "33, 'jhkjadhkjahjksa', '🇪🇸', '03:21', 3290923";
+  const query = `INSERT INTO ${date} ( ${schema} ) VALUES ( ${values} )`;
+  client.query(query, function(err, result) {
     if(err) {
-      return console.error('could not connect to postgres', err);
+      return console.error('error running query', err);
     }
-    const date = getDateSQL();
-    const schema = "22, 'jhkjadhkjahjksa', 'US', '03:21', 329303290923"
-    client.query(`INSERT INTO ${date} ( ${schema} )`, function(err, result) {
-      if(err) {
-        return console.error('error running query', err);
-      }
-      console.log(result);
-      // >> output: 2018-08-23T14:02:57.117Z
-      client.end();
-    });
+    // console.log(result);
+    // >> output: 2018-08-23T14:02:57.117Z
+    //client.end();
   });
 }
 
-createTable();
-insertTicket();
+function getTickets() {
+
+  const date = getDateSQL();
+  const query = `SELECT * FROM ${date}`;
+  client.query(query, function(err, result) {
+    if(err) {
+      return console.error('error running query', err);
+    }
+    console.log('\n\n\n', result.rows);
+    // >> output: 2018-08-23T14:02:57.117Z
+    //client.end();
+  });
+
+}
+
+
 
 
 // socket.io 
@@ -193,13 +183,13 @@ io.on('connection', (socket) => {
 
   });
   
-  socket.on('newTicket', (ticket) => {
-    console.log('ticket: ' + ticket);
+  // socket.on('newTicket', (ticket) => {
+  //   console.log('ticket: ' + ticket);
 
-    router.post('/tickets', TicketCtrl.postTicket);
-    router.get('/tickets', TicketCtrl.getTickets);
-    io.emit('getTickets', )
-  });
+  //   router.post('/tickets', TicketCtrl.postTicket);
+  //   router.get('/tickets', TicketCtrl.getTickets);
+  //   io.emit('getTickets', )
+  // });
 
 });
 
@@ -221,63 +211,6 @@ server.listen(PORT, ()=> {
 
 const web3 =  require('@solana/web3.js');
 const coinTicker = require('coin-ticker');
-
-async function getMasterBalance() {
-  
-}
-
-function createAccount(username, password) {
-  return new Promise((resolve, reject) => {
-    socket.emit('create account', {username:username, password:password});
-
-    socket.once('create account return', (data) => resolve(data.failed));
-  });
-};
-
-
-const formatTime = (num) => {
-  if (String(num).length < 2) 
-    return '0' + String(num);
-  else if (String(num).length < 1) 
-    return '00';
-  return String(num);
-}
-
-const getTime = () => {
-  const date = new Date
-  const hours = formatTime(date.getUTCHours());
-  const minutes = formatTime(date.getMinutes());
-  const seconds = formatTime(date.getSeconds());
-  return `${hours}:${minutes}:${seconds}`;
-}
-
-const getDate = () => {
-  const date = new Date
-  const year = formatTime(date.getUTCFullYear());
-  const month = formatTime(date.getUTCMonth());
-  const day = formatTime(date.getUTCDate());
-  return `${year}-${month}-${day}`;
-}
-
-const getDateSQL = () => {
-  const date = new Date
-  const year = formatTime(date.getUTCFullYear());
-  const month = formatTime(date.getUTCMonth());
-  const day = formatTime(date.getUTCDate());
-  return `_${year}_${month}_${day}_`;
-}
-
-const countDown = () => {
-  const time = getTime().split(':');
-  const hours = formatTime(23-time[0]);
-  const minutes = formatTime(59-time[1]);
-  const seconds = formatTime(59-time[2]);
-  return `${hours}h ${minutes}m ${seconds}s`;
-}
-
-const potTime = (time) => {
-
-}
 
 
 // Controllers
