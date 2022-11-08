@@ -70,7 +70,7 @@ app.get('/', (req, res) => {
 
 const { Client } = require('pg');
 
-const postgreURL = process.env.local.POSTREGRE_URL;
+const postgreURL = process.env.POSTGRE_URL;
 const client = new Client(postgreURL);
 
 client.connect(function(err) {
