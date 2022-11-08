@@ -5,8 +5,8 @@
     <div class="flex items-center justify-between px-4 py-3 sm:p-0">
 
       <!-- Logo -->
-      <a :href="discord_url" target="_blank">
-        <button class="rounded-full h-10 flex justify-center items-center sm:mr-8">
+      <a :href="discord_url" target="_blank" class="sm:mr-8">
+        <button class="rounded-full h-10 flex justify-center items-center">
           <img class="h-12" src="../assets/logo.png" alt="Workcation">
         </button>
       </a>

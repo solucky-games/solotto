@@ -1,5 +1,7 @@
 'use strict';
 
+
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -31,17 +33,33 @@ io.on('connection', (socket) => {
 
   countUsers++;
   console.log(`${countUsers} users connected`);
-  io.emit('UserNumber', `user_num: ${countUsers}`)
+  io.emit('UserNumber', `user_num: ${countUsers}`);
+
+  io.emit('getDate', getDate());
 
   setInterval( function() {
     const time = getTime();
-    if ( time.split(':')[2] == 0 )
+    const timeSplit = time.split(':');
+    if ( timeSplit[2] == 0 ) {
       io.emit('getTime', `server_time: ${time}`);
-    io.emit('getCountDown', `${countDown()}`);
+      if ( timeSplit[0] == 0 && timeSplit[1] == 1 ) {
+        io.emit('getDate', getDate());
+      }
+    }
+    io.emit('getCountDown', countDown());
   }, 1000);
 
 
-  
+  setInterval( async function () {
+    const masterPubKey = new web3.PublicKey('GANTRxDjP5BoUExWqVLAC9yVhC29dThviuqNmMDdSEF4');
+    const connection = new web3.Connection('https://api.devnet.solana.com', 'processed');
+    const potSOL = Math.floor(await connection.getBalance(masterPubKey)/1000000000);
+    coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
+      const potUSD = Math.floor(potSOL*price.last)
+      io.emit('getPOT', { potSOL, potUSD });
+    });
+  }, 10000);
+
   socket.on('disconnect', () => {
     console.log('A user disconnected');
     countUsers--;
@@ -72,6 +90,22 @@ server.listen(PORT, ()=> {
 
 // functions
 
+const web3 =  require('@solana/web3.js');
+const coinTicker = require('coin-ticker');
+
+async function getMasterBalance() {
+  
+}
+
+function createAccount(username, password) {
+  return new Promise((resolve, reject) => {
+    socket.emit('create account', {username:username, password:password});
+
+    socket.once('create account return', (data) => resolve(data.failed));
+  });
+};
+
+
 const formatTime = (num) => {
   if (String(num).length < 2) 
     return '0' + String(num);
@@ -86,6 +120,14 @@ const getTime = () => {
   const minutes = formatTime(date.getMinutes());
   const seconds = formatTime(date.getSeconds());
   return `${hours}:${minutes}:${seconds}`;
+}
+
+const getDate = () => {
+  const date = new Date
+  const year = formatTime(date.getUTCFullYear());
+  const month = formatTime(date.getUTCMonth());
+  const day = formatTime(date.getUTCDate());
+  return `${year}-${month}-${day}`;
 }
 
 const countDown = () => {

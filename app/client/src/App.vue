@@ -3,8 +3,8 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance"/>
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :countdown="countdown" />
-        <PlayPanel :countdown="countdown"/>
+        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" />
+        <PlayPanel :countdown="countdown" :potSOL="potSOL" />
         <HistoryPanel />
       </div>
     </div>
@@ -65,10 +65,27 @@ export default {
     // Countdown
     const countdown = ref('');
     socket.on('getCountDown', (data) => {
-      console.log(data);
       countdown.value = String(data);
       return data;
     });
+
+    // Date 
+    const date = ref('');
+    socket.on('getDate', (data) => {
+      date.value = String(data);
+      return data;
+    });
+
+    // Pot 
+    const potSOL = ref(0);
+    const potUSD = ref(0);
+    socket.on('getPOT', (data) => {
+      console.log(data);
+      potSOL.value = data.potSOL;
+      potUSD.value = data.potUSD;
+      return data;
+    });
+
 
 
     // User wallet
@@ -88,6 +105,9 @@ export default {
     })
 
 
+
+
+
     
 
 
@@ -95,7 +115,10 @@ export default {
     return {
       users,
       balance,
-      countdown
+      countdown,
+      date,
+      potSOL,
+      potUSD
     }
   }
  

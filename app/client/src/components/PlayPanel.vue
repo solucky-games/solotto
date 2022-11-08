@@ -117,7 +117,8 @@ const maxNumber = 1000000000;
 
 export default {
   props: [
-    'countdown'
+    'countdown',
+    'potSOL'
   ],
   components: {
     // CountDown,
@@ -127,12 +128,7 @@ export default {
   setup () {
 
     // Get current pot
-    const potSOL = ref(0);
     const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
-    watchEffect(async () => {
-      potSOL.value = await connection.getBalance(masterPubKey)/1000000000;
-      potSOL.value = Math.floor(potSOL.value);
-    });
 
     const nTickets = ref(0);
     const tickets = ref([]);
@@ -143,6 +139,7 @@ export default {
       console.log(tickets.value)
       nTickets.value = tickets.value.length;
     });
+    
 
     // User wallet
     const wallet = useAnchorWallet();
@@ -170,6 +167,7 @@ export default {
       });
       return { flag, country, city };
     }
+
     
     async function commitNumber () {
 
@@ -299,7 +297,7 @@ export default {
     }
     const yourROI = ref(0);
     function updateYourROI () {
-      yourROI.value = Math.floor((potSOL.value/yourNumbers.value-1)*10000)/100;
+      // yourROI.value = Math.floor((this.potSOL.value/yourNumbers.value-1)*10000)/100;
     }
     watchEffect(async () => {
       updateYourNumbers();
@@ -313,7 +311,6 @@ export default {
     }
     
     return { 
-      potSOL,
       commitNumber,
       clickNum,
       deleteNum,
