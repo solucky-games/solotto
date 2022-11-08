@@ -3,7 +3,7 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance"/>
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" />
+        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :newTicket="newTicket" :tickets="tickets" />
         <PlayPanel :countdown="countdown" :potSOL="potSOL" />
         <HistoryPanel />
       </div>
@@ -57,7 +57,7 @@ export default {
     const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
     const users = ref();
     socket.on('UserNumber', (data) => {
-      console.log(data);
+      //console.log(data);
       users.value = String(data).split(' ')[1];
       return data;
     });
@@ -66,36 +66,52 @@ export default {
     const countdown = ref('');
     socket.on('getCountDown', (data) => {
       countdown.value = String(data);
-      return data;
+
     });
 
     // Date 
     const date = ref('');
     socket.on('getDate', (data) => {
       date.value = String(data);
-      return data;
+
     });
 
     // Pot 
     const potSOL = ref(0);
     const potUSD = ref(0);
     socket.on('getPOT', (data) => {
-      console.log(data);
+      //console.log(data);
       potSOL.value = data.potSOL;
       potUSD.value = data.potUSD;
-      return data;
     });
+
+    // newTicket
+    const newTicket = ref([]);
+    socket.on('getNewTicket', (data, error) => {
+      if (error) console.log('Error on socket:', error);
+      newTicket.value = data;
+    });
+
+    // tickets
+    const tickets = ref([]);
+    socket.on('getTickets', (data, error) => {
+      if (error) console.log('Error on socket:', error);
+      console.log(data, '_________')
+      tickets.value = data;
+    });
+
 
 
 
     // User wallet
     const workspace = useWorkspace();
+    const wallet = workspace.wallet
     const balance = ref();
     setInterval( () => {
       watchEffect(async () => {
       const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
-      console.log(balance);
+      // console.log(balance);
       })
     }, 1000)
 
@@ -118,7 +134,10 @@ export default {
       countdown,
       date,
       potSOL,
-      potUSD
+      potUSD,
+      newTicket,
+      tickets,
+      wallet
     }
   }
  

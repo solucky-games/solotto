@@ -1,6 +1,7 @@
 'use strict';
 
-const Ticket = require('../model/ticket.model')
+const Ticket = require('../model/ticket.model');
+
 
 const postTicket = (req, res) => {
   

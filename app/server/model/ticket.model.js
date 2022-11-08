@@ -1,17 +1,19 @@
 'use strict';
 
-const mongoose = require('mongoose')
+const mongoose = require('./index')
 const Schema = mongoose.Schema
 
 const ticketSchema = new Schema({
-  date: Date,
+  date: Number,
   hour: String,
-  wallet: String,
+  owner: String,
   number: Number,
-  verified: Boolean,
-  country: String,
-  flag: String,
-  twitter: String
+  //verified: Boolean,
+  //country: String,
+  //flag: String,
+  //city: String,
+  //twitter: String,
+  //discord: String
 }, { timestamps: true },
 );
 

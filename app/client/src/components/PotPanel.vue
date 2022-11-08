@@ -64,7 +64,7 @@
 
         <!-- commited numbers -->
         <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
-          
+          <div>{{newTicket.number}}</div>
           <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-gray-100'">
             <div v-for="x in tickets" :key="x.id" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
               <div class="hover:font-semibold grid grid-cols-10 gap-3">
@@ -109,7 +109,9 @@ export default ({
     'date',
     'countdown',
     'potSOL',
-    'potUSD'
+    'potUSD',
+    'newTicket',
+    'tickets'
   ],
   components: {
     //CountDown
@@ -132,33 +134,35 @@ export default ({
         potUSD.value = nf.format(potSOL.value*price.last).split('.')[0];
       });
     });
-    const nTickets = ref(0);
-    const tickets = ref([]);
-    const nPlayers = ref(0);
-    watchEffect(async () => {
-      const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
-      const data = await res.json();
-      tickets.value = data.reverse();
-      console.log(tickets.value)
-      nTickets.value = tickets.value.length;
+    // const tickets = ref([]);
+    // const nTickets = ref(0);
+    // const nPlayers = ref(0);
+    // watchEffect(async () => {
+    //   const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
+    //   const data = await res.json();
+    //   tickets.value = data.reverse();
+    //   console.log(tickets.value)
+    //   nTickets.value = tickets.value.length;
 
-      const uniqueWallets = [];
-      for (const ticket of tickets.value) {
-        if ( !uniqueWallets.includes(ticket.wallet) )
-          uniqueWallets.push(ticket.wallet);
-      }
+    //   const uniqueWallets = [];
+    //   for (const ticket of tickets.value) {
+    //     if ( !uniqueWallets.includes(ticket.wallet) )
+    //       uniqueWallets.push(ticket.wallet);
+    //   }
+    //   nPlayers.value = uniqueWallets.length;
+    // });
 
-      nPlayers.value = uniqueWallets.length;
-    });
+
+
 
     return {
       nf,
       user,
       // potSOL,
       // potUSD,
-      tickets,
-      nTickets,
-      nPlayers,
+      // tickets,
+      // nTickets,
+      // nPlayers,
     }
   },
   data() {

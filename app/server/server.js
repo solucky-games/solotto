@@ -1,16 +1,63 @@
 'use strict';
 
 
-
+const TicketCtrl = require('./controller/ticket.controller');
+// const Ticket = require('./model/ticket.model');
 const express = require('express');
+const router = express.Router();
 const app = express();
 const cors = require('cors');
 
-const dates = ['2022-11-05', '2022-11-06']
+// const utils = require('./utils');
+
+
+const formatTime = (num) => {
+  if (String(num).length < 2) 
+    return '0' + String(num);
+  else if (String(num).length < 1) 
+    return '00';
+  return String(num);
+}
+
+const getTime = () => {
+  const date = new Date
+  const hours = formatTime(date.getUTCHours());
+  const minutes = formatTime(date.getMinutes());
+  const seconds = formatTime(date.getSeconds());
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+const getDate = () => {
+  const date = new Date
+  const year = formatTime(date.getUTCFullYear());
+  const month = formatTime(date.getUTCMonth()+1);
+  const day = formatTime(date.getUTCDate());
+  return `${year}-${month}-${day}`;
+}
+
+const countDown = () => {
+  const time = getTime().split(':');
+  const hours = formatTime(23-time[0]);
+  const minutes = formatTime(59-time[1]);
+  const seconds = formatTime(59-time[2]);
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function getDateSQL () {
+  const date = new Date
+  const year = formatTime(date.getUTCFullYear());
+  const month = formatTime(date.getUTCMonth()+1);
+  const day = formatTime(date.getUTCDate());
+  return `_${year}_${month}_${day}_`;
+}
+
+// router.post('/api/tickets', postTicket);
+// router.get ('/api/tickets', getTickets);
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
+app.use(router);
 
 const server = require('http').createServer(app);
 const PORT = 5001;
@@ -18,6 +65,54 @@ const PORT = 5001;
 app.get('/', (req, res) => {
   res.send('<h1>Welcome hackers to your next challenge! Hack me, get paid.</h1>');
 });
+
+const { Client } = require('pg');
+
+const conString = "postgresql://solucky:dSb24bEYcIe0Eqi73klvDg@free-tier13.aws-eu-central-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full&options=--cluster%3Dsolucky-4329" //Can be found in the Details page
+const client = new Client(conString);
+
+client.connect(function(err) {
+  if(err) {
+    return console.error('could not connect to postgres', err);
+  } else {
+    console.log('DB connected successfully');
+  }
+});
+
+function createTable() {
+  const date = getDateSQL();
+  const schema = 'INDEX id int, owner varchar(255), flag varchar(50), hour varchar(50), timestamp int'
+  const query = `CREATE TABLE ${date} ( ${schema} )`
+  console.log(query);
+  client.query(query, function(err, result) {
+    if(err) {
+      return console.error('error running query', err);
+    }
+    console.log(result);
+    // >> output: 2018-08-23T14:02:57.117Z
+    client.end();
+  });
+  }
+
+function insertTicket() {
+  const date = getDateSQL();
+  const schema = "id, owner, flag, hour, timestamp";
+  const values = "22, 'jhkjadhkjahjksa', 'US', '03:21', 329303290923";
+  const query = `INSERT INTO ${date} ( ${schema} ) VALUES ( ${values} )`;
+  console.log('eoeo', query)
+  client.query(query, function(err, result) {
+    if(err) {
+      return console.error('error running query', err);
+    }
+    console.log(result);
+    // >> output: 2018-08-23T14:02:57.117Z
+    client.end();
+  });
+}
+
+createTable();
+insertTicket();
+
 
 // socket.io 
 const io = require('socket.io')(server, {
@@ -49,15 +144,18 @@ io.on('connection', (socket) => {
     io.emit('getCountDown', countDown());
   }, 1000);
 
-
   setInterval( async function () {
-    const masterPubKey = new web3.PublicKey('GANTRxDjP5BoUExWqVLAC9yVhC29dThviuqNmMDdSEF4');
-    const connection = new web3.Connection('https://api.devnet.solana.com', 'processed');
-    const potSOL = Math.floor(await connection.getBalance(masterPubKey)/1000000000);
-    coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
-      const potUSD = Math.floor(potSOL*price.last)
-      io.emit('getPOT', { potSOL, potUSD });
-    });
+    try {
+      const masterPubKey = new web3.PublicKey('GANTRxDjP5BoUExWqVLAC9yVhC29dThviuqNmMDdSEF4');
+      const connection = new web3.Connection('https://api.devnet.solana.com', 'processed');
+      const potSOL = Math.floor(await connection.getBalance(masterPubKey)/1000000000);
+      coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
+        const potUSD = Math.floor(potSOL*price.last)
+        io.emit('getPOT', { potSOL, potUSD });
+      });
+    } catch (error) {
+      console.log(error)
+    }
   }, 3000);
 
   socket.on('disconnect', () => {
@@ -68,9 +166,13 @@ io.on('connection', (socket) => {
 
   });
   
-  socket.on('newTicket', (ticket) => {
-    console.log('message: ' + msg);
-  });
+  // socket.on('newTicket', (ticket) => {
+  //   console.log('ticket: ' + ticket);
+
+  //   router.post('/tickets', TicketCtrl.postTicket);
+  //   router.get('/tickets', TicketCtrl.getTickets);
+  //   io.emit('getTickets', )
+  // });
 
 });
 
@@ -93,51 +195,9 @@ server.listen(PORT, ()=> {
 const web3 =  require('@solana/web3.js');
 const coinTicker = require('coin-ticker');
 
-async function getMasterBalance() {
-  
-}
 
-function createAccount(username, password) {
-  return new Promise((resolve, reject) => {
-    socket.emit('create account', {username:username, password:password});
-
-    socket.once('create account return', (data) => resolve(data.failed));
-  });
-};
+// Controllers
 
 
-const formatTime = (num) => {
-  if (String(num).length < 2) 
-    return '0' + String(num);
-  else if (String(num).length < 1) 
-    return '00';
-  return String(num);
-}
 
-const getTime = () => {
-  const date = new Date
-  const hours = formatTime(date.getUTCHours());
-  const minutes = formatTime(date.getMinutes());
-  const seconds = formatTime(date.getSeconds());
-  return `${hours}:${minutes}:${seconds}`;
-}
 
-const getDate = () => {
-  const date = new Date
-  const year = formatTime(date.getUTCFullYear());
-  const month = formatTime(date.getUTCMonth());
-  const day = formatTime(date.getUTCDate());
-  return `${year}-${month}-${day}`;
-}
-
-const countDown = () => {
-  const time = getTime().split(':');
-  const hours = formatTime(23-time[0]);
-  const minutes = formatTime(59-time[1]);
-  const seconds = formatTime(59-time[2]);
-  return `${hours}h ${minutes}m ${seconds}s`;
-}
-
-const potTime = (time) => {
-
-}

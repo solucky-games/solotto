@@ -118,7 +118,8 @@ const maxNumber = 1000000000;
 export default {
   props: [
     'countdown',
-    'potSOL'
+    'potSOL',
+    'wallet'
   ],
   components: {
     // CountDown,
@@ -151,7 +152,7 @@ export default {
     })
 
     // User location
-    function userLocation () {
+    async function userLocation () {
       const flag = ref('');
       const country = ref('');
       const city = ref('');
@@ -171,7 +172,7 @@ export default {
     
     async function commitNumber () {
 
-      const location = userLocation();
+      const location = await userLocation();
 
       const { sendTransaction } = useWallet();
 
@@ -210,21 +211,21 @@ export default {
       updateYourROI();
     }
 
-    async function postTicket(verify, location, twitter, discord) {
+    async function postTicket(verify) {
       const date = new Date();
       const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours())
       const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes())
       const ticket = {
         date: date.getUTCDate(),
         hour: `${hour}:${minutes}`,
-        wallet: wallet.value.publicKey.toBase58(),
+        owner: wallet.value.publicKey.toBase58(),
         number: number.value,
-        verified: verify,
-        country: location.country,
-        flag: location.flag,
-        city: location.city,
-        twitter: twitter || null,
-        discord: discord || null,
+        verified: verify || false,
+        country: '',
+        flag: '',
+        city:'',
+        twitter: '',
+        discord: '',
       };
       const requestOptions = {
         method: 'POST',
