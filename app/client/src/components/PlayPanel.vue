@@ -5,7 +5,7 @@
 
     <div class="shadow-xl rounded-xl pt-2 pb-2 " :class="this.$store.state.dark ? 'bg-gray-800' : 'bg-white'">
       <!-- Title Box -->
-      <div class="px-4 text-center mt-8">
+      <div class="px-4 text-center mt-10">
         <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
         <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Number</p>
 

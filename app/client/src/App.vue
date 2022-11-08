@@ -91,18 +91,18 @@ export default {
     // User wallet
     const workspace = useWorkspace();
     const balance = ref();
-    // setInterval( () => {
-    //   watchEffect(async () => {
-    //   const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
-    //   balance.value = Math.floor(bal*100)/100;
-    //   console.log(balance);
-    //   })
-    // }, 1000)
-
-    watchEffect(async () => {
+    setInterval( () => {
+      watchEffect(async () => {
       const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
-    })
+      console.log(balance);
+      })
+    }, 1000)
+
+    // watchEffect(async () => {
+    //   const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
+    //   balance.value = Math.floor(bal*100)/100;
+    // })
 
 
 

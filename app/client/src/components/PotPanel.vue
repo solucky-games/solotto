@@ -40,7 +40,7 @@
   
           </div>
         </div>
-        <div class="flex align-center justify-center">
+        <div class="flex align-center justify-center mt-4">
           <div class="p-2 mr-1 text-center">
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
             <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold">Numbers</p>

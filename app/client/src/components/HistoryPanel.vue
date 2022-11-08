@@ -15,7 +15,40 @@
         </div>
       </div>
 
-      <div class="flex align-center justify-center mt-2">
+      <div class="flex align-center justify-center mt-1">
+
+        <div class="p-4 text-center">
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Countries</p>
+          <div class="flex justify-center" >
+            <p class="font-bold text-xl mt-2"
+              :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+            >{{ ` ${12}` }}</p>
+          </div>
+        </div>
+
+        <div class="p-4 text-center mr-2">
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
+          <div class="flex justify-center" >
+            <p class="font-bold text-xl mt-2 mr-4"
+              :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+            > <span class="text-sm text-gray-400">◎ </span>{{ ` ${323}` }}</p>
+          </div>
+        </div>
+
+        <div class="p-4 text-center">
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
+          <div class="flex justify-center" >
+            <p class="font-bold text-md pt-2 mt-1"
+              :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+            > {{ nf.format(9044309).replaceAll(',', ' ') }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex align-center justify-center">
 
         <div class="p-4 text-center">
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>

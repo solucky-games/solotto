@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
       const potUSD = Math.floor(potSOL*price.last)
       io.emit('getPOT', { potSOL, potUSD });
     });
-  }, 10000);
+  }, 3000);
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');
