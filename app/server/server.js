@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config()
+
 
 //const TicketCtrl = require('./controller/ticket.controller');
 // const Ticket = require('./model/ticket.model');
@@ -68,8 +70,8 @@ app.get('/', (req, res) => {
 
 const { Client } = require('pg');
 
-const conString = "postgres://zlrmcwid:07bjXoJQKL2_LqGjZHjI6vR9ro8GM6UP@lucky.db.elephantsql.com/zlrmcwid" //Can be found in the Details page
-const client = new Client(conString);
+const postgreURL = process.env.local.POSTREGRE_URL;
+const client = new Client(postgreURL);
 
 client.connect(function(err) {
   if(err) {
