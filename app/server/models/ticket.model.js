@@ -1,6 +1,6 @@
 'use strict';
 
-const mongoose = require('./index')
+
 const Schema = mongoose.Schema
 
 const ticketSchema = new Schema({
