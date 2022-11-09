@@ -29,7 +29,7 @@ function getDateSQL () {
   const year = formatTime(date.getUTCFullYear());
   const month = formatTime(date.getUTCMonth()+1);
   const day = formatTime(date.getUTCDate());
-  return `___${year}_${month}_${day}___`;
+  return `_${year}_${month}_${day}_`;
 }
 
 function countDown () {

@@ -2,7 +2,6 @@
 
 require('dotenv').config()
 
-
 //const TicketCtrl = require('./controller/ticket.controller');
 // const Ticket = require('./model/ticket.model');
 const express = require('express');
@@ -11,13 +10,13 @@ const app = express();
 const cors = require('cors');
 
 const utils = require('./utils/utils');
-const ctrls = require('./controllers/ticket.controller');
+const ctrls = require('./controllers/tickets.controller');
 // const web3 = require('./utils/web3');
 const web3 =  require('@solana/web3.js');
 const coinTicker = require('coin-ticker');
 
-// router.post('/api/tickets', postTicket);
-// router.get ('/api/tickets', getTickets);
+router.post('/api/tickets', ctrls.postTicket);
+router.get ('/api/tickets', ctrls.getTickets);
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -25,6 +24,19 @@ app.use(cors());
 app.use(router);
 app.get('/', (req, res) => {
   res.send('<h1>Welcome hackers to your next challenge! Hack me, get paid.</h1>');
+});
+
+// Connect to PotsgreSQL
+const { Client } = require('pg');
+const postgreURL = process.env.POSTGRE_URL;
+const client = new Client(postgreURL);
+
+client.connect(function(err) {
+  if(err) {
+    return console.error('Could not connect to DB...', err);
+  } else {
+    console.log('DB connected successfully!\n');
+  }
 });
 
 const server = require('http').createServer(app);
@@ -37,28 +49,12 @@ server.listen(PORT, ()=> {
     const arr = time.split(':');
     if ( arr[2] == 0 ) {
       console.log(time);
-      if ( arr[1] == 15 && arr[0] == 12 ) {
-        const date = utils.getDate();
-        console.log('\n\n\n\n', date, '\n\n');
-        ctrls.createTable(date); 
+      if ( arr[1] == 25 && arr[0] == 18 ) {
+        const date = utils.getDateSQL();
+        ctrls.createTable(client, date); 
       }
     }
   }, 1000);
-});
-
-// Connect to PotsgreSQL
-const { Client } = require('pg');
-const postgreURL = process.env.POSTGRE_URL;
-const client = new Client(postgreURL);
-
-client.connect(function(err) {
-  if(err) {
-    return console.error('could not connect to postgres', err);
-  } else {
-    console.log('DB connected successfully\n');
-    insertTicket();
-    getTickets();
-  }
 });
 
 // socket.io 

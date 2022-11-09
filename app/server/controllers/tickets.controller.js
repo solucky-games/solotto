@@ -1,47 +1,45 @@
 'use strict';
 
+const utils = require('../utils/utils');
 // const Ticket = require('../models/ticket.model');
 
-function createTable( date ) {
-  const schema = 'id int PRIMARY KEY, owner varchar(255), flag varchar(50), hour varchar(50), timestamp int'
+function createTable( client, date ) {
+  const schema = '_hour varchar(21), __num__ int PRIMARY KEY, _verified boolean, _owner varchar(255), _flag varchar(11), _pot int,_timestamp timestamp'
   const query = `CREATE TABLE ${date} ( ${schema} )`
   client.query(query, function(err, result) {
     if(err) {
-      return console.error('error running query', err);
+      return console.log('error creating table query', err);
     }
-    console.log(result);
-
+    console.log(`NEW TABLE ${date} ${utils.getTime()}`);
+    return result;
   });
 }
 
-function insertTicket( client, ticket ) {
-  const date = getDateSQL();
-  const schema = "id, owner, flag, hour, timestamp";
-  //const values = "33, 'jhkjadhkjahjksa', '🇪🇸', '03:21', 3290923";
+function postTicket( client, date, ticket ) {
+  const schema = "_hour, _num_, _verified, _owner, _flag, _pot, _timestamp";
   const query = `INSERT INTO ${date} ( ${schema} ) VALUES ( ${ticket} )`;
   client.query(query, function(err, result) {
     if(err) {
       return console.error('error running query', err);
     }
-
+    console.log(`NEW TICKET ${ticket} ${utils.getTime()}`);
+    return result;
   });
 }
 
-function getTickets() {
-
-  const date = utils.getDateSQL();
+function getTickets( client, date ) {
   const query = `SELECT * FROM ${date}`;
   client.query(query, function(err, result) {
     if(err) {
       return console.error('error running query', err);
     }
     console.log('\n\n\n', result.rows);
+    return result;
   });
-
 }
 
 module.exports = {
   createTable,
-  insertTicket,
+  postTicket,
   getTickets
 }
