@@ -16,11 +16,6 @@ const ctrls = require('./controllers/ticket.controller');
 const web3 =  require('@solana/web3.js');
 const coinTicker = require('coin-ticker');
 
-
-
-
-
-
 // router.post('/api/tickets', postTicket);
 // router.get ('/api/tickets', getTickets);
 
@@ -39,9 +34,15 @@ server.listen(PORT, ()=> {
   console.log('listening on port', PORT);
 
   setInterval( function() {
-    const time =  utils.getTime();
-    if ( time.split(':')[2] == 0 )
+    const time =  utils.getTime().split(':');
+    if ( time[2]  == 0 ) {
       console.log(time);
+      if ( time[1] == 0 && time[0] == 0 ) {
+        console.log( utils.getDate() )
+        ctrls.createTable(); 
+      }
+    }
+    
   }, 1000);
 
 })
@@ -56,7 +57,6 @@ client.connect(function(err) {
     return console.error('could not connect to postgres', err);
   } else {
     console.log('DB connected successfully\n');
-    createTable();  
     insertTicket();
     getTickets();
   }
