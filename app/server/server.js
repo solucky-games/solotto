@@ -35,11 +35,12 @@ server.listen(PORT, ()=> {
 
   setInterval( function() {
     const time =  utils.getTime().split(':');
-    if ( time[2]  == 0 ) {
+    if ( time[2] == 0 ) {
       console.log(time);
-      if ( time[1] == 0 && time[0] == 0 ) {
-        console.log( utils.getDate() )
-        ctrls.createTable(); 
+      if ( time[1] == 15 && time[0] == 12 ) {
+        const date = utils.getDate();
+        console.log('\n\n\n\n', date, '\n\n');
+        ctrls.createTable(date); 
       }
     }
     
