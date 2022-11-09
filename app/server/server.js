@@ -32,21 +32,19 @@ const PORT = 5001;
 // run server
 server.listen(PORT, ()=> {
   console.log('listening on port', PORT);
-
   setInterval( function() {
-    const time =  utils.getTime().split(':');
-    if ( time[2] == 0 ) {
+    const time =  utils.getTime();
+    const arr = time.split(':');
+    if ( arr[2] == 0 ) {
       console.log(time);
-      if ( time[1] == 15 && time[0] == 12 ) {
+      if ( arr[1] == 15 && arr[0] == 12 ) {
         const date = utils.getDate();
         console.log('\n\n\n\n', date, '\n\n');
         ctrls.createTable(date); 
       }
     }
-    
   }, 1000);
-
-})
+});
 
 // Connect to PotsgreSQL
 const { Client } = require('pg');
