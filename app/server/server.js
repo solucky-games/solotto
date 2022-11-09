@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cors());
 app.use(router);
 app.get('/', (req, res) => {
-  res.send('<h1>Welcome hackers to your next challenge! Hack me, get paid.</h1>');
+  res.send('<h1>Welcome hackers to your next challenge! Hack me, get paid in SOL.</h1>');
 });
 
 // Connect to PotsgreSQL
