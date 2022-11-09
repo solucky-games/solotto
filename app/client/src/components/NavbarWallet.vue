@@ -43,20 +43,20 @@
 
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-800 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
             <img :src="twitter_img" class="h-6 w-6"/>
           </button>
         </a>
         <!-- Discord Button -->
         <a :href="discord_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-800 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="discord_img=discord_gif" @mouseleave="discord_img=require('../assets/ico/discord.png')">
             <img :src="discord_img" class="h-7 w-7"/>
           </button>
         </a>
 
         <diV class="ml-8">
         <!-- Dark Button -->
-        <button class="rounded-full h-8 w-8 m-2 flex justify-center items-center shadow-xl border " @click="this.$store.dispatch('darkMode')" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-800 border-white/10 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-200 border-gray-100 text-gray-600'">
+        <button class="rounded-full h-8 w-8 m-2 flex justify-center items-center shadow-xl border " @click="this.$store.dispatch('darkMode')" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-700 border-white/10 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-200 border-gray-100 text-gray-600'">
           <svg v-if="this.$store.state.dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
