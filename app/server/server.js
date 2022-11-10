@@ -115,15 +115,3 @@ io.on('connection', (socket) => {
   })
 
 });
-
-function getTickets( ) {
-  const date = utils.getDateSQL();
-  const query = `SELECT * FROM ${date}`;
-  client.query(query, function(err, result) {
-    if(err) {
-      return console.error('error running query', err);
-    }
-    console.log('\n\n\n', result.rows);
-    return result.rows;
-  });
-}
