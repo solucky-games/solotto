@@ -5,6 +5,10 @@ module.exports = defineConfig({
   configureWebpack: {
     plugins: [
       new NodePolyfillPlugin()
-    ]
+    ],
+    stats: { warnings: false }
+  },
+  chainWebpack: config => {
+    config.plugins.delete('friendly-errors')
   }
 });

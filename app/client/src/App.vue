@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-      <NavbarWallet :users="users" :balance="balance"/>
+      <NavbarWallet :users="users" :balance="balance" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :newTicket="newTicket" :tickets="tickets" />
         <PlayPanel :countdown="countdown" :potSOL="potSOL" />
         <HistoryPanel />
+        <button @click="newTicket">Send</button>
+        <div>{{tickets[0]}}</div>
       </div>
     </div>
 
@@ -85,13 +87,6 @@ export default {
       potUSD.value = data.potUSD;
     });
 
-    // newTicket
-    const newTicket = ref([]);
-    socket.on('getNewTicket', (data, error) => {
-      if (error) console.log('Error on socket:', error);
-      newTicket.value = data;
-    });
-
     // tickets
     const tickets = ref([]);
     socket.on('getTickets', (data, error) => {
@@ -100,7 +95,11 @@ export default {
       tickets.value = data;
     });
 
-
+    function newTicket () {
+      const ticket = `'09:30', 1, false, 'fhgjfdgfyuf3ggfrhlr', '🇯🇵', 38, ${Date.now()}`;
+      socket.emit('newTicket', ticket)
+      console.log(ticket)
+    }
 
 
     // User wallet
@@ -119,13 +118,6 @@ export default {
     //   const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
     //   balance.value = Math.floor(bal*100)/100;
     // })
-
-
-
-
-
-    
-
 
 
     return {

@@ -169,13 +169,10 @@ export default {
       return { flag, country, city };
     }
 
-    
     async function commitNumber () {
 
       const location = await userLocation();
-
       const { sendTransaction } = useWallet();
-
       if (! wallet.value) {
         return alert('Connect your wallet first!')
       } 
@@ -202,7 +199,7 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
-      await postTicket(false, location);
+      await postTicket(false, location.flag);
 
       commitPop.value = true;
 
@@ -211,36 +208,33 @@ export default {
       updateYourROI();
     }
 
-    async function postTicket(verify) {
+    async function postTicket(verify, flag) {
       const date = new Date();
       const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours())
       const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes())
       const ticket = {
-        date: date.getUTCDate(),
-        hour: `${hour}:${minutes}`,
-        owner: wallet.value.publicKey.toBase58(),
-        number: number.value,
-        verified: verify || false,
-        country: '',
-        flag: '',
-        city:'',
-        twitter: '',
-        discord: '',
+        _hour: `${hour}:${minutes}`,
+        __num__: number.value,
+        _verified: verify || false,
+        _owner: wallet.value.publicKey.toBase58(),
+        _flag: flag,
+        _pot: this.potSOL,
+        _timestamp: date.now()
       };
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(ticket)
-      };
-      console.log(ticket);
-      const server_url = process.env.VUE_APP_DB_TICKETS_URL;
-      const response = await fetch(server_url, requestOptions); 
-      const res = await response.json();
-      console.log(res)
+
+      return ticket;
+      // const requestOptions = {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(ticket)
+      // };
+      // console.log(ticket);
+      // const server_url = process.env.VUE_APP_DB_TICKETS_URL;
+      // const response = await fetch(server_url, requestOptions); 
+      // const res = await response.json();
+      // console.log(res)
 
     }
-
-
 
     // async function verifyNumber() {
     //   sendTicket(number.value, flag.value)

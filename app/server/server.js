@@ -49,7 +49,7 @@ server.listen(PORT, ()=> {
     const arr = time.split(':');
     if ( arr[2] == 0 ) {
       console.log(time);
-      if ( arr[1] == 25 && arr[0] == 18 ) {
+      if ( arr[1] == 13 && arr[0] == 9 ) {
         const date = utils.getDateSQL();
         ctrls.createTable(client, date); 
       }
@@ -73,6 +73,7 @@ io.on('connection', (socket) => {
   console.log(`${countUsers} users connected`);
   io.emit('UserNumber', `user_num: ${countUsers}`);
   io.emit('getDate', utils.getDate());
+  io.emit('getTickets', ctrls.getTickets( client, utils.getDateSQL() ));
 
   setInterval( function() {
     const time = utils.getTime();
@@ -106,4 +107,23 @@ io.on('connection', (socket) => {
     io.emit('UserNumber', `user_num: ${countUsers}`)
   });
 
+  socket.on('newTicket', async (ticket) => {
+    const date = utils.getDateSQL();
+    const post = await ctrls.postTicket( client, date, ticket );
+    io.emit('createdTicket', post);
+    io.emit('getTickets', ctrls.getTickets( client, date ));
+  })
+
 });
+
+function getTickets( ) {
+  const date = utils.getDateSQL();
+  const query = `SELECT * FROM ${date}`;
+  client.query(query, function(err, result) {
+    if(err) {
+      return console.error('error running query', err);
+    }
+    console.log('\n\n\n', result.rows);
+    return result.rows;
+  });
+}
