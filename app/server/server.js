@@ -15,8 +15,8 @@ const ctrls = require('./controllers/tickets.controller');
 const web3 =  require('@solana/web3.js');
 const coinTicker = require('coin-ticker');
 
-router.post('/api/tickets', ctrls.postTicket);
-router.get ('/api/tickets', ctrls.getTickets);
+// router.post('/api/tickets', () => ctrls.postTicket(client, ));
+// router.get ('/api/tickets', ctrls.getTickets);
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -67,13 +67,16 @@ const io = require('socket.io')(server, {
 
 let countUsers = 0;
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
 
   countUsers++;
   console.log(`${countUsers} users connected`);
-  io.emit('UserNumber', `user_num: ${countUsers}`);
+  io.emit('userNumber', `user_num: ${countUsers}`);
   io.emit('getDate', utils.getDate());
-  io.emit('getTickets', ctrls.getTickets( client, utils.getDateSQL() ));
+  const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
+  console.log(tickets, 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEO')
+
+  io.emit('getTickets', tickets);
 
   setInterval( function() {
     const time = utils.getTime();
@@ -109,9 +112,9 @@ io.on('connection', (socket) => {
 
   socket.on('newTicket', async (ticket) => {
     const date = utils.getDateSQL();
-    const post = await ctrls.postTicket( client, date, ticket );
-    io.emit('createdTicket', post);
-    io.emit('getTickets', ctrls.getTickets( client, date ));
+    io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
+    const tickets = ctrls.getTickets( client, date );
+    io.emit('getTickets', tickets );
   })
 
 });

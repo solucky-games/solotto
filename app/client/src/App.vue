@@ -4,10 +4,9 @@
       <NavbarWallet :users="users" :balance="balance" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :newTicket="newTicket" :tickets="tickets" />
-        <PlayPanel :countdown="countdown" :potSOL="potSOL" />
+        <PlayPanel v-on="newTicket" @clicked="newTicket" :countdown="countdown" :potSOL="potSOL" />
         <HistoryPanel />
         <button @click="newTicket">Send</button>
-        <div>{{tickets[0]}}</div>
       </div>
     </div>
 
@@ -48,17 +47,11 @@ export default {
     HistoryPanel,
     // CommitModal
   },
-  // created() {
-  //   SocketioService.setupSocketConnection();
-
-  // },
-  // beforeUnmount() {
-  //   SocketioService.disconnect();
-  // },
   data() {
+
     const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
     const users = ref();
-    socket.on('UserNumber', (data) => {
+    socket.on('userNumber', (data) => {
       //console.log(data);
       users.value = String(data).split(' ')[1];
       return data;
@@ -91,16 +84,16 @@ export default {
     const tickets = ref([]);
     socket.on('getTickets', (data, error) => {
       if (error) console.log('Error on socket:', error);
-      console.log(data, '_________')
+      console.log('tickets', data );
       tickets.value = data;
     });
 
-    function newTicket () {
-      const ticket = `'09:30', 1, false, 'fhgjfdgfyuf3ggfrhlr', '🇯🇵', 38, ${Date.now()}`;
-      socket.emit('newTicket', ticket)
+    // newTicket
+    function newTicket (ticket) {
+      //const ticket = `'12:30', 123456, false, 'fhgjfdgfyuf3ggfrhlr', '🇯🇵', 38, ${Date.now()}`;
+      socket.emit('newTicket',  ticket)
       console.log(ticket)
     }
-
 
     // User wallet
     const workspace = useWorkspace();
@@ -121,6 +114,7 @@ export default {
 
 
     return {
+      socket,
       users,
       balance,
       countdown,
@@ -132,6 +126,7 @@ export default {
       wallet
     }
   }
+  
  
 }
 </script>

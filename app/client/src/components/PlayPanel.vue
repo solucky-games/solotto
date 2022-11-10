@@ -62,7 +62,7 @@
 
       <div class="font-bold text-4xl text-center p-7 rounded-xl m-4 cursor-pointer"
       :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
-      @click="commitNumber"
+      @click="() => commitNumber"
       @mouseover="commitHover=true"
       @mouseleave="commitHover=false">
         <div class="text-2xl py-2 mr-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" v-if="commitHover">
@@ -98,7 +98,10 @@
 
 import { ref, watchEffect } from 'vue'
 import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
-import { useAnchorWallet, useWallet } from 'solana-wallets-vue'
+import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
+
+// import { io } from 'socket.io-client';
+
 // import CountDown from './CountDown.vue';
 
 //import {sendTicket} from './controller/sendTicket'
@@ -117,6 +120,7 @@ const maxNumber = 1000000000;
 
 export default {
   props: [
+    'socket',
     'countdown',
     'potSOL',
     'wallet'
@@ -128,18 +132,9 @@ export default {
   },
   setup () {
 
-    // Get current pot
-    const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
+    // // Get current pot
 
-    const nTickets = ref(0);
-    const tickets = ref([]);
-    watchEffect(async () => {
-      const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
-      const data = await res.json();
-      tickets.value = data.reverse();
-      console.log(tickets.value)
-      nTickets.value = tickets.value.length;
-    });
+    // const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
     
 
     // User wallet
@@ -169,24 +164,27 @@ export default {
       return { flag, country, city };
     }
 
+
+    const ticket = ref('')
+    // Commit Number
     async function commitNumber () {
 
-      const location = await userLocation();
-      const { sendTransaction } = useWallet();
-      if (! wallet.value) {
-        return alert('Connect your wallet first!')
-      } 
+      
+      // if (! wallet.value) {
+      //   return alert('Connect your wallet first!')
+      // } 
 
-      if ( tickets.value[number.value] && checkNumber(number.value) )
-        return alert('This number is already commited! Try another one.')
+      // if ( tickets.value[number.value] && checkNumber(number.value) )
+      //   return alert('This number is already commited! Try another one.')
 
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
-
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
 
       if (bal < commitSOL) 
         return alert('Not enough SOL in your wallet. Minimum funds needed: 1 SOL')
 
+      const { sendTransaction } = useWallet();
+      const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
       const transaction = new Transaction().add(
           SystemProgram.transfer({
               fromPubkey: wallet.value.publicKey,
@@ -199,52 +197,22 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
-      await postTicket(false, location.flag);
+
+      const location = await userLocation();
+      ticket.value = emitTicket(location.flag);
 
       commitPop.value = true;
 
-      updateYourNumbers();
-      updateYourProbability();
-      updateYourROI();
     }
 
-    async function postTicket(verify, flag) {
+    function emitTicket(flag) {
       const date = new Date();
       const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours())
       const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes())
-      const ticket = {
-        _hour: `${hour}:${minutes}`,
-        __num__: number.value,
-        _verified: verify || false,
-        _owner: wallet.value.publicKey.toBase58(),
-        _flag: flag,
-        _pot: this.potSOL,
-        _timestamp: date.now()
-      };
-
-      return ticket;
-      // const requestOptions = {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(ticket)
-      // };
-      // console.log(ticket);
-      // const server_url = process.env.VUE_APP_DB_TICKETS_URL;
-      // const response = await fetch(server_url, requestOptions); 
-      // const res = await response.json();
-      // console.log(res)
-
-    }
-
-    // async function verifyNumber() {
-    //   sendTicket(number.value, flag.value)
-  
-    async function checkNumber (num) {
-      for (const ticket in tickets.value) {
-        if (ticket.number == num)
-          return false
-      }
-      return true
+      return `'${hour}:${minutes}', ${number.value}, false, '${wallet.value.publicKey.toBase58()}', '${flag}'', ${this.potSOL}, ${date.now()}`;
+      // socket.emit('newTicket', ticket);
+      // console.log(socket.on('postTicket'))
+      // console.log(ticket)
     }
 
     const number = ref('0')
@@ -276,29 +244,29 @@ export default {
 
     const commitPop = ref(false);
     
-    const yourNumbers = ref(0);
-    function updateYourNumbers () {
-      const address = wallet.value.publicKey.toBase58();
-      const arr = [];
-      for (const [key, value] of Object.entries(tickets.value)) {
-        if (value === address)
-          arr.push(key);
-      }
-      yourNumbers.value = arr.length;
-    }
-    const yourProbability = ref(0);
-    function updateYourProbability () {
-      yourProbability.value = Math.floor((yourNumbers.value/tickets.value.length)*10000)/100;
-    }
-    const yourROI = ref(0);
-    function updateYourROI () {
-      // yourROI.value = Math.floor((this.potSOL.value/yourNumbers.value-1)*10000)/100;
-    }
-    watchEffect(async () => {
-      updateYourNumbers();
-      updateYourProbability();
-      updateYourROI();
-    });
+    //const yourNumbers = ref(0);
+    // function updateYourNumbers () {
+    //   const address = wallet.value.publicKey.toBase58();
+    //   const arr = [];
+    //   for (const [key, value] of Object.entries(tickets.value)) {
+    //     if (value === address)
+    //       arr.push(key);
+    //   }
+    //   yourNumbers.value = arr.length;
+    // }
+    // const yourProbability = ref(0);
+    // function updateYourProbability () {
+    //   yourProbability.value = Math.floor((yourNumbers.value/tickets.value.length)*10000)/100;
+    // }
+    // const yourROI = ref(0);
+    // function updateYourROI () {
+    //   // yourROI.value = Math.floor((this.potSOL.value/yourNumbers.value-1)*10000)/100;
+    // }
+    // watchEffect(async () => {
+    //   updateYourNumbers();
+    //   updateYourProbability();
+    //   updateYourROI();
+    // });
 
     function markWallet(address){
       if( wallet.value.publicKey.toBase58() == address ) 
@@ -312,14 +280,20 @@ export default {
       resetNum,
       number,
       nf,
-      tickets,
+      //tickets,
       shortWallet,
-      yourNumbers,
-      yourProbability,
+      // yourNumbers,
+      // yourProbability,
+      // yourROI,
       markWallet,
       location,
-      yourROI,
       commitPop,
+      ticket
+    }
+  },
+  methods: {
+    onClickButton (ticket) {
+      this.$emit('clicked', ticket)
     }
   },
   data() {

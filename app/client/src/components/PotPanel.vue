@@ -65,26 +65,24 @@
         <!-- commited numbers -->
         <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
           <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-gray-100'">
-            <div v-for="x in tickets" :key="x.id" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
-              <div class="hover:font-semibold grid grid-cols-10 gap-3">
-                <div class="text-xs col-span-2"  :class="markWallet(user, x.wallet) ? 'text-purple-400 font-bold' : 'text-grey-600'">{{ x.hour }}</div>
-                
-                <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
-                  <div class="text-xs text-left">{{ shortWallet(x.wallet, 4) }}</div>
+            <div v-for="x of this.tickets" :key="x._hour" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
+              <div class="hover:font-semibold grid grid-cols-10 gap-3" :class="markWallet(wallet, x._owner) ? 'text-purple-400 font-bold' : 'text-grey-600'">
+                <div class="text-xs col-span-2" >{{ x._hour }}</div>
+                <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
+                  <div class="text-xs text-left">{{ shortWallet(x._owner, 4) }}</div>
                 </a>
                 <a class="col-span-1" :href="'https://google.com/search?q='+x.country" target="_blank">
-                  <div class="text-xs">{{ x.flag }}</div>
+                  <div class="text-xs">{{ x._flag }}</div>
                 </a>
-                <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
-                  <div class="text-[13px] text-center" :class="markWallet(x.wallet)"> {{ nf.format(x.number).replaceAll(',', ' ') }}</div>
+                <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
+                  <div class="text-[13px] text-center" :class="markWallet(wallet, x._owner)"> {{ nf.format(x.__num__).replaceAll(',', ' ') }}</div>
                 </a>
-                <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x.wallet+'?cluster='+cluster" target="_blank" :class="markWallet(x.wallet)">
-                  <div v-if="x.verified" class="text-[10px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(x.wallet)"> {{ '✔️' }}</div>
+                <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
+                  <div v-if="x._verified" class="text-[10px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(wallet, x._owner)"> {{ '✔️' }}</div>
                 </a>
               </div>
             </div>
           </lo>
-
         </div>
 
     </div>

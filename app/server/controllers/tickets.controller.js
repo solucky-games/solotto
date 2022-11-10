@@ -18,6 +18,7 @@ async function createTable( client, date ) {
 async function postTicket( client, date, ticket ) {
   const schema = "_hour, __num__, _verified, _owner, _flag, _pot, _timestamp";
   const query = `INSERT INTO ${date} ( ${schema} ) VALUES ( ${ticket} )`;
+  console.log('postTicket',client.query)
   client.query(query, function(err, result) {
     if(err) {
       return console.error('error running query', err);
@@ -29,13 +30,23 @@ async function postTicket( client, date, ticket ) {
 
 async function getTickets( client, date ) {
   const query = `SELECT * FROM ${date}`;
-  client.query(query, function(err, result) {
-    if(err) {
-      return console.error('error running query', err);
-    }
-    console.log('\n\n\neooo', result.rows);
-    return result.rows;
-  });
+  console.log(client.query)
+  //  client.query(query, async function(err, result) {
+  //   if(err) {
+  //     return console.error('error running query', err);
+  //   }
+  //   const data = await result.rows;
+  //   console.log(data, 'eeeo');
+  //   return data;
+  // });
+  try {
+    const data = await client.query(query)
+    const rows = await data.rows;
+    console.log('rows', rows);
+    return rows
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 module.exports = {
