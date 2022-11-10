@@ -22,7 +22,7 @@
             {{location.flag}}
           </div>
         </div>
-        Make with love by SOLucky Games © All rights reserved. <br>Deployed in 2022. Good luck all!
+        Make with love by SOLucky Games © All rights reserved. <br>Built in <a href="https://solana.com/" target="_blank">Solana</a> in 2022. Good luck all!
       </div>
     </div>
 
