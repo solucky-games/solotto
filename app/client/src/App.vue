@@ -17,6 +17,10 @@
           <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
             <span class="text-xs">CONNECTED: </span>{{users}}
           </div>
+          <!-- Users flag -->
+          <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
+            {{location.flag}}
+          </div>
         </div>
         Make with love by SOLucky Games © All rights reserved. Deployed in 2022. Good luck all!
       </div>
@@ -111,6 +115,25 @@ export default {
       nPlayers.value = data;
     });
 
+    // User location
+    async function userLocation () {
+      const flag = ref('');
+      const country = ref('');
+      const city = ref('');
+      fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (payload) {
+        console.log(payload);
+        flag.value = payload.location.country.flag.emoji;
+        country.value =  payload.location.country.code;
+        city.value =  payload.city;
+      });
+      return { flag, country, city };
+    }
+    const location = ref('');
+
     // User wallet
     const wallet = useAnchorWallet();
     const connection = new Connection(process.env.VUE_APP_CLUSTER_URL, 'connected')
@@ -119,6 +142,7 @@ export default {
       watchEffect(async () => {
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
+      location.value = await userLocation()
       })
     }, 10000)
 
@@ -132,7 +156,8 @@ export default {
       potSOL,
       potUSD,
       tickets,
-      nPlayers
+      nPlayers,
+      location
     }
   }
   
