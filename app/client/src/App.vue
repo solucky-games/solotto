@@ -22,7 +22,7 @@
             {{location.flag}}
           </div>
         </div>
-        Make with love by SOLucky Games © All rights reserved. Deployed in 2022. Good luck all!
+        Make with love by SOLucky Games © All rights reserved. <br>Deployed in 2022. Good luck all!
       </div>
     </div>
 
@@ -133,6 +133,9 @@ export default {
       return { flag, country, city };
     }
     const location = ref('');
+    watchEffect(async () => {
+      location.value = await userLocation()
+    });
 
     // User wallet
     const wallet = useAnchorWallet();
@@ -142,9 +145,8 @@ export default {
       watchEffect(async () => {
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
-      location.value = await userLocation()
       })
-    }, 10000)
+    }, 10000);
 
 
     return {
