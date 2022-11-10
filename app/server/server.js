@@ -2,21 +2,13 @@
 
 require('dotenv').config()
 
-//const TicketCtrl = require('./controller/ticket.controller');
-// const Ticket = require('./model/ticket.model');
 const express = require('express');
 const router = express.Router();
 const app = express();
 const cors = require('cors');
-
+const coinTicker = require('coin-ticker');
 const utils = require('./utils/utils');
 const ctrls = require('./controllers/tickets.controller');
-// const web3 = require('./utils/web3');
-const web3 =  require('@solana/web3.js');
-const coinTicker = require('coin-ticker');
-
-// router.post('/api/tickets', () => ctrls.postTicket(client, ));
-// router.get ('/api/tickets', ctrls.getTickets);
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -72,7 +64,7 @@ io.on('connection', async (socket) => {
   countUsers++;
   console.log(`${countUsers} users connected`);
   io.emit('userNumber', `user_num: ${countUsers}`);
-  io.emit('getDate', utils.getDate());
+  
   const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
   const potSOL = await tickets.length;
   coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
@@ -81,6 +73,27 @@ io.on('connection', async (socket) => {
   });
 
   io.emit('getTickets', tickets);
+
+  socket.on('disconnect', () => {
+    countUsers--;
+    console.log(`${countUsers} users connected`);
+    io.emit('UserNumber', `user_num: ${countUsers}`)
+  });
+
+  socket.on('newTicket', async (ticket) => {
+    const date = utils.getDateSQL();
+    io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
+    const tickets = ctrls.getTickets( client, date );
+    const potSOL = await tickets.length;
+    coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
+      const potUSD = Math.floor(potSOL*price.last)
+      io.emit('getPOT', { potSOL, potUSD });
+    });
+    io.emit('getTickets', tickets );
+  })
+
+});
+
 
   // setInterval( function() {
   //   const time = utils.getTime();
@@ -107,23 +120,3 @@ io.on('connection', async (socket) => {
   //     console.log(error)
   //   }
   // }, 3000);
-
-  socket.on('disconnect', () => {
-    countUsers--;
-    console.log(`${countUsers} users connected`);
-    io.emit('UserNumber', `user_num: ${countUsers}`)
-  });
-
-  socket.on('newTicket', async (ticket) => {
-    const date = utils.getDateSQL();
-    io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
-    const tickets = ctrls.getTickets( client, date );
-    const potSOL = await tickets.length;
-    coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
-      const potUSD = Math.floor(potSOL*price.last)
-      io.emit('getPOT', { potSOL, potUSD });
-    });
-    io.emit('getTickets', tickets );
-  })
-
-});
