@@ -1,14 +1,23 @@
 <template>
   <div>
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-      <NavbarWallet :users="users" :balance="balance" />
+      <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers"/>
-        <PlayPanel v-on="newTicket" @clicked="this.newTicket" :balance="balance" :potSOL="potSOL" />
+        <PlayPanel v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" />
         <HistoryPanel />
-        <!-- <button @click="newTicket">Send</button> -->
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
+        <div class="flex justify-center items-center rounded-xl m-4">
+          <!-- Server time -->
+          <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
+            {{time}}<span class="text-xs"> UTC</span>
+          </div>
+          <!-- Users connected -->
+          <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
+            <span class="text-xs">CONNECTED: </span>{{users}}
+          </div>
+        </div>
         Make with love by SOLucky Games © All rights reserved. Deployed in 2022. Good luck all!
       </div>
     </div>
@@ -24,9 +33,9 @@ import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
 import { ref, watchEffect } from 'vue';
-import { io } from 'socket.io-client';
 import { useAnchorWallet } from 'solana-wallets-vue';
-import { Connection } from '@solana/web3.js'; 
+import { Connection } from '@solana/web3.js';
+import { io } from 'socket.io-client';
 
 export default {
   name: 'App',
@@ -55,15 +64,18 @@ export default {
       return String(num);
     }
 
-
-
-    // function getTime () {
-    //   const date = new Date
-    //   const hours = formatTime(date.getUTCHours());
-    //   const minutes = formatTime(date.getMinutes());
-    //   const seconds = formatTime(date.getSeconds());
-    //   return `${hours}:${minutes}:${seconds}`;
-    // }
+    
+    const time = ref('');
+    function getTime () {
+      const date = new Date
+      const hours = formatTime(date.getUTCHours());
+      const minutes = formatTime(date.getMinutes());
+      const seconds = formatTime(date.getSeconds());
+      return `${hours}:${minutes}:${seconds}`;
+    }
+    setInterval( () => {
+      time.value = getTime();
+    }, 1000);
 
     const date = getDate()
     function getDate () {
@@ -99,16 +111,7 @@ export default {
       nPlayers.value = data;
     });
 
-    // newTicket
-    function newTicket (ticket) {
-      //const ticket = `'12:30', 123456, false, 'fhgjfdgfyuf3ggfrhlr', '🇯🇵', 38, ${Date.now()}`;
-      socket.emit('newTicket',  ticket)
-      console.log(ticket)
-    }
-
     // User wallet
-    // const workspace = useWorkspace();
-    // const wallet = workspace.wallet
     const wallet = useAnchorWallet();
     const connection = new Connection(process.env.VUE_APP_CLUSTER_URL, 'connected')
     const balance = ref();
@@ -116,33 +119,20 @@ export default {
       watchEffect(async () => {
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
-      // console.log(balance);
       })
     }, 10000)
-
-    // watchEffect(async () => {
-    //   const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
-    //   balance.value = Math.floor(bal*100)/100;
-    // })
-
-    // const nTickets = tickets.length || 0;
-
-
-
 
 
     return {
       socket,
       users,
-      // balance,
-      // countdown,
+      balance,
       date,
+      time,
       potSOL,
       potUSD,
-      newTicket,
       tickets,
       nPlayers
-    
     }
   }
   

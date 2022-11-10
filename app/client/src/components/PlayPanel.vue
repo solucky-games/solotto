@@ -64,7 +64,7 @@
 
       <div class="font-bold text-4xl text-center p-7 rounded-xl m-4 cursor-pointer"
       :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
-      @click="() => commitNumber"
+      @click="commitNumber"
       @mouseover="commitHover=true"
       @mouseleave="commitHover=false">
         <div class="text-2xl py-2 mr-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" v-if="commitHover">
@@ -103,6 +103,8 @@ import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from
 import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
 import CountDown from './CountDown.vue';
 // import utils from './utils';
+import { io } from 'socket.io-client';
+
 
 const preflightCommitment = 'processed'
 const cluster = 'devnet'
@@ -115,21 +117,14 @@ export default {
     'countdown',
     'potSOL',
     'wallet',
-    'balance'
+    'balance',
+    'tickets'
   ],
   components: {
     CountDown,
     // PopCommit,
   },
   setup () {
-
-
-    // const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed');
-    // const userBalance = ref();
-    // watchEffect(async () => {
-    //   const balance = await connection.getBalance(wallet.value.publicKey)/1000000000;
-    //   userBalance.value = Math.floor(balance*100)/100;
-    // })
 
     // User wallet
     const wallet = useAnchorWallet();
@@ -152,8 +147,8 @@ export default {
       return { flag, country, city };
     }
 
-
     const ticket = ref('')
+    
     // Commit Number
     async function commitNumber () {
 
@@ -161,9 +156,11 @@ export default {
         return alert('Connect your wallet first!')
       } 
 
-      // if ( tickets.value[number.value] && checkNumber(number.value) )
-      //   return alert('This number is already commited! Try another one.')
-
+      // for ( const num of tickets ) {
+      //   if ( num.__num__ == number.value )
+      //     return alert('This number is already commited! Try another one.')
+      // }
+      
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
 
@@ -194,12 +191,14 @@ export default {
 
     function emitTicket(flag) {
       const date = new Date();
-      const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours())
-      const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes())
-      return `'${hour}:${minutes}', ${number.value}, false, '${wallet.value.publicKey.toBase58()}', '${flag}'', ${this.potSOL}, ${date.now()}`;
-      // socket.emit('newTicket', ticket);
-      // console.log(socket.on('postTicket'))
-      // console.log(ticket)
+      const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours());
+      const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes());
+      const ticket = `'${hour}:${minutes}', ${number.value}, false, '${wallet.value.publicKey.toBase58()}', '${flag}'', ${this.potSOL}, ${date.now()}`;
+      const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
+      socket.emit('newTicket', ticket);
+      socket.emit('postTicket', ticket);
+      console.log(socket.on('postTicket'))
+      console.log(ticket)
     }
 
     const number = ref('0')
@@ -258,12 +257,6 @@ export default {
       resetNum,
       number,
       nf,
-      //tickets,
-      // shortWallet,
-      // yourNumbers,
-      // yourProbability,
-      // yourROI,
-      // markWallet,
       location,
       commitPop,
       ticket

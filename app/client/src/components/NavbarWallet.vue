@@ -35,11 +35,6 @@
     <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0">
 
       <div class="flex justify-center items-center rounded-xl">
-        <!-- Users connected -->
-        <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400"><span class="text-xs">CONNECTED: </span>{{users}}</div>
-      </div>
-
-      <div class="flex justify-center items-center rounded-xl">
 
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
@@ -77,7 +72,8 @@ import { WalletMultiButton } from 'solana-wallets-vue'
 export default {
   props: [
     'users',
-    'balance'
+    'balance',
+    'time'
   ],
   data() {
     return {

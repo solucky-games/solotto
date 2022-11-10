@@ -75,13 +75,8 @@ io.on('connection', async (socket) => {
 
   io.emit('getTickets', tickets);
 
-  socket.on('disconnect', () => {
-    countUsers--;
-    console.log(`${countUsers} users connected`);
-    io.emit('UserNumber', `user_num: ${countUsers}`)
-  });
-
   socket.on('newTicket', async (ticket) => {
+    console.log(ticket);
     const date = utils.getDateSQL();
     io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
     const tickets = ctrls.getTickets( client, date );
@@ -93,5 +88,11 @@ io.on('connection', async (socket) => {
     io.emit('getTickets', tickets );
     io.emit('nPlayers', utils.nPlayers(tickets))
   })
+
+  socket.on('disconnect', () => {
+    countUsers--;
+    console.log(`${countUsers} users connected`);
+    io.emit('UserNumber', `user_num: ${countUsers}`)
+  });
 
 });
