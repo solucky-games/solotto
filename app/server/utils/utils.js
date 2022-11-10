@@ -40,11 +40,23 @@ function countDown () {
   return `${hours}h ${minutes}m ${seconds}s`;
 }
 
+function nPlayers ( tickets ) {
+  const uniqueWallets = [];
+  for (const ticket of tickets) {
+    if ( uniqueWallets.includes(ticket._owner)  )
+      continue;
+    else
+      uniqueWallets.push(ticket._owner);
+  }
+  return uniqueWallets.length;
+}
+
 
 module.exports = {
   formatTime,
   getTime,
   getDate,
   getDateSQL,
-  countDown
+  countDown,
+  nPlayers
 }

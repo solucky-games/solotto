@@ -71,6 +71,7 @@ io.on('connection', async (socket) => {
     const potUSD = Math.floor(potSOL*price.last)
     io.emit('getPOT', { potSOL, potUSD });
   });
+  io.emit('nPlayers', utils.nPlayers(tickets))
 
   io.emit('getTickets', tickets);
 
@@ -90,6 +91,7 @@ io.on('connection', async (socket) => {
       io.emit('getPOT', { potSOL, potUSD });
     });
     io.emit('getTickets', tickets );
+    io.emit('nPlayers', utils.nPlayers(tickets))
   })
 
 });

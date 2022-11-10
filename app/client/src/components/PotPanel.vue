@@ -47,7 +47,7 @@
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
                 :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{users}}</p>
+              > {{potSOL}}</p>
             </div>
           </div>
 
@@ -57,7 +57,7 @@
             <div class="flex justify-center" >
               <p class="font-bold text-2xl mt-2"
                 :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-              > {{ `${nPlayers}`}}</p>
+              > {{nPlayers}}</p>
             </div>
           </div>
         </div>
@@ -108,7 +108,8 @@ export default ({
     'potSOL',
     'potUSD',
     'newTicket',
-    'tickets'
+    'tickets',
+    'nPlayers'
   ],
   components: {
     CountDown
@@ -118,65 +119,14 @@ export default ({
     markWallet
   },
   setup() {
-    const user = '';
-    // const workspace = useWorkspace();
-    // const connection = new Connection(clusterUrl, commitment)
-    // const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
+
     const nf = Intl.NumberFormat();
-    // const potSOL = ref(0);
-    // const potUSD = ref(0);
-    // watchEffect(async () => {
-    //   potSOL.value = await connection.getBalance(masterPubKey)/1000000000;
-    //   potSOL.value = Math.floor(potSOL.value);
-    //   coinTicker(process.env.VUE_APP_EXCHANGE, 'SOL_USD').then( (price) => { 
-    //     potUSD.value = nf.format(potSOL.value*price.last).split('.')[0];
-    //   });
-    // });
-    // const tickets = ref([]);
-    // const nTickets = ref(0);
-    // const nPlayers = ref(0);
-    // watchEffect(async () => {
-    //   const res = await fetch(process.env.VUE_APP_DB_TICKETS_URL);
-    //   const data = await res.json();
-    //   tickets.value = data.reverse();
-    //   console.log(tickets.value)
-    //   nTickets.value = tickets.value.length;
-
-    //   const uniqueWallets = [];
-    //   for (const ticket of tickets.value) {
-    //     if ( !uniqueWallets.includes(ticket.wallet) )
-    //       uniqueWallets.push(ticket.wallet);
-    //   }
-    //   nPlayers.value = uniqueWallets.length;
-    // });
-
-
-
-
+   
     return {
       nf,
-      user,
-      // potSOL,
-      // potUSD,
-      // tickets,
       // nTickets,
       // nPlayers,
     }
-  },
-  data() {
-    // const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
-    // const users = ref();
-    // socket.on('UserNumber', (data) => {
-    //   console.log(data);
-    //   users.value = String(data).split(' ')[1];
-    //   return data;
-    // });
-
-    // const users = SocketioService.getSocketUsers();
-
-    // return {
-    //   users
-    // }
   }
 })
 </script>

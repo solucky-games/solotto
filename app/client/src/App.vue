@@ -3,7 +3,7 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" />
+        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers"/>
         <PlayPanel v-on="newTicket" @clicked="this.newTicket" :balance="balance" :potSOL="potSOL" />
         <HistoryPanel />
         <!-- <button @click="newTicket">Send</button> -->
@@ -48,12 +48,14 @@ export default {
     });
 
     function formatTime (num) {
-    if (String(num).length < 2) 
-      return '0' + String(num);
-    else if (String(num).length < 1) 
-      return '00';
-    return String(num);
-  }
+      if (String(num).length < 2) 
+        return '0' + String(num);
+      else if (String(num).length < 1) 
+        return '00';
+      return String(num);
+    }
+
+
 
     // function getTime () {
     //   const date = new Date
@@ -89,6 +91,14 @@ export default {
       tickets.value = data;
     });
 
+    // tickets
+    const nPlayers = ref(0);
+    socket.on('nPlayers', (data, error) => {
+      if (error) console.log('Error on socket:', error);
+      console.log('tickets', data );
+      nPlayers.value = data;
+    });
+
     // newTicket
     function newTicket (ticket) {
       //const ticket = `'12:30', 123456, false, 'fhgjfdgfyuf3ggfrhlr', '🇯🇵', 38, ${Date.now()}`;
@@ -108,12 +118,17 @@ export default {
       balance.value = Math.floor(bal*100)/100;
       // console.log(balance);
       })
-    }, 1000)
+    }, 10000)
 
     // watchEffect(async () => {
     //   const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
     //   balance.value = Math.floor(bal*100)/100;
     // })
+
+    // const nTickets = tickets.length || 0;
+
+
+
 
 
     return {
@@ -126,7 +141,8 @@ export default {
       potUSD,
       newTicket,
       tickets,
-      // wallet
+      nPlayers
+    
     }
   }
   
