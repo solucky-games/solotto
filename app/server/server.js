@@ -74,35 +74,39 @@ io.on('connection', async (socket) => {
   io.emit('userNumber', `user_num: ${countUsers}`);
   io.emit('getDate', utils.getDate());
   const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
-  console.log(tickets, 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEO')
+  const potSOL = await tickets.length;
+  coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
+    const potUSD = Math.floor(potSOL*price.last)
+    io.emit('getPOT', { potSOL, potUSD });
+  });
 
   io.emit('getTickets', tickets);
 
-  setInterval( function() {
-    const time = utils.getTime();
-    const timeSplit = time.split(':');
-    if ( timeSplit[2] == 0 ) {
-      io.emit('getTime', `server_time: ${time}`);
-      if ( timeSplit[0] == 0 && timeSplit[1] == 1 ) {
-        io.emit('getDate', utils.getDate());
-      }
-    }
-    io.emit('getCountDown', utils.countDown());
-  }, 1000);
+  // setInterval( function() {
+  //   const time = utils.getTime();
+  //   const timeSplit = time.split(':');
+  //   if ( timeSplit[2] == 0 ) {
+  //     io.emit('getTime', `server_time: ${time}`);
+  //     if ( timeSplit[0] == 0 && timeSplit[1] == 1 ) {
+  //       io.emit('getDate', utils.getDate());
+  //     }
+  //   }
+  //   io.emit('getCountDown', utils.countDown());
+  // }, 1000);
 
-  setInterval( async function () {
-    try {
-      const masterPubKey = new web3.PublicKey('GANTRxDjP5BoUExWqVLAC9yVhC29dThviuqNmMDdSEF4');
-      const connection = new web3.Connection('https://api.devnet.solana.com', 'processed');
-      const potSOL = Math.floor(await connection.getBalance(masterPubKey)/1000000000);
-      coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
-        const potUSD = Math.floor(potSOL*price.last)
-        io.emit('getPOT', { potSOL, potUSD });
-      });
-    } catch (error) {
-      console.log(error)
-    }
-  }, 3000);
+  // setInterval( async function () {
+  //   try {
+  //     const masterPubKey = new web3.PublicKey('GANTRxDjP5BoUExWqVLAC9yVhC29dThviuqNmMDdSEF4');
+  //     const connection = new web3.Connection('https://api.devnet.solana.com', 'processed');
+  //     const potSOL = Math.floor(await connection.getBalance(masterPubKey)/1000000000);
+  //     coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
+  //       const potUSD = Math.floor(potSOL*price.last)
+  //       io.emit('getPOT', { potSOL, potUSD });
+  //     });
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }, 3000);
 
   socket.on('disconnect', () => {
     countUsers--;
@@ -114,6 +118,11 @@ io.on('connection', async (socket) => {
     const date = utils.getDateSQL();
     io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
     const tickets = ctrls.getTickets( client, date );
+    const potSOL = await tickets.length;
+    coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
+      const potUSD = Math.floor(potSOL*price.last)
+      io.emit('getPOT', { potSOL, potUSD });
+    });
     io.emit('getTickets', tickets );
   })
 

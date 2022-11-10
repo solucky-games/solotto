@@ -29,13 +29,13 @@
             </div>
 
             <div class="mt-2 pl-2">
-              <!-- <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"/> -->
-              <div class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'">
+              <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"/>
+              <!-- <div class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'">
                 <div class="text-gray-400 text-xl">
                   {{ date }}
                 </div>
                 {{countdown}}
-              </div>
+              </div> -->
             </div>
   
           </div>
@@ -69,7 +69,7 @@
               <div class="hover:font-semibold grid grid-cols-10 gap-3" :class="markWallet(wallet, x._owner) ? 'text-purple-400 font-bold' : 'text-grey-600'">
                 <div class="text-xs col-span-2" >{{ x._hour }}</div>
                 <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
-                  <div class="text-xs text-left">{{ shortWallet(x._owner, 4) }}</div>
+                  <div class="text-xs text-left">{{ shortWallet(x._owner, 6) }}</div>
                 </a>
                 <a class="col-span-1" :href="'https://google.com/search?q='+x.country" target="_blank">
                   <div class="text-xs">{{ x._flag }}</div>
@@ -92,7 +92,7 @@
 import { ref, watchEffect } from 'vue';
 import { PublicKey } from '@solana/web3.js';
 import coinTicker from 'coin-ticker';
-// import CountDown from './CountDown.vue';
+import CountDown from './CountDown.vue';
 import { shortWallet, markWallet } from './utils';
 import { useWorkspace } from '@/services/useWorkspace';
 //import SocketioService from '@/services/socketio.service';
@@ -111,7 +111,7 @@ export default ({
     'tickets'
   ],
   components: {
-    //CountDown
+    CountDown
   },
   methods: {
     shortWallet,

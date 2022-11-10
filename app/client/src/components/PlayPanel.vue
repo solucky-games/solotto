@@ -16,9 +16,11 @@
             <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
           </div>
           <div class="pl-2">
-            <div class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+            <CountDown :_date="false" class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" />
+
+            <!-- <div class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
               {{countdown}}
-            </div>
+            </div> -->
           </div>      
         </div>
 
@@ -102,7 +104,7 @@ import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
 
 // import { io } from 'socket.io-client';
 
-// import CountDown from './CountDown.vue';
+import CountDown from './CountDown.vue';
 
 //import {sendTicket} from './controller/sendTicket'
 //import {deleteTicket} from '../services/deleteTicket'
@@ -126,7 +128,7 @@ export default {
     'wallet'
   ],
   components: {
-    // CountDown,
+    CountDown,
     // PopCommit,
     // TodaysPot,
   },

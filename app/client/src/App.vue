@@ -3,10 +3,13 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :newTicket="newTicket" :tickets="tickets" />
+        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :newTicket="newTicket" :tickets="tickets" />
         <PlayPanel v-on="newTicket" @clicked="newTicket" :countdown="countdown" :potSOL="potSOL" />
         <HistoryPanel />
-        <button @click="newTicket">Send</button>
+        <!-- <button @click="newTicket">Send</button> -->
+      </div>
+      <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
+        Done with love by SOLucky Games © All rights reserved. 2022
       </div>
     </div>
 
@@ -21,20 +24,20 @@ import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
 // import CommitModal from './components/CommitModal.vue';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { initWallet } from 'solana-wallets-vue';
+// import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+// import { initWallet } from 'solana-wallets-vue';
 import { initWorkspace } from './services/useWorkspace';
 // import SocketioService from './services/socketio.service.js';
 import { ref, watchEffect } from 'vue';
 import { io } from 'socket.io-client';
 import { useWorkspace } from './services/useWorkspace';
 
-const wallets = [
-    new PhantomWalletAdapter(),
-    new SolflareWalletAdapter(),
-]
+// const wallets = [
+//     new PhantomWalletAdapter(),
+//     new SolflareWalletAdapter(),
+// ]
 
-initWallet({ wallets, autoConnect: true })
+// initWallet({ wallets, autoConnect: true })
 initWorkspace()
 
 
@@ -57,19 +60,30 @@ export default {
       return data;
     });
 
-    // Countdown
-    const countdown = ref('');
-    socket.on('getCountDown', (data) => {
-      countdown.value = String(data);
+    function formatTime (num) {
+    if (String(num).length < 2) 
+      return '0' + String(num);
+    else if (String(num).length < 1) 
+      return '00';
+    return String(num);
+  }
 
-    });
+    // function getTime () {
+    //   const date = new Date
+    //   const hours = formatTime(date.getUTCHours());
+    //   const minutes = formatTime(date.getMinutes());
+    //   const seconds = formatTime(date.getSeconds());
+    //   return `${hours}:${minutes}:${seconds}`;
+    // }
 
-    // Date 
-    const date = ref('');
-    socket.on('getDate', (data) => {
-      date.value = String(data);
-
-    });
+    const date = getDate()
+    function getDate () {
+      const date = new Date
+      const year = formatTime(date.getUTCFullYear());
+      const month = formatTime(date.getUTCMonth()+1);
+      const day = formatTime(date.getUTCDate());
+      return `${year}-${month}-${day}`;
+    }
 
     // Pot 
     const potSOL = ref(0);
@@ -117,7 +131,7 @@ export default {
       socket,
       users,
       balance,
-      countdown,
+      // countdown,
       date,
       potSOL,
       potUSD,
