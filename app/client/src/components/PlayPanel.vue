@@ -43,7 +43,7 @@
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${yourProbability}%`}}</p>
+                > {{ `${2.77}%`}}</p>
               </div>
             </div>
 
