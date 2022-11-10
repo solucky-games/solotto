@@ -89,17 +89,8 @@
 </template>
 
 <script>
-// import { ref, watchEffect } from 'vue';
-// import { PublicKey } from '@solana/web3.js';
-// import coinTicker from 'coin-ticker';
 import CountDown from './CountDown.vue';
 import { shortWallet, markWallet } from './utils';
-// import { useWorkspace } from '@/services/useWorkspace';
-//import SocketioService from '@/services/socketio.service';
-//import { io } from 'socket.io-client';
-// import SocketioService from '@/services/socketio.service.js';
-
-
 
 export default ({
   props: [
@@ -119,13 +110,9 @@ export default ({
     markWallet
   },
   setup() {
-
     const nf = Intl.NumberFormat();
-   
     return {
-      nf,
-      // nTickets,
-      // nPlayers,
+      nf
     }
   }
 })
