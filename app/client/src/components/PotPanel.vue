@@ -65,7 +65,7 @@
                 <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
                   <div class="text-xs text-left">{{ shortWallet(x._owner, 6) }}</div>
                 </a>
-                <a class="col-span-1" :href="'https://google.com/search?q='+x.country" target="_blank">
+                <a class="col-span-1" :href="'https://google.com/search?q='+x._flag" target="_blank">
                   <div class="text-xs">{{ x._flag }}</div>
                 </a>
                 <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
