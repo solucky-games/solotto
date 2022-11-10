@@ -3,13 +3,13 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :newTicket="newTicket" :tickets="tickets" />
-        <PlayPanel v-on="newTicket" @clicked="newTicket" :countdown="countdown" :potSOL="potSOL" />
+        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" />
+        <PlayPanel v-on="newTicket" @clicked="this.newTicket" :balance="balance" :potSOL="potSOL" />
         <HistoryPanel />
         <!-- <button @click="newTicket">Send</button> -->
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
-        Done with love by SOLucky Games © All rights reserved. 2022
+        Done with love by SOLucky Games © All rights reserved. Deployed in 2022. Good luck all!
       </div>
     </div>
 
@@ -23,23 +23,25 @@ import NavbarWallet from './components/NavbarWallet.vue';
 import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
-// import CommitModal from './components/CommitModal.vue';
 // import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-// import { initWallet } from 'solana-wallets-vue';
-import { initWorkspace } from './services/useWorkspace';
-// import SocketioService from './services/socketio.service.js';
 import { ref, watchEffect } from 'vue';
 import { io } from 'socket.io-client';
-import { useWorkspace } from './services/useWorkspace';
+import { useAnchorWallet } from 'solana-wallets-vue';
+import { Connection } from '@solana/web3.js'; 
+// import { useWorkspace } from './services/useWorkspace';
+// import { initWallet } from 'solana-wallets-vue';
+// import SocketioService from './services/socketio.service.js';
+// import CommitModal from './components/CommitModal.vue';
+// import { initWorkspace } from './services/useWorkspace';
+
 
 // const wallets = [
-//     new PhantomWalletAdapter(),
-//     new SolflareWalletAdapter(),
-// ]
+// //   new PhantomWalletAdapter(),
+// //   new SolflareWalletAdapter(),
+// // ]
 
-// initWallet({ wallets, autoConnect: true })
-initWorkspace()
-
+// // initWallet({ wallets, autoConnect: true })
+// initWorkspace()
 
 export default {
   name: 'App',
@@ -110,12 +112,14 @@ export default {
     }
 
     // User wallet
-    const workspace = useWorkspace();
-    const wallet = workspace.wallet
+    // const workspace = useWorkspace();
+    // const wallet = workspace.wallet
+    const wallet = useAnchorWallet();
+    const connection = new Connection(process.env.VUE_APP_CLUSTER_URL, 'connected')
     const balance = ref();
     setInterval( () => {
       watchEffect(async () => {
-      const bal = await workspace.connection.getBalance(workspace.wallet.value.publicKey)/1000000000;
+      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
       balance.value = Math.floor(bal*100)/100;
       // console.log(balance);
       })
@@ -130,14 +134,14 @@ export default {
     return {
       socket,
       users,
-      balance,
+      // balance,
       // countdown,
       date,
       potSOL,
       potUSD,
       newTicket,
       tickets,
-      wallet
+      // wallet
     }
   }
   

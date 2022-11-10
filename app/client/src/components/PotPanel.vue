@@ -89,12 +89,12 @@
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue';
-import { PublicKey } from '@solana/web3.js';
-import coinTicker from 'coin-ticker';
+// import { ref, watchEffect } from 'vue';
+// import { PublicKey } from '@solana/web3.js';
+// import coinTicker from 'coin-ticker';
 import CountDown from './CountDown.vue';
 import { shortWallet, markWallet } from './utils';
-import { useWorkspace } from '@/services/useWorkspace';
+// import { useWorkspace } from '@/services/useWorkspace';
 //import SocketioService from '@/services/socketio.service';
 //import { io } from 'socket.io-client';
 // import SocketioService from '@/services/socketio.service.js';
@@ -119,18 +119,19 @@ export default ({
   },
   setup() {
     const user = '';
-    const workspace = useWorkspace();
-    const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
+    // const workspace = useWorkspace();
+    // const connection = new Connection(clusterUrl, commitment)
+    // const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
     const nf = Intl.NumberFormat();
-    const potSOL = ref(0);
-    const potUSD = ref(0);
-    watchEffect(async () => {
-      potSOL.value = await workspace.connection.getBalance(masterPubKey)/1000000000;
-      potSOL.value = Math.floor(potSOL.value);
-      coinTicker(process.env.VUE_APP_EXCHANGE, 'SOL_USD').then( (price) => { 
-        potUSD.value = nf.format(potSOL.value*price.last).split('.')[0];
-      });
-    });
+    // const potSOL = ref(0);
+    // const potUSD = ref(0);
+    // watchEffect(async () => {
+    //   potSOL.value = await connection.getBalance(masterPubKey)/1000000000;
+    //   potSOL.value = Math.floor(potSOL.value);
+    //   coinTicker(process.env.VUE_APP_EXCHANGE, 'SOL_USD').then( (price) => { 
+    //     potUSD.value = nf.format(potSOL.value*price.last).split('.')[0];
+    //   });
+    // });
     // const tickets = ref([]);
     // const nTickets = ref(0);
     // const nPlayers = ref(0);

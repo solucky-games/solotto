@@ -3,7 +3,7 @@ import App from './App.vue';
 import store from './store';
 import unoverlay from 'unoverlay-vue';
 import SolanaWallets from 'solana-wallets-vue';
-import useWorkspace from './services/useWorkspace';
+// import useWorkspace from './services/useWorkspace';
 import './assets/css/tailwind.css'
 import './assets/css/wallets.css';
 
@@ -53,7 +53,6 @@ const walletOptions = {
 }
 
 createApp(App)
-  .use(useWorkspace)
   .use(store)
   .use(SolanaWallets, walletOptions)
   .use(unoverlay)

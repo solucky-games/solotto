@@ -1,9 +1,11 @@
 import { computed } from 'vue'
-import { useAnchorWallet } from 'solana-wallets-vue'
+import { useAnchorWallet, initWallet, createWalletStore} from 'solana-wallets-vue'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Provider, Program } from '@project-serum/anchor'
 import idl from '../program/idl.json'
 
+createWalletStore();
+initWallet();
 const clusterUrl = process.env.VUE_APP_CLUSTER_URL
 const preflightCommitment = 'processed'
 const commitment = 'processed'

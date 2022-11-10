@@ -98,24 +98,13 @@
 <script>
 
 
-import { ref, watchEffect } from 'vue'
-import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js'
+import { ref } from 'vue';
+import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js';
 import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
-
-// import { io } from 'socket.io-client';
-
 import CountDown from './CountDown.vue';
-
-//import {sendTicket} from './controller/sendTicket'
-//import {deleteTicket} from '../services/deleteTicket'
-// @ts-ignore
-// window.Buffer = Buffer;
-
-//const programID = new PublicKey(idl.metadata.address)
+// import utils from './utils';
 
 const preflightCommitment = 'processed'
-
-
 const cluster = 'devnet'
 const commitSOL = 1;
 const maxNumber = 1000000000;
@@ -125,28 +114,25 @@ export default {
     'socket',
     'countdown',
     'potSOL',
-    'wallet'
+    'wallet',
+    'balance'
   ],
   components: {
     CountDown,
     // PopCommit,
-    // TodaysPot,
   },
   setup () {
 
-    // // Get current pot
 
-    // const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
-    
+    // const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed');
+    // const userBalance = ref();
+    // watchEffect(async () => {
+    //   const balance = await connection.getBalance(wallet.value.publicKey)/1000000000;
+    //   userBalance.value = Math.floor(balance*100)/100;
+    // })
 
     // User wallet
     const wallet = useAnchorWallet();
-    const connection = new Connection(clusterApiUrl(process.env.APP_VUE_CLUSTER), 'processed');
-    const userBalance = ref();
-    watchEffect(async () => {
-      const balance = await connection.getBalance(wallet.value.publicKey)/1000000000;
-      userBalance.value = Math.floor(balance*100)/100;
-    })
 
     // User location
     async function userLocation () {
@@ -171,10 +157,9 @@ export default {
     // Commit Number
     async function commitNumber () {
 
-      
-      // if (! wallet.value) {
-      //   return alert('Connect your wallet first!')
-      // } 
+      if (! wallet.value) {
+        return alert('Connect your wallet first!')
+      } 
 
       // if ( tickets.value[number.value] && checkNumber(number.value) )
       //   return alert('This number is already commited! Try another one.')
@@ -220,6 +205,7 @@ export default {
     const number = ref('0')
     const nf = Intl.NumberFormat();
 
+    // Keyboard functionality
     function clickNum (n) {
       if (number.value[0] === '0')
         return number.value = String(n)
@@ -229,21 +215,16 @@ export default {
       else
         return alert(`Number must be between 0 and ${nf.format(maxNumber)}, including both.`)     
     }
-
     function deleteNum () {
       if (number.value.length > 1)
         number.value = number.value.slice(0, -1);
       else resetNum();
     }
-
     function resetNum () {
       number.value = '0';
     }
 
-    function shortWallet (addrs, n) {
-      return addrs.slice(0, n)+'...'+addrs.slice(-n)
-    }
-
+    
     const commitPop = ref(false);
     
     //const yourNumbers = ref(0);
@@ -269,11 +250,6 @@ export default {
     //   updateYourProbability();
     //   updateYourROI();
     // });
-
-    function markWallet(address){
-      if( wallet.value.publicKey.toBase58() == address ) 
-        return 'font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600';
-    }
     
     return { 
       commitNumber,
@@ -283,19 +259,19 @@ export default {
       number,
       nf,
       //tickets,
-      shortWallet,
+      // shortWallet,
       // yourNumbers,
       // yourProbability,
       // yourROI,
-      markWallet,
+      // markWallet,
       location,
       commitPop,
       ticket
     }
   },
   methods: {
-    onClickButton (ticket) {
-      this.$emit('clicked', ticket)
+    onClickButton () {
+      this.$emit('clicked', this.commitNumber)
     }
   },
   data() {
