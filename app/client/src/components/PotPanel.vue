@@ -30,12 +30,6 @@
 
             <div class="mt-2 pl-2">
               <CountDown :_date="true" class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"/>
-              <!-- <div class="text-center text-2xl tracking-widest font-semibold justify-center"  :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'">
-                <div class="text-gray-400 text-xl">
-                  {{ date }}
-                </div>
-                {{countdown}}
-              </div> -->
             </div>
   
           </div>
