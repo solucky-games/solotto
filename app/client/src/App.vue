@@ -23,25 +23,10 @@ import NavbarWallet from './components/NavbarWallet.vue';
 import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
-// import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { ref, watchEffect } from 'vue';
 import { io } from 'socket.io-client';
 import { useAnchorWallet } from 'solana-wallets-vue';
 import { Connection } from '@solana/web3.js'; 
-// import { useWorkspace } from './services/useWorkspace';
-// import { initWallet } from 'solana-wallets-vue';
-// import SocketioService from './services/socketio.service.js';
-// import CommitModal from './components/CommitModal.vue';
-// import { initWorkspace } from './services/useWorkspace';
-
-
-// const wallets = [
-// //   new PhantomWalletAdapter(),
-// //   new SolflareWalletAdapter(),
-// // ]
-
-// // initWallet({ wallets, autoConnect: true })
-// initWorkspace()
 
 export default {
   name: 'App',
