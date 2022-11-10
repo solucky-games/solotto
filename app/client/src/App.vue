@@ -9,7 +9,7 @@
         <!-- <button @click="newTicket">Send</button> -->
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
-        Done with love by SOLucky Games © All rights reserved. Deployed in 2022. Good luck all!
+        Make with love by SOLucky Games © All rights reserved. Deployed in 2022. Good luck all!
       </div>
     </div>
 
