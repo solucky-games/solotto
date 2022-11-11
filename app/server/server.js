@@ -41,9 +41,10 @@ server.listen(PORT, ()=> {
     const arr = time.split(':');
     if ( arr[2] == 0 ) {
       console.log(time);
-      if ( arr[1] == 13 && arr[0] == 9 ) {
+      if ( arr[1] == 0 && arr[0] == 0 ) {
         const date = utils.getDateSQL();
-        ctrls.createTable(client, date); 
+        ctrls.createTable(client, date);
+        console.log(date);
       }
     }
   }, 1000);

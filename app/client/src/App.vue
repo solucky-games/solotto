@@ -40,6 +40,8 @@ import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from
 import { io } from 'socket.io-client';
 import commit_sound from './assets/sounds/3.wav';
 import commited_sound from './assets/sounds/2.wav';
+import pot_sound from './assets/sounds/pot.mp3'
+import welcome_sound from './assets/sounds/welcome.wav';
 import store from './store';
 
 const preflightCommitment = 'processed'
@@ -58,12 +60,9 @@ export default {
   },
   data() {
 
-
-
     const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
     const users = ref();
     socket.on('userNumber', (data) => {
-      //console.log(data);
       users.value = String(data).split(' ')[1];
       return data;
     });
@@ -76,7 +75,9 @@ export default {
       return String(num);
     }
 
-    
+    const welcome_audio = new Audio(welcome_sound);
+    const pot_audio = new Audio(pot_sound);
+    welcome_audio.play();
     const time = ref('');
     function getTime () {
       const date = new Date
@@ -87,6 +88,9 @@ export default {
     }
     setInterval( () => {
       time.value = getTime();
+      console.log(time.value)
+      if ( time.value === '00:00:00' && store.state.sound )
+        pot_audio.play();
     }, 1000);
 
     const date = getDate()
