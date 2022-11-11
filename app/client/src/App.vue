@@ -38,6 +38,8 @@ import { ref, watchEffect } from 'vue';
 import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
 import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js';
 import { io } from 'socket.io-client';
+import commit_sound from './assets/sounds/3.wav';
+import commited_sound from './assets/sounds/2.wav';
 
 const preflightCommitment = 'processed'
 const cluster = 'devnet'
@@ -54,6 +56,8 @@ export default {
     // CommitModal
   },
   data() {
+
+
 
     const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
     const users = ref();
@@ -156,6 +160,10 @@ export default {
     // Commit Number
     async function commitNumber (number) {
 
+      const audio1 = new Audio(commit_sound);
+      const audio2 = new Audio(commited_sound);
+      audio1.play();
+
       if (! wallet.value) {
         return alert('Connect your wallet first!')
       } 
@@ -185,7 +193,7 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
-
+      audio2.play();
       //const location = await userLocation();
       ticket.value = emitTicket(number);
 

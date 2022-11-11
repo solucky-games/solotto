@@ -100,7 +100,7 @@
 
 import { ref } from 'vue';
 import CountDown from './CountDown.vue';
-import sound1 from '../assets/sounds/1.mp3';
+import click_sound from '../assets/sounds/click.mp3';
 
 export default {
   props: [
@@ -128,7 +128,7 @@ export default {
   },
   setup () {
 
-    const audio = new Audio(sound1);
+    const audio = new Audio(click_sound);
 
     const number = ref('0')
     const nf = Intl.NumberFormat();
@@ -155,7 +155,6 @@ export default {
       number.value = '0';
     }
 
-    
     const commitPop = ref(false);
     
     //const yourNumbers = ref(0);
