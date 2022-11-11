@@ -225,6 +225,10 @@ export default {
 
 <style>
 
+html {
+  overflow-x: hidden;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;

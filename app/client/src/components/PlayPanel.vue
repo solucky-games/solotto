@@ -100,6 +100,7 @@
 
 import { ref } from 'vue';
 import CountDown from './CountDown.vue';
+import sound1 from '../assets/sounds/1.mp3';
 
 export default {
   props: [
@@ -127,12 +128,16 @@ export default {
   },
   setup () {
 
+    const audio = new Audio(sound1);
+
     const number = ref('0')
     const nf = Intl.NumberFormat();
     const maxNumber = 1000000000;
 
     // Keyboard functionality
     function clickNum (n) {
+      audio.play()
+
       if (number.value[0] === '0')
         return number.value = String(n)
       
