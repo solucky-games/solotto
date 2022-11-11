@@ -136,7 +136,8 @@ export default {
 
     // Keyboard functionality
     function clickNum (n) {
-      audio.play()
+      if ( this.$store.state.sound )
+        audio.play()
 
       if (number.value[0] === '0')
         return number.value = String(n)

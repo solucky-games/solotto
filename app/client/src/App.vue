@@ -162,7 +162,8 @@ export default {
 
       const audio1 = new Audio(commit_sound);
       const audio2 = new Audio(commited_sound);
-      audio1.play();
+      if ( this.$store.state.sound )
+        audio1.play();
 
       if (! wallet.value) {
         return alert('Connect your wallet first!')
@@ -193,7 +194,8 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
-      audio2.play();
+      if ( this.$store.state.sound )
+        audio2.play();
       //const location = await userLocation();
       ticket.value = emitTicket(number);
 
