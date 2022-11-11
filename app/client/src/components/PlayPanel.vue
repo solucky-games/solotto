@@ -64,7 +64,7 @@
 
       <div class="font-bold text-4xl text-center p-7 rounded-xl m-4 cursor-pointer"
       :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
-      @click="commitNumber"
+      @click="$emit('commit', number)"
       @mouseover="commitHover=true"
       @mouseleave="commitHover=false">
         <div class="text-2xl py-2 mr-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" v-if="commitHover">
@@ -99,17 +99,7 @@
 
 
 import { ref } from 'vue';
-import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js';
-import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
 import CountDown from './CountDown.vue';
-// import utils from './utils';
-import { io } from 'socket.io-client';
-
-
-const preflightCommitment = 'processed'
-const cluster = 'devnet'
-const commitSOL = 1;
-const maxNumber = 1000000000;
 
 export default {
   props: [
@@ -120,89 +110,26 @@ export default {
     'balance',
     'tickets'
   ],
+  methods: {
+    commitNumber () {
+      this.$emit('commit', this.commitNumber)
+    }
+  },
   components: {
     CountDown,
     // PopCommit,
   },
+  data() {
+    return {
+      commitHover: false,
+      commiting: false,
+    }
+  },
   setup () {
-
-    // User wallet
-    const wallet = useAnchorWallet();
-
-    // User location
-    async function userLocation () {
-      const flag = ref('');
-      const country = ref('');
-      const city = ref('');
-      fetch('https://api.ipregistry.co/?key=0nxj6f90k9nup0j3')
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (payload) {
-        console.log(payload);
-        flag.value = payload.location.country.flag.emoji;
-        country.value =  payload.location.country.code;
-        city.value =  payload.city;
-      });
-      return { flag, country, city };
-    }
-
-    const ticket = ref('')
-    
-    // Commit Number
-    async function commitNumber () {
-
-      if (! wallet.value) {
-        return alert('Connect your wallet first!')
-      } 
-
-      // for ( const num of tickets ) {
-      //   if ( num.__num__ == number.value )
-      //     return alert('This number is already commited! Try another one.')
-      // }
-      
-      const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
-      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
-
-      if (bal < commitSOL) 
-        return alert('Not enough SOL in your wallet. Minimum funds needed: 1 SOL')
-
-      const { sendTransaction } = useWallet();
-      const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
-      const transaction = new Transaction().add(
-          SystemProgram.transfer({
-              fromPubkey: wallet.value.publicKey,
-              toPubkey: new PublicKey(masterPubKey),
-              lamports: commitSOL*1000000000,
-              message: number.value})
-      )
-
-      const signature = await sendTransaction(transaction, connection);
-      console.log(signature);
-      
-      await connection.confirmTransaction(signature, number.value);// processed');
-
-      const location = await userLocation();
-      ticket.value = emitTicket(location.flag);
-
-      commitPop.value = true;
-
-    }
-
-    function emitTicket(flag) {
-      const date = new Date();
-      const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours());
-      const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes());
-      const ticket = `'${hour}:${minutes}', ${number.value}, false, '${wallet.value.publicKey.toBase58()}', '${flag}'', ${this.potSOL}, ${date.now()}`;
-      const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
-      socket.emit('newTicket', ticket);
-      socket.emit('postTicket', ticket);
-      console.log(socket.on('postTicket'))
-      console.log(ticket)
-    }
 
     const number = ref('0')
     const nf = Intl.NumberFormat();
+    const maxNumber = 1000000000;
 
     // Keyboard functionality
     function clickNum (n) {
@@ -251,7 +178,6 @@ export default {
     // });
     
     return { 
-      commitNumber,
       clickNum,
       deleteNum,
       resetNum,
@@ -259,18 +185,6 @@ export default {
       nf,
       location,
       commitPop,
-      ticket
-    }
-  },
-  methods: {
-    onClickButton () {
-      this.$emit('clicked', this.commitNumber)
-    }
-  },
-  data() {
-    return {
-      commitHover: false,
-      commiting: false,
     }
   }
 }

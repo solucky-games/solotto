@@ -5,7 +5,7 @@ CREATE TABLE "_ticketSchema_" (
   _owner varchar(255),
   _flag varchar(11), 
   _pot int,
-  _timestamp timestamp
+  _timestamp bigint
 );
 
 -- DROP TABLE "_ticketSchema_"

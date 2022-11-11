@@ -42,13 +42,16 @@ function countDown () {
 
 function nPlayers ( tickets ) {
   const uniqueWallets = [];
-  for (const ticket of tickets) {
-    if ( uniqueWallets.includes(ticket._owner)  )
-      continue;
-    else
-      uniqueWallets.push(ticket._owner);
+  if ( tickets.length > 0 ) {
+    for (const ticket of tickets) {
+      if ( uniqueWallets.includes(ticket._owner)  )
+        continue;
+      else
+        uniqueWallets.push(ticket._owner);
+    }
+    return uniqueWallets.length;
   }
-  return uniqueWallets.length;
+  return 0;
 }
 
 

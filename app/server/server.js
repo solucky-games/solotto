@@ -72,21 +72,22 @@ io.on('connection', async (socket) => {
     io.emit('getPOT', { potSOL, potUSD });
   });
   io.emit('nPlayers', utils.nPlayers(tickets))
-
   io.emit('getTickets', tickets);
 
   socket.on('newTicket', async (ticket) => {
     console.log(ticket);
     const date = utils.getDateSQL();
     io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
-    const tickets = ctrls.getTickets( client, date );
+
+    const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
     const potSOL = await tickets.length;
     coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
       const potUSD = Math.floor(potSOL*price.last)
       io.emit('getPOT', { potSOL, potUSD });
     });
-    io.emit('getTickets', tickets );
     io.emit('nPlayers', utils.nPlayers(tickets))
+    io.emit('nNumbers', utils.nPlayers(tickets))
+    io.emit('getTickets', tickets);
   })
 
   socket.on('disconnect', () => {

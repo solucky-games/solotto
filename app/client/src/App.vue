@@ -4,7 +4,7 @@
       <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers"/>
-        <PlayPanel v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" />
+        <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" />
         <HistoryPanel />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
@@ -35,9 +35,14 @@ import PotPanel from './components/PotPanel.vue';
 import PlayPanel from './components/PlayPanel.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
 import { ref, watchEffect } from 'vue';
-import { useAnchorWallet } from 'solana-wallets-vue';
-import { Connection } from '@solana/web3.js';
+import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
+import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js';
 import { io } from 'socket.io-client';
+
+const preflightCommitment = 'processed'
+const cluster = 'devnet'
+const commitSOL = 1;
+
 
 export default {
   name: 'App',
@@ -93,8 +98,8 @@ export default {
     const potUSD = ref(0);
     socket.on('getPOT', (data) => {
       //console.log(data);
-      potSOL.value = data.potSOL;
-      potUSD.value = data.potUSD;
+      potSOL.value = data.potSOL || 0;
+      potUSD.value = data.potUSD || 0;
     });
 
     // tickets
@@ -146,6 +151,58 @@ export default {
       })
     }, 10000);
 
+    const ticket = ref('')
+    
+    // Commit Number
+    async function commitNumber (number) {
+
+      if (! wallet.value) {
+        return alert('Connect your wallet first!')
+      } 
+
+      // for ( const num of tickets ) {
+      //   if ( num.__num__ == number.value )
+      //     return alert('This number is already commited! Try another one.')
+      // }
+      
+      const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
+      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
+
+      if (bal < commitSOL) 
+        return alert('Not enough SOL in your wallet. Minimum funds needed: 1 SOL')
+
+      const { sendTransaction } = useWallet();
+      const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
+      const transaction = new Transaction().add(
+          SystemProgram.transfer({
+              fromPubkey: wallet.value.publicKey,
+              toPubkey: new PublicKey(masterPubKey),
+              lamports: commitSOL*1000000000,
+              message: number.value})
+      )
+
+      const signature = await sendTransaction(transaction, connection);
+      console.log(signature);
+      
+      await connection.confirmTransaction(signature, number.value);// processed');
+
+      //const location = await userLocation();
+      ticket.value = emitTicket(number);
+
+      //commitPop.value = true;
+
+    }
+
+    function emitTicket(number) {
+      const date = new Date();
+      const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours());
+      const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes());
+      const ticket = `'${hour}:${minutes}', ${number}, false, '${wallet.value.publicKey.toBase58()}', '${location.value.flag}', ${potSOL.value}, ${Date.now()}`;
+      socket.emit('newTicket', ticket);
+      //socket.emit('postTicket', ticket);
+      console.log(socket.on('postTicket'))
+      console.log(ticket)
+    }
 
     return {
       socket,
@@ -157,7 +214,8 @@ export default {
       potUSD,
       tickets,
       nPlayers,
-      location
+      location,
+      commitNumber
     }
   }
   
