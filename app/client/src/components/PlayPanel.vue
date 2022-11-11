@@ -101,6 +101,7 @@
 import { ref } from 'vue';
 import CountDown from './CountDown.vue';
 import click_sound from '../assets/sounds/click.mp3';
+import store from '@/store';
 
 export default {
   props: [
@@ -136,8 +137,8 @@ export default {
 
     // Keyboard functionality
     function clickNum (n) {
-      if ( this.$store.state.sound )
-        audio.play()
+      if ( store.state.sound )
+        audio.play();
 
       if (number.value[0] === '0')
         return number.value = String(n)

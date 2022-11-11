@@ -40,6 +40,7 @@ import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from
 import { io } from 'socket.io-client';
 import commit_sound from './assets/sounds/3.wav';
 import commited_sound from './assets/sounds/2.wav';
+import store from './store';
 
 const preflightCommitment = 'processed'
 const cluster = 'devnet'
@@ -162,7 +163,7 @@ export default {
 
       const audio1 = new Audio(commit_sound);
       const audio2 = new Audio(commited_sound);
-      if ( this.$store.state.sound )
+      if ( store.state.sound )
         audio1.play();
 
       if (! wallet.value) {
@@ -194,7 +195,7 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
-      if ( this.$store.state.sound )
+      if ( store.state.sound )
         audio2.play();
       //const location = await userLocation();
       ticket.value = emitTicket(number);
@@ -245,7 +246,7 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: rgba(129, 129, 129, 0.692);
+  background-color: rgba(184, 184, 184, 0.692);
   border-radius: 0.75rem;
   margin: 0.4rem;
   border-left: 1px solid rgba(211, 211, 211, 0);
