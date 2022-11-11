@@ -158,11 +158,12 @@ export default {
     }, 10000);
 
     const user_wallet = ref('');
-    if ( wallet.value )
-      user_wallet.value = wallet.value.publicKey;
+    watchEffect(async () => {
+      if ( wallet.value )
+        user_wallet.value = await wallet.value.publicKey;
+    });
 
     const ticket = ref('')
-    
     // Commit Number
     async function commitNumber (number) {
 
