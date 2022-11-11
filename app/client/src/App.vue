@@ -3,7 +3,7 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers"/>
+        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers" :wallet="user_wallet" />
         <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" />
         <HistoryPanel />
       </div>
@@ -41,7 +41,6 @@ import { io } from 'socket.io-client';
 import commit_sound from './assets/sounds/3.wav';
 import commited_sound from './assets/sounds/2.wav';
 import pot_sound from './assets/sounds/pot.mp3'
-import welcome_sound from './assets/sounds/welcome.wav';
 import store from './store';
 
 const preflightCommitment = 'processed'
@@ -75,9 +74,7 @@ export default {
       return String(num);
     }
 
-    const welcome_audio = new Audio(welcome_sound);
-    const pot_audio = new Audio(pot_sound);
-    welcome_audio.play();
+
     const time = ref('');
     function getTime () {
       const date = new Date
@@ -86,10 +83,10 @@ export default {
       const seconds = formatTime(date.getSeconds());
       return `${hours}:${minutes}:${seconds}`;
     }
+    const pot_audio = new Audio(pot_sound);
     setInterval( () => {
       time.value = getTime();
-      console.log(time.value)
-      if ( time.value === '00:00:00' && store.state.sound )
+      if ( time.value === '14:56:00' && store.state.sound )
         pot_audio.play();
     }, 1000);
 
@@ -160,6 +157,10 @@ export default {
       })
     }, 10000);
 
+    const user_wallet = ref('');
+    if ( wallet.value )
+      user_wallet.value = wallet.value.publicKey;
+
     const ticket = ref('')
     
     // Commit Number
@@ -209,10 +210,10 @@ export default {
     }
 
     function emitTicket(number) {
-      const date = new Date();
-      const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours());
-      const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes());
-      const ticket = `'${hour}:${minutes}', ${number}, false, '${wallet.value.publicKey.toBase58()}', '${location.value.flag}', ${potSOL.value}, ${Date.now()}`;
+      // const date = new Date();
+      // const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours());
+      // const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes());
+      const ticket = `, ${number}, false, '${wallet.value.publicKey.toBase58()}', '${location.value.flag}', ${potSOL.value}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
       //socket.emit('postTicket', ticket);
       console.log(socket.on('postTicket'))
@@ -230,7 +231,8 @@ export default {
       tickets,
       nPlayers,
       location,
-      commitNumber
+      commitNumber,
+      user_wallet
     }
   }
   

@@ -76,6 +76,7 @@ io.on('connection', async (socket) => {
   io.emit('getTickets', tickets);
 
   socket.on('newTicket', async (ticket) => {
+    ticket = `'${utils.getTime()}' ${ticket}`;
     console.log(ticket);
     const date = utils.getDateSQL();
     io.emit('postTicket', ctrls.postTicket( client, date, ticket ));

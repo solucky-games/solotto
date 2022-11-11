@@ -63,7 +63,7 @@
               <div class="hover:font-semibold grid grid-cols-10 gap-3" :class="markWallet(wallet, x._owner) ? 'text-purple-400 font-bold' : 'text-grey-600'">
                 <div class="text-xs col-span-2" >{{ x._hour }}</div>
                 <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
-                  <div class="text-xs text-left">{{ shortWallet(x._owner, 6) }}</div>
+                  <div class="text-xs text-left">{{ shortWallet(x._owner, 5) }}</div>
                 </a>
                 <a class="col-span-1" :href="'https://google.com/search?q='+x._flag" target="_blank">
                   <div class="text-xs">{{ x._flag }}</div>
@@ -94,7 +94,8 @@ export default ({
     'potUSD',
     'newTicket',
     'tickets',
-    'nPlayers'
+    'nPlayers',
+    'wallet'
   ],
   components: {
     CountDown
