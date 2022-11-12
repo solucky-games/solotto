@@ -41,8 +41,14 @@ function countDown () {
 }
 
 function nPlayers ( tickets ) {
+  let n = 0;
+  try {
+    n = tickets.length;
+  } catch ( e ) {
+    console.log( e );
+  };
   const uniqueWallets = [];
-  if ( tickets.length > 0 ) {
+  if ( n > 0 ) {
     for (const ticket of tickets) {
       if ( uniqueWallets.includes(ticket._owner)  )
         continue;

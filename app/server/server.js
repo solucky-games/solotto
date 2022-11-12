@@ -41,7 +41,7 @@ server.listen(PORT, ()=> {
     const arr = time.split(':');
     if ( arr[2] == 0 ) {
       console.log(time);
-      if ( arr[1] == 0 && arr[0] == 0 ) {
+      if ( arr[1] == 0 && arr[0] == 8 ) {
         const date = utils.getDateSQL();
         ctrls.createTable(client, date);
         console.log(date);
@@ -67,7 +67,12 @@ io.on('connection', async (socket) => {
   io.emit('userNumber', `user_num: ${countUsers}`);
   
   const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
-  const potSOL = await tickets.length;
+  let potSOL = 0;
+  try {
+    potSOL = await tickets.length;
+  } catch (e) {
+    console.log('tickets.length error: ' + e.message);
+  };
   coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
     const potUSD = Math.floor(potSOL*price.last)
     io.emit('getPOT', { potSOL, potUSD });

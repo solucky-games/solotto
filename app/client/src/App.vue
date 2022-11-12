@@ -74,7 +74,6 @@ export default {
       return String(num);
     }
 
-
     const time = ref('');
     function getTime () {
       const date = new Date
@@ -86,7 +85,7 @@ export default {
     const pot_audio = new Audio(pot_sound);
     setInterval( () => {
       time.value = getTime();
-      if ( time.value === '14:56:00' && store.state.sound )
+      if ( time.value === '08:00:00' && store.state.sound )
         pot_audio.play();
     }, 1000);
 
@@ -116,7 +115,7 @@ export default {
       tickets.value = data;
     });
 
-    // tickets
+    // nPlayers
     const nPlayers = ref(0);
     socket.on('nPlayers', (data, error) => {
       if (error) console.log('Error on socket:', error);
