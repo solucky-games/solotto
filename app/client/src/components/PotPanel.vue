@@ -10,14 +10,14 @@
             <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-4">Today's</p>
             <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">SOL Pot</p>
 
-            <div class="flex ">
+            <div class="flex">
               <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mt-3 mr-1"
                 >◎ </p>
                 <p class="font-bold text-4xl mt-2"
                 > {{ potSOL }}</p>
               </div>
-              <div class=" text-4xl mt-2 mr-4 text-gray-400">/</div>
+              <div class="text-4xl mt-2 mr-4 text-gray-400">/</div>
               <div class="flex justify-center pt-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mr-1"
                 >$ </p>
@@ -26,7 +26,7 @@
               </div>
             </div>
 
-            <div class="mt-2 pl-2">
+            <div class="mt-4">
               <div class="text-gray-400 text-xl tracking-widest font-semibold text-center" >
                 {{ date }}
               </div>
