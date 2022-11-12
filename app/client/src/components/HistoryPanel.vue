@@ -91,16 +91,11 @@
 </template>
 
 <script>
-// import { ref, watchEffect } from 'vue';
-// import { Bar } from 'vue-chartjs'
-import LineChart from './lineChart.ts'
-// import PolarChart from './polarChart.ts'
-
+import LineChart from './charts/lineChart.ts'
 
 export default {
   components: {
     LineChart,
-    // PolarChart,
   },
   setup () {
 
