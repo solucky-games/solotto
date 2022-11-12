@@ -39,7 +39,7 @@
 
         <div class="p-4 text-center mr-2">
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Pot</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">SOL Pot</p>
           <div class="flex justify-center" >
             <p class="font-bold text-xl mt-2 mr-4"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
@@ -49,7 +49,7 @@
 
         <div class="p-4 text-center">
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Pot</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">SOL Pot</p>
           <div class="flex justify-center" >
             <p class="font-bold text-xl mt-2 mr-4"
             :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
