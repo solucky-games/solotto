@@ -40,6 +40,7 @@ import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from
 import { io } from 'socket.io-client';
 import commit_sound from './assets/sounds/3.wav';
 import commited_sound from './assets/sounds/2.wav';
+import wrong_sound from './assets/sounds/wrong.mp3';
 import pot_sound from './assets/sounds/pot.mp3'
 import store from './store';
 
@@ -180,17 +181,24 @@ export default {
 
       const audio1 = new Audio(commit_sound);
       const audio2 = new Audio(commited_sound);
-      if ( store.state.sound )
-        audio1.play();
+      const audio3 = new Audio(wrong_sound)
 
       if (! wallet.value) {
         return alert('Connect your wallet first!')
       } 
 
       for ( const num of tickets.value ) {
-        if ( num.__num__ == number )
-          return alert('This number is already commited! Try another one.')
+        if ( num.__num__ == number ) {
+          audio3.play();
+          if ( store.state.sound )
+            audio3.play();
+          console.log
+          return 'This number is already commited! Try another one' //alert('This number is already commited! Try another one.')
+        }
       }
+
+      if ( store.state.sound )
+        audio1.play();
       
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
