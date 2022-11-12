@@ -4,7 +4,7 @@
   <div class="m-auto w-full max-w-md p-4">
     <div class="p-4 text-gray-600 rounded-xl text-center shadow-xl" :class="this.$store.state.dark ? 'bg-gray-800 shadow-gray-700' : 'bg-white'">
 
-      <div class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-8">SOLucky</div>
+      <div class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-8">SOLotto</div>
       <div class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">History</div>
       
       <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">

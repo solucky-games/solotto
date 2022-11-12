@@ -96,8 +96,6 @@
 </template>
 
 <script>
-
-
 import { ref } from 'vue';
 import click_sound from '../assets/sounds/click.mp3';
 import store from '@/store';
@@ -117,10 +115,6 @@ export default {
     commitNumber () {
       this.$emit('commit', this.commitNumber)
     }
-  },
-  components: {
-    // CountDown,
-    // PopCommit,
   },
   data() {
     return {

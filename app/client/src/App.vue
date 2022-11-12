@@ -285,8 +285,6 @@ export default {
       yourROI
     }
   }
-  
- 
 }
 </script>
 
