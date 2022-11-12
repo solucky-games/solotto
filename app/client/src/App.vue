@@ -3,8 +3,8 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers" :wallet="user_wallet" />
-        <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" />
+        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers" :wallet="user_wallet" />
+        <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" />
         <HistoryPanel />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
@@ -74,22 +74,8 @@ export default {
       return String(num);
     }
 
-    const time = ref('');
-    function getTime () {
-      const date = new Date
-      const hours = formatTime(date.getUTCHours());
-      const minutes = formatTime(date.getMinutes());
-      const seconds = formatTime(date.getSeconds());
-      return `${hours}:${minutes}:${seconds}`;
-    }
-    const pot_audio = new Audio(pot_sound);
-    setInterval( () => {
-      time.value = getTime();
-      if ( time.value === '08:00:00' && store.state.sound )
-        pot_audio.play();
-    }, 1000);
-
-    const date = getDate()
+    const date = ref('')
+    date.value = getDate();
     function getDate () {
       const date = new Date
       const year = formatTime(date.getUTCFullYear());
@@ -97,6 +83,37 @@ export default {
       const day = formatTime(date.getUTCDate());
       return `${year}-${month}-${day}`;
     }
+
+    const time = ref('');
+    time.value = getTime();
+    function getTime () {
+      const date = new Date
+      const hours = formatTime(date.getUTCHours());
+      const minutes = formatTime(date.getMinutes());
+      const seconds = formatTime(date.getSeconds());
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
+    const countdown = ref('');
+    countdown.value = countDown();
+    function countDown () {
+      const time = getTime().split(':');
+      const hours = formatTime(23-time[0]);
+      const minutes = formatTime(59-time[1]);
+      const seconds = formatTime(59-time[2]);
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Pot sound 00:00:00 UTC
+    const pot_audio = new Audio(pot_sound);
+    setInterval( () => {
+      time.value = getTime();
+      countdown.value = countDown();
+      if ( time.value === '11:00:00' && store.state.sound ) {
+        pot_audio.play();
+        date.value = getDate();
+      }
+    }, 1000);
 
     // Pot 
     const potSOL = ref(0);
@@ -232,7 +249,8 @@ export default {
       nPlayers,
       location,
       commitNumber,
-      user_wallet
+      user_wallet,
+      countdown
     }
   }
   

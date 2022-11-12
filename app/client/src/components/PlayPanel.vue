@@ -16,11 +16,9 @@
             <div class="uppercase text-xl text-gray-400 font-semibold m-4">in</div>
           </div>
           <div class="pl-2">
-            <CountDown :_date="false" class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" />
-
-            <!-- <div class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
+            <div class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
               {{countdown}}
-            </div> -->
+            </div>
           </div>      
         </div>
 
@@ -99,13 +97,11 @@
 
 
 import { ref } from 'vue';
-import CountDown from './CountDown.vue';
 import click_sound from '../assets/sounds/click.mp3';
 import store from '@/store';
 
 export default {
   props: [
-    'socket',
     'countdown',
     'potSOL',
     'wallet',
@@ -118,7 +114,7 @@ export default {
     }
   },
   components: {
-    CountDown,
+    // CountDown,
     // PopCommit,
   },
   data() {
