@@ -8,7 +8,7 @@
         <div class="flex align-center justify-center">
           <div class="p-4 text-center">
             <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-4">Today's</p>
-            <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Pot</p>
+            <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">SOL Pot</p>
 
             <div class="flex ">
               <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
