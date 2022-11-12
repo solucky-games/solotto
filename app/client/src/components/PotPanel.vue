@@ -37,7 +37,43 @@
   
           </div>
         </div>
-        <div class="flex align-center justify-center mt-4">
+
+        <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl ">
+          <div class="flex align-center justify-center mb-4">
+
+            <div class="p-4 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
+              <div class="flex justify-center" >
+                <p class="lowercase font-bold text-xl mt-2"
+                  :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+                > {{ potSOL }}</p>
+              </div>
+            </div>
+
+            <div class="p-4 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Verified</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
+              <div class="flex justify-center" >
+                <p class="font-bold text-xl mt-2"
+                  :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+                > {{ 0 }}</p>
+              </div>
+            </div>
+
+            <div class="p-4 text-center">
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
+              <div class="flex justify-center" >
+                <p class="font-bold text-xl mt-2"
+                  :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+                > {{ nPlayers }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- <div class="flex align-center justify-center mt-4">
           <div class="p-2 mr-1 text-center">
             <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
             <p class="uppercase text-xl tracking-widest text-gray-400 font-semibold">Numbers</p>
@@ -57,12 +93,12 @@
               > {{nPlayers}}</p>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- commited numbers -->
         <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
           <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-gray-100'">
-            <div v-for="x of this.tickets" :key="x._hour" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
+            <div v-for="x of tickets" :key="x._hour" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
               <div class="hover:font-semibold grid grid-cols-10 gap-3" :class="markWallet(wallet, x._owner) ? 'text-purple-400 font-bold' : 'text-grey-600'">
                 <div class="text-xs col-span-2" >{{ x._hour }}</div>
                 <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">

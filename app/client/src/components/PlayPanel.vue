@@ -26,12 +26,12 @@
           <div class="flex align-center justify-center mb-4">
 
             <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Commited</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
               <div class="flex justify-center" >
                 <p class="lowercase font-bold text-xl mt-2"
                   :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `x${12}`}}</p>
+                > {{ `x${yourNumbers}`}}</p>
               </div>
             </div>
 
@@ -41,26 +41,28 @@
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${2.77}%`}}</p>
+                > {{ `${yourProbability}%`}}</p>
               </div>
             </div>
 
             <div class="p-4 text-center">
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">ROI</p>
+              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Exp ROI</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ `${nf.format(10000)}%`}}</p>
+                > {{ `${nf.format(yourROI)}%`}}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="uppercase text-s mb-5 tracking-widest text-gray-400 font-semibold text-center">Pick your number</div>
+      <div class="uppercase text-s tracking-widest text-gray-400 font-semibold text-center mb-4 -mt-2">
+        Pick your number
+      </div>
 
-      <div class="font-bold text-4xl text-center p-7 rounded-xl m-4 cursor-pointer"
+      <div class="font-bold text-4xl text-center p-7 rounded-xl mx-4 cursor-pointer"
       :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
       @click="$emit('commit', number)"
       @mouseover="commitHover=true"
@@ -106,7 +108,10 @@ export default {
     'potSOL',
     'wallet',
     'balance',
-    'tickets'
+    'tickets',
+    'yourNumbers',
+    'yourProbability',
+    'yourROI'
   ],
   methods: {
     commitNumber () {
@@ -154,30 +159,6 @@ export default {
     }
 
     const commitPop = ref(false);
-    
-    //const yourNumbers = ref(0);
-    // function updateYourNumbers () {
-    //   const address = wallet.value.publicKey.toBase58();
-    //   const arr = [];
-    //   for (const [key, value] of Object.entries(tickets.value)) {
-    //     if (value === address)
-    //       arr.push(key);
-    //   }
-    //   yourNumbers.value = arr.length;
-    // }
-    // const yourProbability = ref(0);
-    // function updateYourProbability () {
-    //   yourProbability.value = Math.floor((yourNumbers.value/tickets.value.length)*10000)/100;
-    // }
-    // const yourROI = ref(0);
-    // function updateYourROI () {
-    //   // yourROI.value = Math.floor((this.potSOL.value/yourNumbers.value-1)*10000)/100;
-    // }
-    // watchEffect(async () => {
-    //   updateYourNumbers();
-    //   updateYourProbability();
-    //   updateYourROI();
-    // });
     
     return { 
       clickNum,

@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <div class="flex align-center justify-center mt-1">
+      <div class="flex align-center justify-center">
 
         <div class="p-4 text-center">
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
@@ -81,7 +81,7 @@
         </div>
       </div>
 
-      <div class="uppercase text-xs mb-4 mt-4 tracking-widest text-gray-400 font-semibold">Historical winners</div>
+      <div class="uppercase text-xs mb-4 mt-2 tracking-widest text-gray-400 font-semibold">Historical winners</div>
 
       <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-text-gray-200'">
         <div v-for="x of winners" :key="x.id" >

@@ -3,8 +3,8 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers" :wallet="user_wallet" />
-        <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" />
+        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers" :wallet="wallet.publicKey" />
+        <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" :yourNumbers="yourNumbers" :yourProbability="yourProbability" :yourROI="yourROI" />
         <HistoryPanel />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
@@ -109,7 +109,7 @@ export default {
     setInterval( () => {
       time.value = getTime();
       countdown.value = countDown();
-      if ( time.value === '11:00:00' && store.state.sound ) {
+      if ( time.value === '12:00:00' && store.state.sound ) {
         pot_audio.play();
         date.value = getDate();
       }
@@ -173,12 +173,6 @@ export default {
       })
     }, 10000);
 
-    const user_wallet = ref('');
-    watchEffect(async () => {
-      if ( wallet.value )
-        user_wallet.value = await wallet.value.publicKey;
-    });
-
     const ticket = ref('')
     // Commit Number
     async function commitNumber (number) {
@@ -221,36 +215,54 @@ export default {
         audio2.play();
       //const location = await userLocation();
       ticket.value = emitTicket(number);
-
       //commitPop.value = true;
-
     }
-
     function emitTicket(number) {
-      // const date = new Date();
-      // const hour = String(date.getUTCHours()).length < 2 ? '0' + String(date.getUTCHours()) : String(date.getUTCHours());
-      // const minutes = String(date.getMinutes()).length < 2 ? '0' + String(date.getMinutes()) : String(date.getMinutes());
-      const ticket = `, ${number}, false, '${wallet.value.publicKey.toBase58()}', '${location.value.flag}', ${potSOL.value}, ${Date.now()}`;
+      const ticket = `, ${number}, false, '${wallet.value.publicKey}', '${location.value.flag}', ${potSOL.value}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
-      //socket.emit('postTicket', ticket);
       console.log(socket.on('postTicket'))
       console.log(ticket)
     }
 
+    // Play panel stats
+    const yourNumbers = ref(0);
+    function updateYourNumbers () {
+      for (const i of tickets.value) {
+        if (i._owner === wallet.value.publicKey)
+          yourNumbers.value++;
+      }
+    }
+    const yourProbability = ref(0);
+    function updateYourProbability () {
+      yourProbability.value = Math.floor((yourNumbers.value/potSOL.value)*10000)/100;
+    }
+    const yourROI = ref(0);
+    function updateYourROI () {
+      yourROI.value = Math.floor((potSOL.value/yourNumbers.value-1)*10000)/100;
+    }
+    watchEffect(async () => {
+      updateYourNumbers();
+      updateYourProbability();
+      updateYourROI();
+    });
+
     return {
+      wallet,
       socket,
       users,
       balance,
       date,
       time,
+      countdown,
       potSOL,
       potUSD,
       tickets,
       nPlayers,
       location,
       commitNumber,
-      user_wallet,
-      countdown
+      yourNumbers,
+      yourProbability,
+      yourROI
     }
   }
   
