@@ -22,7 +22,7 @@
             {{location.flag}}
           </div>
         </div>
-        Make with 💓 by Solucky Games © All rights reserved. <br>Built in <a href="https://solana.com/" target="_blank" class="underline">Solana</a> in 2022. Good luck all!
+        Made with 💓 by Solucky Games © All rights reserved. <br>Built in <a href="https://solana.com/" target="_blank" class="underline">Solana</a> in 2022. Good luck all!
       </div>
     </div>
     <!-- <CommitModal class="invisible hidden"/> -->
