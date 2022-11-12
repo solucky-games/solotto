@@ -56,6 +56,7 @@ export default {
     PotPanel,
     PlayPanel,
     HistoryPanel,
+    
     // CommitModal
   },
   data() {

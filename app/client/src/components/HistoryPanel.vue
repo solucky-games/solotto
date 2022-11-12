@@ -23,67 +23,58 @@
           <div class="flex justify-center" >
             <p class="font-bold text-xl mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            >{{ ` ${12}` }}</p>
+            >{{ 12 }}</p>
           </div>
         </div>
-
-        <div class="p-4 text-center mr-2">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
-          <div class="flex justify-center" >
-            <p class="font-bold text-xl mt-2 mr-4"
-              :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            > <span class="text-sm text-gray-400">◎ </span>{{ ` ${323}` }}</p>
-          </div>
-        </div>
-
-        <div class="p-4 text-center">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
-          <div class="flex justify-center" >
-            <p class="font-bold text-md pt-2 mt-1"
-              :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            > {{ nf.format(9044309).replaceAll(',', ' ') }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex align-center justify-center">
 
         <div class="p-4 text-center">
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Countries</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
           <div class="flex justify-center" >
             <p class="font-bold text-xl mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            >{{ ` ${12}` }}</p>
+            >{{ 1203 }}</p>
           </div>
         </div>
 
         <div class="p-4 text-center mr-2">
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Prize</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Pot</p>
           <div class="flex justify-center" >
             <p class="font-bold text-xl mt-2 mr-4"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            > <span class="text-sm text-gray-400">◎ </span>{{ ` ${323}` }}</p>
+            > <span class="text-sm text-gray-400">◎ </span>{{ 323 }}</p>
           </div>
         </div>
 
         <div class="p-4 text-center">
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Number</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Pot</p>
           <div class="flex justify-center" >
-            <p class="font-bold text-md pt-2 mt-1"
-              :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            > {{ nf.format(9044309).replaceAll(',', ' ') }}</p>
+            <p class="font-bold text-xl mt-2 mr-4"
+            :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+            > <span class="text-sm text-gray-400">◎ </span>{{ 88 }}</p>
           </div>
         </div>
       </div>
 
-      <div class="uppercase text-xs mb-4 mt-2 tracking-widest text-gray-400 font-semibold">Historical winners</div>
+      <div >
+        <!-- <Bar class="m-h-24 h-24" /> -->
+        <div class="uppercase text-xs mt-2 tracking-widest text-gray-400 font-semibold">
+          Cumulative POT
+          <LineChart class="m-h-48 h-48"/>
+        </div>
 
-      <lo class=" max-h-96 min-h-96 h-96 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-text-gray-200'">
+        <!-- <div class="uppercase text-xs mt-2 tracking-widest text-gray-400 font-semibold">
+          POT country distribution
+          <PolarChart class="m-h-24 h-24"/>
+        </div> -->
+      </div>
+
+      <div class="uppercase text-xs mb-4 mt-4 tracking-widest text-gray-400 font-semibold">
+        Historical winners
+      </div>
+      <lo class=" max-h-64 min-h-64 h-64 flex flex-col flex-grow overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-text-gray-200'">
         <div v-for="x of winners" :key="x.id" >
           <div class="hover:font-semibold grid grid-cols-12 justify-center align-center align-middle"  :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
             <div class="text-xs text.left   col-span-3">{{ x.date }}</div>
@@ -101,13 +92,19 @@
 
 <script>
 // import { ref, watchEffect } from 'vue';
+// import { Bar } from 'vue-chartjs'
+import LineChart from './lineChart.ts'
+// import PolarChart from './polarChart.ts'
 
 
 export default {
+  components: {
+    LineChart,
+    // PolarChart,
+  },
   setup () {
 
     const nf = Intl.NumberFormat();
-
 
     // async function getWinners () {
     //   const res = await fetch(process.env.VUE_APP_DB_WINNERS_URL+'winners')
@@ -121,8 +118,20 @@ export default {
     // });
 
     return { 
-      // winners,
+      // winners,ç
       nf
+    }
+  },
+  data() {
+
+    return {
+      chartData: {
+        labels: [ 'January', 'February', 'March' ],
+        datasets: [ { data: [40, 20, 12] } ]
+      },
+      chartOptions: {
+        responsive: true
+      }
     }
   }
 }

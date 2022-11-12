@@ -19,6 +19,7 @@
     "@solana/wallet-adapter-wallets": "^0.19.5",
     "@toruslabs/eccrypto": "^1.1.8",
     "autoprefixer": "^10",
+    "chart.js": "^3.9.1",
     "cipher-base": "^1.0.4",
     "coin-ticker": "^3.2.0",
     "core-js": "^3.8.3",
@@ -38,6 +39,7 @@
     "twitter-api-v2": "^1.12.9",
     "unoverlay-vue": "^0.2.2",
     "vue": "^3.2.13",
+    "vue-chartjs": "^4.1.2",
     "vuex": "^4.1.0",
     "webpack": "^5.74.0"
   },
