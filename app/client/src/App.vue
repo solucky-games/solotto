@@ -11,7 +11,7 @@
         <div class="flex justify-center items-center rounded-xl m-4">
           <!-- Server time -->
           <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
-            {{time}}<span class="text-xs"> UTC</span>
+            {{ time }}<span class="text-xs"> UTC</span>
           </div>
           <!-- Users connected -->
           <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
@@ -19,7 +19,7 @@
           </div>
           <!-- Users flag -->
           <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
-            {{location.flag}}
+            {{ location.flag }}
           </div>
         </div>
         Made with 💓 by Solucky Games © All rights reserved. <br>Built in <a href="https://solana.com/" target="_blank" class="underline">Solana</a> in 2022. Good luck all!
@@ -244,7 +244,6 @@ export default {
       for (const i of tickets.value) {
         if (i._owner == wallet.value.publicKey) {
           nums++;
-          console.log('eeeeoooo', i)
         }
       }
       yourNumbers.value = nums;
