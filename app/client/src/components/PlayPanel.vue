@@ -70,7 +70,7 @@
         <div class="text-2xl py-2 mr-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" v-if="commitHover">
           <a class="text-xl mr-5 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
             Commit 🚀 </a>
-          {{nf.format(number)}}
+          {{ nf.format(number).replaceAll(',', ' ') }}
         </div>
         <div v-else>{{ nf.format(number).replaceAll(',', ' ') }}</div>
       </div>

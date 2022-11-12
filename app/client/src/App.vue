@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
@@ -109,9 +109,10 @@ export default {
     setInterval( () => {
       time.value = getTime();
       countdown.value = countDown();
-      if ( time.value === '12:00:00' && store.state.sound ) {
-        pot_audio.play();
+      if ( time.value === '00:00:00' ) {
         date.value = getDate();
+        if ( store.state.sound )
+          pot_audio.play();
       }
     }, 1000);
 
@@ -186,14 +187,13 @@ export default {
         return alert('Connect your wallet first!')
       } 
 
-      // for ( const num of tickets ) {
-      //   if ( num.__num__ == number.value )
-      //     return alert('This number is already commited! Try another one.')
-      // }
+      for ( const num of tickets.value ) {
+        if ( num.__num__ == number )
+          return alert('This number is already commited! Try another one.')
+      }
       
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
       const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
-
       if (bal < commitSOL) 
         return alert('Not enough SOL in your wallet. Minimum funds needed: 1 SOL')
 
@@ -211,11 +211,16 @@ export default {
       console.log(signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
+
       if ( store.state.sound )
         audio2.play();
       //const location = await userLocation();
       ticket.value = emitTicket(number);
       //commitPop.value = true;
+      updateYourNumbers();
+      updateYourProbability();
+      updateYourROI();
+
     }
     function emitTicket(number) {
       const ticket = `, ${number}, false, '${wallet.value.publicKey}', '${location.value.flag}', ${potSOL.value}, ${Date.now()}`;
@@ -227,24 +232,32 @@ export default {
     // Play panel stats
     const yourNumbers = ref(0);
     function updateYourNumbers () {
+      let nums = 0;
       for (const i of tickets.value) {
-        if (i._owner === wallet.value.publicKey)
-          yourNumbers.value++;
+        if (i._owner == wallet.value.publicKey) {
+          nums++;
+          console.log('eeeeoooo', i)
+        }
       }
+      yourNumbers.value = nums;
     }
     const yourProbability = ref(0);
     function updateYourProbability () {
-      yourProbability.value = Math.floor((yourNumbers.value/potSOL.value)*10000)/100;
+      yourProbability.value = Math.floor((yourNumbers.value/potSOL.value)*1000)/10;
     }
     const yourROI = ref(0);
     function updateYourROI () {
-      yourROI.value = Math.floor((potSOL.value/yourNumbers.value-1)*10000)/100;
+      if ( yourProbability.value > 0 )
+        yourROI.value = Math.floor((potSOL.value/yourNumbers.value-1)*1000)/10;
     }
-    watchEffect(async () => {
-      updateYourNumbers();
-      updateYourProbability();
-      updateYourROI();
-    });
+    setInterval( () => {
+      watchEffect( () => {
+        updateYourNumbers();
+        updateYourProbability();
+        updateYourROI();
+      });
+    }, 1000);
+    
 
     return {
       wallet,
