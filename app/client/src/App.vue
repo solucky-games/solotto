@@ -78,20 +78,20 @@ export default {
     const date = ref('')
     date.value = getDate();
     function getDate () {
-      const date = new Date
-      const year = formatTime(date.getUTCFullYear());
-      const month = formatTime(date.getUTCMonth()+1);
-      const day = formatTime(date.getUTCDate());
+      const d = new Date;
+      const year = formatTime(d.getUTCFullYear());
+      const month = formatTime(d.getUTCMonth()+1);
+      const day = formatTime(d.getUTCDate());
       return `${year}-${month}-${day}`;
     }
 
     const time = ref('');
     time.value = getTime();
     function getTime () {
-      const date = new Date
-      const hours = formatTime(date.getUTCHours());
-      const minutes = formatTime(date.getMinutes());
-      const seconds = formatTime(date.getSeconds());
+      const d = new Date;
+      const hours = formatTime(d.getUTCHours());
+      const minutes = formatTime(d.getMinutes());
+      const seconds = formatTime(d.getSeconds());
       return `${hours}:${minutes}:${seconds}`;
     }
 
@@ -265,7 +265,6 @@ export default {
       });
     }, 1000);
     
-
     return {
       wallet,
       socket,

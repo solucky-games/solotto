@@ -100,26 +100,28 @@
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue';
+// import { ref, watchEffect } from 'vue';
 
-const nf = Intl.NumberFormat();
 
 export default {
   setup () {
 
-    async function getWinners () {
-      const res = await fetch(process.env.VUE_APP_DB_WINNERS_URL+'winners')
-      const data = await res.json()
-      return data;
-    }
+    const nf = Intl.NumberFormat();
 
-    const winners = ref({});
-    watchEffect(async () => {
-      winners.value = await getWinners()
-    });
+
+    // async function getWinners () {
+    //   const res = await fetch(process.env.VUE_APP_DB_WINNERS_URL+'winners')
+    //   const data = await res.json()
+    //   return data;
+    // }
+
+    // const winners = ref({});
+    // watchEffect(async () => {
+    //   winners.value = await getWinners()
+    // });
 
     return { 
-      winners,
+      // winners,
       nf
     }
   }

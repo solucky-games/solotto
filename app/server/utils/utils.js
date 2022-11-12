@@ -9,7 +9,7 @@ function formatTime (num) {
 }
 
 function getTime () {
-  const date = new Date
+  const date = new Date;
   const hours = formatTime(date.getUTCHours());
   const minutes = formatTime(date.getMinutes());
   const seconds = formatTime(date.getSeconds());
@@ -25,7 +25,7 @@ function getDate () {
 }
 
 function getDateSQL () {
-  const date = new Date
+  const date = new Date;
   const year = formatTime(date.getUTCFullYear());
   const month = formatTime(date.getUTCMonth()+1);
   const day = formatTime(date.getUTCDate());

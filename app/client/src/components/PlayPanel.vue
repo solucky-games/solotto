@@ -124,11 +124,10 @@ export default {
   },
   setup () {
 
-    const audio = new Audio(click_sound);
-
     const number = ref('0')
     const nf = Intl.NumberFormat();
     const maxNumber = 1000000000;
+    const audio = new Audio(click_sound);
 
     // Keyboard functionality
     function clickNum (n) {
