@@ -41,7 +41,7 @@
 
         <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl ">
 
-          <div class="grid grid-cols-3 grid-flow-row align-center justify-center mb-4 px-4 text-center">
+          <div class="grid grid-cols-3 grid-flow-row align-center justify-center mb-3 px-4 text-center">
 
             <div class="p-4 text-center">
               <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Total</p>
@@ -98,30 +98,33 @@
         </div> -->
 
         <!-- commited numbers -->
-        <div class="uppercase text-xs mt-3 mb-5 tracking-widest text-gray-400 font-semibold">Current commited numbers</div>
-          <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-gray-100'">
-            <div v-for="x of tickets" :key="x._hour" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
-              <div class="grid grid-cols-10 gap-3" :class="markWallet(wallet, x._owner) ? 'text-purple-400 font-bold' : 'text-grey-600'">
-                <div class="hover:text-[13px] hover:font-semibold text-xs col-span-2" >{{ x._hour }}</div>
-                <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
-                  <div class="hover:text-[13px] hover:font-semibold text-xs text-left">{{ shortWallet(x._owner, 6) }}</div>
-                </a>
-                <a class="col-span-1" :href="'https://google.com/search?q='+x._flag" target="_blank">
-                  <div class="hover:text-[14px] text-xs">{{ x._flag }}</div>
-                </a>
-                <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
-                  <div class="hover:text-[14px] hover:font-semibold text-[13px] text-center" :class="markWallet(wallet, x._owner)"> 
-                    {{ nf.format(x.__num__).replaceAll(',', ' ') }}
-                  </div>
-                </a>
-                <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
-                  <div v-if="x._verified" class="text-[10px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(wallet, x._owner)"> {{ '✔️' }}</div>
-                </a>
-              </div>
-            </div>
-          </lo>
+        <div class="uppercase text-xs mb-5 tracking-widest text-gray-400 font-semibold">
+          Current commited numbers
         </div>
+        
+        <lo class="max-h-96 min-h-96 h-96 flex flex-col-reverse align-start overflow-y-auto bg-gray-100 p-2 rounded-xl shadow-inner" :class="this.$store.state.dark ? 'bg-gray-700' : 'bg-gray-100'">
+          <div v-for="x of tickets" :key="x._hour" class="py-1" :class="this.$store.state.dark ? 'text-gray-200' : 'bg-text-gray-800'">
+            <div class="grid grid-cols-10 gap-3" :class="markWallet(wallet, x._owner) ? 'text-purple-400 font-bold' : 'text-grey-600'">
+              <div class="hover:text-[13px] hover:font-semibold text-xs col-span-2" >{{ x._hour }}</div>
+              <a class="col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
+                <div class="hover:text-[13px] hover:font-semibold text-xs text-left">{{ shortWallet(x._owner, 6) }}</div>
+              </a>
+              <a class="col-span-1" :href="'https://google.com/search?q='+x._flag" target="_blank">
+                <div class="hover:text-[14px] text-xs">{{ x._flag }}</div>
+              </a>
+              <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
+                <div class="hover:text-[14px] hover:font-semibold text-[13px] text-center" :class="markWallet(wallet, x._owner)"> 
+                  {{ nf.format(x.__num__).replaceAll(',', ' ') }}
+                </div>
+              </a>
+              <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
+                <div v-if="x._verified" class="text-[10px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(wallet, x._owner)"> {{ '✔️' }}</div>
+              </a>
+            </div>
+          </div>
+        </lo>
 
+      </div>
     </div>
 </template>
 

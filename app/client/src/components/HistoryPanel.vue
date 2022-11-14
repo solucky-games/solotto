@@ -63,7 +63,7 @@
         <!-- <Bar class="m-h-24 h-24" /> -->
         <div class="uppercase text-xs mt-3 tracking-widest text-gray-400 font-semibold">
           Cumulative SOL POT
-          <LineChart class="m-h-48 h-48 " :chartData="chartData" :chartLabels="chartLabels" />
+          <LineChart class="m-h-52 h-52 " :chartData="chartData" :chartLabels="chartLabels" />
         </div>
 
         <!-- <div class="uppercase text-xs mt-2 tracking-widest text-gray-400 font-semibold">
