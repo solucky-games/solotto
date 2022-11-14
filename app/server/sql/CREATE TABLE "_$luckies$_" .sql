@@ -12,6 +12,5 @@
 
 -- DROP TABLE "_$luckies$_";
 
-INSERT INTO _$luckies$_  ( __date__, _time, _num, _verified, _account, _owner, _flag, _pot, _timestamp ) 
-VALUES ( '2022-11-06', '14:03:00', 783434, true, 'rjeiurfrefhuhrfejreh439034njkn', '2TyAp92s7TEksnycmYY2Fk5i1j5anwFTqECyuFMVhomP', '🇪🇸', 120, 7984798437 )
-
+INSERT INTO _$luckies$_ ( __date__, _time, _num, _verified, _account, _owner, _flag, _pot, _timestamp ) 
+VALUES ('2022-11-07', '12:02:27', 700222, false, '_', '2TyAp92s7TEksnycmYY2Fk5i1j5anwFTqECyuFMVhomP', '🇯🇵', 44, 666666666')

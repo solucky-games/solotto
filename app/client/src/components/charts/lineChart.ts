@@ -27,6 +27,10 @@ export default defineComponent({
   components: {
     Line
   },
+  // props: [
+  //   'chartData',
+  //   'chartLabels'
+  // ],
   props: {
     chartId: {
       type: String,
@@ -63,8 +67,9 @@ export default defineComponent({
   },
   setup(props) {
     
-    const chartData = { labels: props.chartLabels, datasets: [ 
-      {
+    const chartData = { 
+      labels: ['11-07', '11-08', '11-09', '11-10', '11-11', '11-12', '11-13'], 
+      datasets: [{
         label: false,
         backgroundColor: '#c084fc',
         data: props.chartData

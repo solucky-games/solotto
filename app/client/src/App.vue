@@ -133,11 +133,12 @@ export default {
     const chartLabels = ref([]);
     socket.on('getHistory', (data, error) => {
       if (error) console.log('Error on socket:', error);
-      // console.log(data);
       history.value = data;
+      let cumPot = 0;
       for ( const x of data ) {
-        chartData.value.append(x._pot);
-        chartLabels.value.append(x.__date__.substring(0, 5))
+        cumPot += Number(x._pot);
+        chartData.value = [...chartData.value, cumPot ];
+        chartLabels.value = [...chartData.value, x.__date__ ];
       }
     });
 
@@ -227,11 +228,11 @@ export default {
       const { sendTransaction } = useWallet();
       const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
       const transaction = new Transaction().add(
-          SystemProgram.transfer({
-              fromPubkey: wallet.value.publicKey,
-              toPubkey: new PublicKey(masterPubKey),
-              lamports: commitSOL*1000000000,
-              message: number.value})
+        SystemProgram.transfer({
+          fromPubkey: wallet.value.publicKey,
+          toPubkey: new PublicKey(masterPubKey),
+          lamports: commitSOL*1000000000,
+          message: number.value})
       )
 
       const signature = await sendTransaction(transaction, connection);
