@@ -90,7 +90,6 @@ io.on('connection', async (socket) => {
     console.log(ticket);
     const date = utils.getDateSQL();
     io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
-
     const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
     const potSOL = await tickets.length;
     coinTicker('bitstamp', 'SOL_USD').then( (price) => { 
@@ -102,6 +101,15 @@ io.on('connection', async (socket) => {
     io.emit('nNumbers', utils.nPlayers(tickets))
     io.emit('getTickets', tickets);
   })
+
+  socket.on('newPlayer', async (player) => {
+    if ( ctrls.postPlayer( client, player ) ) {
+      const players = await ctrls.getTickets( client ) || [];
+      io.emit('totalPlayers', await players.length );
+      io.emit('totalCountries', utils.totalCountries(players));
+    }
+
+  });
 
   socket.on('disconnect', () => {
     countUsers--;

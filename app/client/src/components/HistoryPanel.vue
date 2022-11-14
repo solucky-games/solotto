@@ -23,7 +23,7 @@
           <div class="flex justify-center" >
             <p class="font-bold text-lg mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            >{{ 12 }}</p>
+            >{{ totalCountries }}</p>
           </div>
         </div>
 
@@ -33,7 +33,7 @@
           <div class="flex justify-center" >
             <p class="font-bold text-lg mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            >{{ 1203 }}</p>
+            >{{ totalPlayers }}</p>
           </div>
         </div>
 
@@ -111,6 +111,8 @@ import { shortWallet, markWallet } from './utils';
 export default {
   props: [
     'history',
+    'totalCountries',
+    'totalPlayers',
     'maxPot',
     'avgPot',
     'chartData',

@@ -78,6 +78,26 @@ function nPlayers ( tickets ) {
   return 0;
 }
 
+function totalCountries ( players ) {
+  let n = 0;
+  try {
+    n = players.length;
+  } catch ( e ) {
+    console.log( e );
+  };
+  if ( n > 0 ) {
+    const uniqueCountries = [];
+    for (const player of players) {
+      if ( uniqueCountries.includes(player._flag)  )
+        continue;
+      else
+        uniqueCountries.push(ticket._owner);
+    }
+    return uniqueCountries.length;
+  }
+  return 0;
+}
+
 module.exports = {
   formatTime,
   getTime,
@@ -85,5 +105,6 @@ module.exports = {
   getDateSQL,
   countDown,
   nVerified,
-  nPlayers
+  nPlayers,
+  totalCountries
 }

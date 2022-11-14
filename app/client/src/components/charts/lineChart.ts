@@ -68,6 +68,7 @@ export default defineComponent({
   setup(props) {
 
     const chartData = { 
+      
       labels: ['11-07', '11-08', '11-09', '11-10', '11-11', '11-12', '11-13'], // props.chartData,
       datasets: [{
         label: false,

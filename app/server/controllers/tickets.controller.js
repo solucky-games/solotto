@@ -18,7 +18,7 @@ async function createTable( client, date ) {
 async function postTicket( client, date, ticket ) {
   const schema = "_hour, __num__, _verified, _owner, _flag, _pot, _timestamp";
   const query = `INSERT INTO ${date} ( ${schema} ) VALUES ( ${ticket} )`;
-  console.log('postTicket',client.query)
+  console.log('postTicket', client.query)
   client.query(query, function(err, result) {
     if(err) {
       return console.error('error running query', err);
@@ -40,12 +40,48 @@ async function getTickets( client, date ) {
   }
 }
 
+
+async function postHistory( client, lucky ) {
+  const schema = '__date__, _time, _num, _verified, _account, _owner, _flag, _pot, _timestamp';
+  const query = `INSERT INTO _$luckies ( ${schema} ) VALUES ( ${lucky} )`;
+  client.query(query, function(err, result) {
+    if(err) {
+      return 0;
+    }
+    console.log(`NEW LUCKY ${lucky}`);
+    return result;
+  });
+}
+
+
 async function getHistory( client ) {
   const query = `SELECT * FROM _$luckies$_`;
   try {
     const data = await client.query(query)
     const rows = await data.rows;
-    //console.log('rows', rows);
+    return rows
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function postPlayer ( client, player ) {
+  const schema = '__wallet__, _flag, _country, _city, _ip, _timestamp';
+  const query = `INSERT INTO _players_ ( ${schema} ) VALUES ( ${player} )`;
+  client.query(query, function(err, result) {
+    if(err) {
+      return 0;
+    }
+    console.log(`NEW PLAYER ${player}`);
+    return result;
+  });
+}
+
+async function getPlayers( client ) {
+  const query = `SELECT * FROM _players_`;
+  try {
+    const data = await client.query(query)
+    const rows = await data.rows;
     return rows
   } catch (error) {
     console.log(error);
@@ -56,5 +92,8 @@ module.exports = {
   createTable,
   postTicket,
   getTickets,
-  getHistory
+  postHistory,
+  getHistory,
+  postPlayer,
+  getPlayers
 }

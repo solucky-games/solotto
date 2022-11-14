@@ -5,7 +5,7 @@
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nVerified="nVerified" :nPlayers="nPlayers" :wallet="user_wallet" />
         <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" :yourNumbers="yourNumbers" :yourProbability="yourProbability" :yourROI="yourROI" />
-        <HistoryPanel :history="history" :maxPot="maxPot" :avgPot="avgPot" :chartData="chartData" :chartLabels="chartLabels" :wallet="user_wallet" />
+        <HistoryPanel :history="history" :totalCountries="totalCountries" :totalPlayers="totalPlayers" :maxPot="maxPot" :avgPot="avgPot" :chartData="chartData" :chartLabels="chartLabels" :wallet="user_wallet" />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
         <div class="flex justify-center items-center rounded-xl m-4">
@@ -153,6 +153,19 @@ export default {
       history.value = data.reverse();
     });
 
+    // total historical countries & players
+    const totalCountries = ref(0);
+    socket.on('totalCountries', (data, error) => {
+      if (error) console.log('Error on socket:', error);
+      totalCountries.value = data
+    });
+    const totalPlayers = ref(0);
+    socket.on('totalPlayers', (data, error) => {
+      if (error) console.log('Error on socket:', error);
+      totalPlayers.value = data
+    });
+
+
     // tickets []
     const tickets = ref([]);
     socket.on('getTickets', (data, error) => {
@@ -290,6 +303,7 @@ export default {
       if ( location.value.flag )
         flag = location.value.flag;
       const player = `${user_wallet.value}, ${flag}, ${location.value.country}, ${location.value.city}, ${location.value.ip}, ${Date.now()}`;
+      console.log(player);
       socket.emit('newPlayer', player);
       console.log(player)
     }
@@ -338,6 +352,8 @@ export default {
       potSOL,
       potUSD,
       history,
+      totalCountries,
+      totalPlayers,
       maxPot,
       avgPot,
       chartData,
