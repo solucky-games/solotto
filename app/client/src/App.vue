@@ -127,7 +127,7 @@ export default {
       potUSD.value = data.potUSD || 0;
     });
 
-    // history
+    // history []
     const history = ref([]);
     socket.on('getHistory', (data, error) => {
       if (error) console.log('Error on socket:', error);
@@ -135,7 +135,7 @@ export default {
       history.value = data;
     });
 
-    // tickets
+    // tickets []
     const tickets = ref([]);
     socket.on('getTickets', (data, error) => {
       if (error) console.log('Error on socket:', error);
