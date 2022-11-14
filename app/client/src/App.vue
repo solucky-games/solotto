@@ -3,7 +3,7 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nPlayers="nPlayers" :wallet="wallet.publicKey" />
+        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nVerified="nVerified" :nPlayers="nPlayers" :wallet="wallet.publicKey" />
         <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" :yourNumbers="yourNumbers" :yourProbability="yourProbability" :yourROI="yourROI" />
         <HistoryPanel />
       </div>
@@ -131,15 +131,21 @@ export default {
     const tickets = ref([]);
     socket.on('getTickets', (data, error) => {
       if (error) console.log('Error on socket:', error);
-      console.log('tickets', data );
       tickets.value = data;
+    });
+
+    // nVerified
+    const nVerified = ref(0);
+    socket.on('nVerified', (data, error) => {
+      if (error) console.log('Error on socket:', error);
+      console.log(data);
+      nVerified.value = data;
     });
 
     // nPlayers
     const nPlayers = ref(0);
     socket.on('nPlayers', (data, error) => {
       if (error) console.log('Error on socket:', error);
-      console.log('tickets', data );
       nPlayers.value = data;
     });
 
@@ -223,16 +229,15 @@ export default {
 
       if ( store.state.sound )
         audio2.play();
-      //const location = await userLocation();
+
       ticket.value = emitTicket(number);
-      //commitPop.value = true;
       updateYourNumbers();
       updateYourProbability();
       updateYourROI();
 
     }
     function emitTicket(number) {
-      const ticket = `, ${number}, false, '${wallet.value.publicKey}', '${location.value.flag}', ${potSOL.value}, ${Date.now()}`;
+      const ticket = `, ${number}, true, '${wallet.value.publicKey}', '${location.value.flag}', ${potSOL.value+1}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
       console.log(socket.on('postTicket'))
       console.log(ticket)
@@ -280,6 +285,7 @@ export default {
       potSOL,
       potUSD,
       tickets,
+      nVerified,
       nPlayers,
       location,
       commitNumber,

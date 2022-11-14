@@ -1,5 +1,4 @@
 'use strict';
-
 require('dotenv').config()
 
 const express = require('express');
@@ -77,6 +76,7 @@ io.on('connection', async (socket) => {
     const potUSD = Math.floor(potSOL*price.last)
     io.emit('getPOT', { potSOL, potUSD });
   });
+  io.emit('nVerified', utils.nVerified(tickets))
   io.emit('nPlayers', utils.nPlayers(tickets))
   io.emit('getTickets', tickets);
 
@@ -92,6 +92,7 @@ io.on('connection', async (socket) => {
       const potUSD = Math.floor(potSOL*price.last)
       io.emit('getPOT', { potSOL, potUSD });
     });
+    io.emit('nVerified', utils.nVerified(tickets))
     io.emit('nPlayers', utils.nPlayers(tickets))
     io.emit('nNumbers', utils.nPlayers(tickets))
     io.emit('getTickets', tickets);

@@ -40,6 +40,24 @@ function countDown () {
   return `${hours}h ${minutes}m ${seconds}s`;
 }
 
+function nVerified ( tickets ) {
+  let n = 0;
+  try {
+    n = tickets.length;
+  } catch ( e ) {
+    console.log( e );
+  };
+  if ( n > 0 ) {
+    let v = 0;
+    for (const ticket of tickets) {
+      if ( ticket._verified  )
+        v++;
+    }
+    return v;
+  }
+  return 0;
+}
+
 function nPlayers ( tickets ) {
   let n = 0;
   try {
@@ -47,8 +65,8 @@ function nPlayers ( tickets ) {
   } catch ( e ) {
     console.log( e );
   };
-  const uniqueWallets = [];
   if ( n > 0 ) {
+    const uniqueWallets = [];
     for (const ticket of tickets) {
       if ( uniqueWallets.includes(ticket._owner)  )
         continue;
@@ -60,12 +78,12 @@ function nPlayers ( tickets ) {
   return 0;
 }
 
-
 module.exports = {
   formatTime,
   getTime,
   getDate,
   getDateSQL,
   countDown,
+  nVerified,
   nPlayers
 }

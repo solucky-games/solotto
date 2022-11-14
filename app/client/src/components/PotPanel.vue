@@ -32,7 +32,7 @@
                 {{ date }}
               </div>
               <div class="text-center text-2xl tracking-widest font-semibold justify-center" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'" >
-                {{countdown}}
+                {{ countdown }}
               </div>
             </div>
   
@@ -58,7 +58,7 @@
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
                   :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-                > {{ 0 }}</p>
+                > {{ nVerified }}</p>
               </div>
             </div>
 
@@ -133,6 +133,7 @@ export default ({
     'potUSD',
     'newTicket',
     'tickets',
+    'nVerified',
     'nPlayers',
     'wallet'
   ],
