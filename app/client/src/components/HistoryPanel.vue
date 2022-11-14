@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-4 grid-flow-row gap-4 align-center justify-center">
+      <div class="grid grid-cols-4 grid-flow-row gap-4 align-center justify-center text-center">
 
         <div class="p-2 text-center">
           <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Total</p>

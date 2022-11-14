@@ -212,7 +212,6 @@ export default {
           audio3.play();
           if ( store.state.sound )
             audio3.play();
-          console.log
           return 'This number is already commited! Try another one' //alert('This number is already commited! Try another one.')
         }
       }
@@ -236,7 +235,7 @@ export default {
       )
 
       const signature = await sendTransaction(transaction, connection);
-      console.log(signature);
+      console.log('Transaction confirmed! Signature:', signature);
       
       await connection.confirmTransaction(signature, number.value);// processed');
 
@@ -250,7 +249,10 @@ export default {
 
     }
     function emitTicket(number) {
-      const ticket = `, ${number}, false, '${wallet.value.publicKey}', '${location.value.flag}', ${potSOL.value+1}, ${Date.now()}`;
+      let flag = '🏴‍☠️'
+      if ( location.value.flag )
+        flag = location.value.flag;
+      const ticket = `, ${number}, false, '${wallet.value.publicKey}', '${flag}', ${potSOL.value+1}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
       console.log(socket.on('postTicket'))
       console.log(ticket)
@@ -260,14 +262,13 @@ export default {
     const yourNumbers = ref(0);
     function updateYourNumbers () {
       let nums = 0;
-      if ( typeof tickets.value === Array ) {
-        for (const i of tickets.value) {
-          if (i._owner == wallet.value.publicKey) {
-            nums++;
-          }
+      for (const i of tickets.value) {
+        if (i._owner == wallet.value.publicKey) {
+          nums++;
         }
-        yourNumbers.value = nums;
       }
+      yourNumbers.value = nums;
+      
     }
     const yourProbability = ref(0);
     function updateYourProbability () {

@@ -41,7 +41,7 @@
 
         <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl ">
 
-          <div class="grid grid-cols-3 grid-flow-row align-center justify-center mb-4 px-4">
+          <div class="grid grid-cols-3 grid-flow-row align-center justify-center mb-4 px-4 text-center">
 
             <div class="p-4 text-center">
               <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Total</p>
