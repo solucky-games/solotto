@@ -237,7 +237,7 @@ export default {
 
     }
     function emitTicket(number) {
-      const ticket = `, ${number}, true, '${wallet.value.publicKey}', '${location.value.flag}', ${potSOL.value+1}, ${Date.now()}`;
+      const ticket = `, ${number}, false, '${wallet.value.publicKey}', '${location.value.flag}', ${potSOL.value+1}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
       console.log(socket.on('postTicket'))
       console.log(ticket)
