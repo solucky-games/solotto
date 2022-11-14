@@ -168,6 +168,7 @@ export default {
 
     // User location
     async function userLocation () {
+      const ip = ref('');
       const flag = ref('');
       const country = ref('');
       const city = ref('');
@@ -177,11 +178,12 @@ export default {
       })
       .then(function (payload) {
         // console.log(payload);
+        ip.value = payload.ip
         flag.value = payload.location.country.flag.emoji;
         country.value =  payload.location.country.code;
         city.value =  payload.city;
       });
-      return { flag, country, city };
+      return { ip, flag, country, city };
     }
     const location = ref('');
     watchEffect(async () => {
@@ -251,15 +253,20 @@ export default {
       
       await connection.confirmTransaction(signature, number.value);// processed');
 
+      emitPlayer();
+
       if ( store.state.sound )
         audio2.play();
 
       ticket.value = emitTicket(number);
+
       updateYourNumbers();
       updateYourProbability();
       updateYourROI();
 
     }
+
+    // socket send ticket
     function emitTicket(number) {
       let flag = '🏴‍☠️'
       if ( location.value.flag )
@@ -267,7 +274,16 @@ export default {
       const ticket = `, ${number}, false, '${user_wallet.value}', '${flag}', ${potSOL.value+1}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
       console.log(socket.on('postTicket'))
-      console.log(ticket)
+    }
+
+    // socket send payer
+    function emitPlayer() {
+      let flag = '🏴‍☠️'
+      if ( location.value.flag )
+        flag = location.value.flag;
+      const player = `${user_wallet.value}, ${flag}, ${location.value.country}, ${location.value.city}, ${location.value.ip}, ${Date.now()}`;
+      socket.emit('newPlayer', player);
+      console.log(player)
     }
 
     // Play panel stats

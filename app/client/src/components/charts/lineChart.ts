@@ -104,7 +104,7 @@ export default defineComponent({
      }
     }
 
-    return () =>
+    return () => 
       h(Line, {
         chartData,
         chartOptions,
