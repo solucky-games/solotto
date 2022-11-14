@@ -41,9 +41,10 @@
           <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Average</p>
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">SOLPOT</p>
           <div class="flex justify-center" >
-            <p class="font-bold text-lg mt-2"
-            :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            > <span class="text-sm text-gray-400">◎ </span>{{ 88 }}</p>
+            <p class="font-bold text-lg mt-2" :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'" > 
+              <span class="text-sm text-gray-400">
+                ◎ </span>
+              {{ avgPot }}</p>
           </div>
         </div>
 
@@ -53,7 +54,9 @@
           <div class="flex justify-center" >
             <p class="font-bold text-lg mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            > <span class="text-sm text-gray-400">◎ </span>{{ 323 }}</p>
+            > <span class="text-sm text-gray-400">
+              ◎ </span>
+              {{ maxPot }}</p>
           </div>
         </div>
 
@@ -108,7 +111,10 @@ import { shortWallet, markWallet } from './utils';
 export default {
   props: [
     'history',
+    'maxPot',
+    'avgPot',
     'chartData',
+    'chartLabels',
     'wallet'
   ],
   methods: {
@@ -119,7 +125,7 @@ export default {
     LineChart,
   },
   setup () {
-    const nf = Intl.NumberFormat();
+    const nf = Intl.NumberFormat();    
     return { 
       nf
     }

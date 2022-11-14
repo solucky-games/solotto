@@ -5,7 +5,7 @@
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nVerified="nVerified" :nPlayers="nPlayers" :wallet="user_wallet" />
         <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" :yourNumbers="yourNumbers" :yourProbability="yourProbability" :yourROI="yourROI" />
-        <HistoryPanel :history="history" :chartData="chartData" :chartLabels="chartLabels" :wallet="user_wallet" />
+        <HistoryPanel :history="history" :maxPot="maxPot" :avgPot="avgPot" :chartData="chartData" :chartLabels="chartLabels" :wallet="user_wallet" />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
         <div class="flex justify-center items-center rounded-xl m-4">
@@ -134,14 +134,22 @@ export default {
     const history = ref([]);
     const chartData = ref([]);
     const chartLabels = ref([]);
+    const maxPot = ref(0);
+    const avgPot = ref(0);
     socket.on('getHistory', (data, error) => {
       if (error) console.log('Error on socket:', error);
       let cumPot = 0;
+      let sumPot = 0;
+      let i = 0;
       for ( const x of data ) {
+        if( x._pot > maxPot.value ) maxPot.value = Math.floor(x._pot);
+        sumPot += x._pot;
         cumPot += Number(x._pot);
         chartData.value = [...chartData.value, cumPot ];
         chartLabels.value = [...chartLabels.value, x.__date__ ];
+        i++;
       }
+      avgPot.value = Math.floor((sumPot / i)) || 0;
       history.value = data.reverse();
     });
 
@@ -276,7 +284,7 @@ export default {
       console.log(socket.on('postTicket'))
     }
 
-    // socket send payer
+    // socket send player
     function emitPlayer() {
       let flag = '🏴‍☠️'
       if ( location.value.flag )
@@ -330,6 +338,8 @@ export default {
       potSOL,
       potUSD,
       history,
+      maxPot,
+      avgPot,
       chartData,
       chartLabels,
       tickets,
