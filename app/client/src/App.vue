@@ -242,16 +242,19 @@ export default {
     const yourNumbers = ref(0);
     function updateYourNumbers () {
       let nums = 0;
-      for (const i of tickets.value) {
-        if (i._owner == wallet.value.publicKey) {
-          nums++;
+      if ( typeof tickets.value === Array ) {
+        for (const i of tickets.value) {
+          if (i._owner == wallet.value.publicKey) {
+            nums++;
+          }
         }
+        yourNumbers.value = nums;
       }
-      yourNumbers.value = nums;
     }
     const yourProbability = ref(0);
     function updateYourProbability () {
-      yourProbability.value = Math.floor((yourNumbers.value/potSOL.value)*1000)/10;
+      if ( yourNumbers.value > 0 )
+        yourProbability.value = Math.floor((yourNumbers.value/potSOL.value)*1000)/10;
     }
     const yourROI = ref(0);
     function updateYourROI () {

@@ -15,17 +15,18 @@
                 <p class="font-bold text-2xl mt-3 mr-1"
                 >◎ </p>
                 <p class="font-bold text-4xl mt-2"
-                > {{ potSOL }}</p>
+                >{{ potSOL }}</p>
               </div>
               <div class="text-4xl mt-2 mr-4 text-gray-400">/</div>
               <div class="flex justify-center pt-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
                 <p class="font-bold text-2xl mr-1"
                 >$ </p>
                 <p class="font-bold text-2xl"
-                > {{ potUSD }}</p>
+                >{{ potUSD }}</p>
               </div>
             </div>
 
+            <!-- Countdown & Date -->
             <div class="mt-4">
               <div class="text-gray-400 text-xl tracking-widest font-semibold text-center" >
                 {{ date }}
