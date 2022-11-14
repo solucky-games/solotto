@@ -136,14 +136,13 @@ export default {
     const chartLabels = ref([]);
     socket.on('getHistory', (data, error) => {
       if (error) console.log('Error on socket:', error);
-      history.value = data;
       let cumPot = 0;
       for ( const x of data ) {
         cumPot += Number(x._pot);
         chartData.value = [...chartData.value, cumPot ];
         chartLabels.value = [...chartLabels.value, x.__date__ ];
       }
-      console.log(chartData.value)
+      history.value = data.reverse();
     });
 
     // tickets []
