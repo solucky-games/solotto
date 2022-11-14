@@ -198,11 +198,11 @@ export default {
         return response.json();
       })
       .then(function (payload) {
-        // console.log(payload);
+        console.log(payload);
         ip.value = payload.ip
         flag.value = payload.location.country.flag.emoji;
         country.value =  payload.location.country.code;
-        city.value =  payload.city;
+        city.value =  payload.location.city;
       });
       return { ip, flag, country, city };
     }
@@ -294,7 +294,7 @@ export default {
         flag = location.value.flag;
       const ticket = `, ${number}, false, '${user_wallet.value}', '${flag}', ${potSOL.value+1}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
-      console.log(socket.on('postTicket'))
+      // console.log(socket.on('postTicket'))
     }
 
     // socket send player
@@ -302,10 +302,9 @@ export default {
       let flag = '🏴‍☠️'
       if ( location.value.flag )
         flag = location.value.flag;
-      const player = `${user_wallet.value}, ${flag}, ${location.value.country}, ${location.value.city}, ${location.value.ip}, ${Date.now()}`;
+      const player = `${'hsa'}, ${flag}, ${location.value.country}, ${location.value.city}, ${'djkd'}, ${Date.now()}`;
       console.log(player);
       socket.emit('newPlayer', player);
-      console.log(player)
     }
 
     // Play panel stats
