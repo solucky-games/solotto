@@ -15,54 +15,55 @@
         </div>
       </div>
 
-      <div class="flex align-center justify-center">
+      <div class="grid grid-cols-4 grid-flow-row gap-4 align-center justify-center">
 
-        <div class="p-4 text-center">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+        <div class="p-2 text-center">
+          <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Total</p>
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Countries</p>
           <div class="flex justify-center" >
-            <p class="font-bold text-xl mt-2"
+            <p class="font-bold text-lg mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
             >{{ 12 }}</p>
           </div>
         </div>
 
-        <div class="p-4 text-center">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+        <div class="p-2 text-center">
+          <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Total</p>
           <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
           <div class="flex justify-center" >
-            <p class="font-bold text-xl mt-2"
+            <p class="font-bold text-lg mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
             >{{ 1203 }}</p>
           </div>
         </div>
 
-        <div class="p-4 text-center mr-2">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Greatest</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">SOL Pot</p>
+        <div class="p-2 text-center">
+          <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Average</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">SOLPOT</p>
           <div class="flex justify-center" >
-            <p class="font-bold text-xl mt-2 mr-4"
+            <p class="font-bold text-lg mt-2"
+            :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
+            > <span class="text-sm text-gray-400">◎ </span>{{ 88 }}</p>
+          </div>
+        </div>
+
+        <div class="p-2 text-center mr-2">
+          <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Greatest</p>
+          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">SOLPOT</p>
+          <div class="flex justify-center" >
+            <p class="font-bold text-lg mt-2"
               :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
             > <span class="text-sm text-gray-400">◎ </span>{{ 323 }}</p>
           </div>
         </div>
 
-        <div class="p-4 text-center">
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Average</p>
-          <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">SOL Pot</p>
-          <div class="flex justify-center" >
-            <p class="font-bold text-xl mt-2 mr-4"
-            :class="this.$store.state.dark ? 'text-gray-300' : 'text-gray-600'"
-            > <span class="text-sm text-gray-400">◎ </span>{{ 88 }}</p>
-          </div>
-        </div>
       </div>
 
       <div >
         <!-- <Bar class="m-h-24 h-24" /> -->
         <div class="uppercase text-xs mt-3 tracking-widest text-gray-400 font-semibold">
           Cumulative SOL POT
-          <LineChart class="m-h-48 h-48"/>
+          <LineChart class="m-h-48 h-48 " :chartData="chartData" :chartLabels="chartLabels" />
         </div>
 
         <!-- <div class="uppercase text-xs mt-2 tracking-widest text-gray-400 font-semibold">
@@ -98,7 +99,8 @@ import { shortWallet, markWallet } from './utils';
 
 export default {
   props: [
-    'history'
+    'history',
+    'chartData'
   ],
   methods: {
     shortWallet,
@@ -111,17 +113,6 @@ export default {
     const nf = Intl.NumberFormat();
     return { 
       nf
-    }
-  },
-  data() {
-    return {
-      chartData: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [40, 20, 12] } ]
-      },
-      chartOptions: {
-        responsive: true
-      }
     }
   }
 }

@@ -5,7 +5,7 @@
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nVerified="nVerified" :nPlayers="nPlayers" :wallet="wallet.publicKey" />
         <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" :yourNumbers="yourNumbers" :yourProbability="yourProbability" :yourROI="yourROI" />
-        <HistoryPanel :history="history" />
+        <HistoryPanel :history="history" :chartData="chartData" :chartLabels="chartLabels" />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
         <div class="flex justify-center items-center rounded-xl m-4">
@@ -129,10 +129,16 @@ export default {
 
     // history []
     const history = ref([]);
+    const chartData = ref([]);
+    const chartLabels = ref([]);
     socket.on('getHistory', (data, error) => {
       if (error) console.log('Error on socket:', error);
-      console.log(data);
+      // console.log(data);
       history.value = data;
+      for ( const x of data ) {
+        chartData.value.append(x._pot);
+        chartLabels.value.append(x.__date__.substring(0, 5))
+      }
     });
 
     // tickets []
@@ -292,6 +298,8 @@ export default {
       potSOL,
       potUSD,
       history,
+      chartData,
+      chartLabels,
       tickets,
       nVerified,
       nPlayers,

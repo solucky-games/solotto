@@ -26,10 +26,11 @@
         </div>
 
         <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl pt-4">
-          <div class="flex align-center justify-center mb-4">
+          
+          <div class="grid grid-cols-3 grid-flow-row align-center justify-center mb-4 px-4">
 
             <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
+              <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Your</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
               <div class="flex justify-center" >
                 <p class="lowercase font-bold text-xl mt-2"
@@ -39,7 +40,7 @@
             </div>
 
             <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
+              <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Your</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Probability</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
@@ -49,7 +50,7 @@
             </div>
 
             <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Your</p>
+              <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Your</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Exp ROI</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"

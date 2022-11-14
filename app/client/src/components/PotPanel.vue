@@ -8,7 +8,7 @@
         <div class="flex align-center justify-center">
           <div class="p-4 text-center">
             <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold mt-4">Today's</p>
-            <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">SOL Pot</p>
+            <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">SOLPOT</p>
 
             <div class="flex">
               <div class="flex justify-center mr-3 p-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
@@ -31,7 +31,7 @@
               <div class="text-gray-400 text-xl tracking-widest font-semibold text-center" >
                 {{ date }}
               </div>
-              <div class="text-center text-2xl tracking-widest font-semibold justify-center" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'" >
+              <div class="text-center text-2xl tracking-widest font-semibold justify-center uppercase" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'" >
                 {{ countdown }}
               </div>
             </div>
@@ -40,10 +40,11 @@
         </div>
 
         <div class="text-center uppercase tracking-widest font-semibold justify-center border-1 rounded-xl ">
-          <div class="flex align-center justify-center mb-4">
+
+          <div class="grid grid-cols-3 grid-flow-row align-center justify-center mb-4 px-4">
 
             <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+              <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Total</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
               <div class="flex justify-center" >
                 <p class="lowercase font-bold text-xl mt-2"
@@ -53,7 +54,7 @@
             </div>
 
             <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Verified</p>
+              <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Verified</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Numbers</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"
@@ -63,7 +64,7 @@
             </div>
 
             <div class="p-4 text-center">
-              <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Total</p>
+              <p class="uppercase text-[10px] tracking-widest text-gray-400 font-semibold">Total</p>
               <p class="uppercase text-xs tracking-widest text-gray-400 font-semibold">Players</p>
               <div class="flex justify-center" >
                 <p class="font-bold text-xl mt-2"

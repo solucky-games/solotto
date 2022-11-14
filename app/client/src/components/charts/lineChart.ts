@@ -44,6 +44,14 @@ export default defineComponent({
       default: '',
       type: String
     },
+    chartData: {
+      type: Array,
+      default: Array
+    },
+    chartLabels: {
+      type: Array,
+      default: Array
+    }
     // styles: {
     //   type: Object as PropType<Partial<CSSStyleDeclaration>>,
     //   default: () => {}
@@ -54,16 +62,25 @@ export default defineComponent({
     // }
   },
   setup(props) {
-    const chartData = {
-      labels: ['11-04', '11-05', '11-06', '11-07', '11-08', '11-09', '11-10', '11-11', '11-12', '11-13'],
-      datasets: [
-        {
-          label: false,
-          backgroundColor: '#c084fc',
-          data: [5, 20, 40, 153, 220, 323, 940, 1090, 1400, 1500, 1640]
-        }
-      ]
-    }
+    
+    const chartData = { labels: props.chartLabels, datasets: [ 
+      {
+        label: false,
+        backgroundColor: '#c084fc',
+        data: props.chartData
+      }]
+    };
+
+    // {
+    //   labels: ['11-04', '11-05', '11-06', '11-07', '11-08', '11-09', '11-10', '11-11', '11-12', '11-13'],
+    //   datasets: [
+    //     {
+    //       label: false,
+    //       backgroundColor: '#c084fc',
+    //       data: [5, 20, 40, 153, 220, 323, 940, 1090, 1400, 1500, 1640]
+    //     }
+    //   ]
+    // }
 
     const chartOptions = {
       responsive: true,
