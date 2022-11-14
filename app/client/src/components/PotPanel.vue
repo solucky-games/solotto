@@ -27,8 +27,8 @@
             </div>
 
             <!-- Countdown & Date -->
-            <div class="mt-4">
-              <div class="text-gray-400 text-xl tracking-widest font-semibold text-center" >
+            <div class="mt-3">
+              <div class="text-gray-400 text-2xl tracking-widest font-semibold text-center" >
                 {{ date }}
               </div>
               <div class="text-center text-2xl tracking-widest font-semibold justify-center uppercase" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'" >
