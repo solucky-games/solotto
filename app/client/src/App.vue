@@ -3,9 +3,9 @@
     <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
       <NavbarWallet :users="users" :balance="balance" :time="time" />
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nVerified="nVerified" :nPlayers="nPlayers" :wallet="wallet.publicKey" />
+        <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nVerified="nVerified" :nPlayers="nPlayers" :wallet="user_wallet" />
         <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" :yourNumbers="yourNumbers" :yourProbability="yourProbability" :yourROI="yourROI" />
-        <HistoryPanel :history="history" :chartData="chartData" :chartLabels="chartLabels" :wallet="wallet.publicKey" />
+        <HistoryPanel :history="history" :chartData="chartData" :chartLabels="chartLabels" :wallet="user_wallet" />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
         <div class="flex justify-center items-center rounded-xl m-4">
@@ -15,7 +15,10 @@
           </div>
           <!-- Users connected -->
           <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
-            <span class="text-xs">CONNECTED: </span>{{users}}
+            <span class="text-xs">
+              CONNECTED: 
+            </span>
+            {{ users }}
           </div>
           <!-- Users flag -->
           <div class="text-center text-md tracking-widest font-semibold justify-center mr-8 text-gray-400">
@@ -138,8 +141,9 @@ export default {
       for ( const x of data ) {
         cumPot += Number(x._pot);
         chartData.value = [...chartData.value, cumPot ];
-        chartLabels.value = [...chartData.value, x.__date__ ];
+        chartLabels.value = [...chartLabels.value, x.__date__ ];
       }
+      console.log(chartData.value)
     });
 
     // tickets []
@@ -187,14 +191,22 @@ export default {
 
     // User wallet
     const wallet = useAnchorWallet();
+    const user_wallet = ref('');
+    try {
+      user_wallet.value = wallet.value.publicKey;
+    } catch { console.log('Wallet connection error')}
     const connection = new Connection(process.env.VUE_APP_CLUSTER_URL, 'connected')
     const balance = ref();
-    setInterval( () => {
-      watchEffect(async () => {
-      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
+    watchEffect(async () => {
+    try {
+      user_wallet.value = wallet.value.publicKey;
+    } catch { console.log('Wallet connection error')}
+      const bal = await connection.getBalance(user_wallet.value)/1000000000;
       balance.value = Math.floor(bal*100)/100;
-      })
-    }, 10000);
+      setInterval( async () => {
+        balance.value = Math.floor(await connection.getBalance(user_wallet.value)/1000000000*100)/100;
+      }, 10000);
+    });
 
     const ticket = ref('')
     // Commit Number
@@ -221,7 +233,7 @@ export default {
         audio1.play();
       
       const connection = new Connection(clusterApiUrl(cluster), preflightCommitment)
-      const bal = await connection.getBalance(wallet.value.publicKey)/1000000000;
+      const bal = await connection.getBalance(user_wallet.value)/1000000000;
       if (bal < commitSOL) 
         return alert('Not enough SOL in your wallet. Minimum funds needed: 1 SOL')
 
@@ -229,7 +241,7 @@ export default {
       const masterPubKey = new PublicKey(process.env.VUE_APP_MASTER_WALLET);
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: wallet.value.publicKey,
+          fromPubkey: user_wallet.value,
           toPubkey: new PublicKey(masterPubKey),
           lamports: commitSOL*1000000000,
           message: number.value})
@@ -253,7 +265,7 @@ export default {
       let flag = '🏴‍☠️'
       if ( location.value.flag )
         flag = location.value.flag;
-      const ticket = `, ${number}, false, '${wallet.value.publicKey}', '${flag}', ${potSOL.value+1}, ${Date.now()}`;
+      const ticket = `, ${number}, false, '${user_wallet.value}', '${flag}', ${potSOL.value+1}, ${Date.now()}`;
       socket.emit('newTicket', ticket);
       console.log(socket.on('postTicket'))
       console.log(ticket)
@@ -263,13 +275,16 @@ export default {
     const yourNumbers = ref(0);
     function updateYourNumbers () {
       let nums = 0;
-      for (const i of tickets.value) {
-        if (i._owner == wallet.value.publicKey) {
-          nums++;
+      try {
+        for (const i of tickets.value) {
+          if (i._owner == user_wallet.value) {
+            nums++;
+          }
         }
+        yourNumbers.value = nums;
+      } catch {
+        return
       }
-      yourNumbers.value = nums;
-      
     }
     const yourProbability = ref(0);
     function updateYourProbability () {
@@ -290,7 +305,7 @@ export default {
     }, 1000);
     
     return {
-      wallet,
+      user_wallet,
       socket,
       users,
       balance,

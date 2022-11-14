@@ -66,7 +66,7 @@
         Pick your number
       </div>
 
-      <div class="font-bold text-4xl text-center p-7 rounded-xl mx-4 cursor-pointer"
+      <div class="font-bold text-4xl text-center p-7 rounded-xl mx-2 cursor-pointer"
       :class="this.$store.state.dark ? 'bg-gray-600 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-200'"
       @click="$emit('commit', number)"
       @mouseover="commitHover=true"
