@@ -109,7 +109,9 @@
                   <div class="hover:text-[14px] text-xs">{{ x._flag }}</div>
                 </a>
                 <a class="text-right col-span-3" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
-                  <div class="hover:text-[14px] hover:font-semibold text-[13px] text-center" :class="markWallet(wallet, x._owner)"> {{ nf.format(x.__num__).replaceAll(',', ' ') }}</div>
+                  <div class="hover:text-[14px] hover:font-semibold text-[13px] text-center" :class="markWallet(wallet, x._owner)"> 
+                    {{ nf.format(x.__num__).replaceAll(',', ' ') }}
+                  </div>
                 </a>
                 <a class="text-right col-span-1" :href="'https://explorer.solana.com/address/'+x._owner+'?cluster='+cluster" target="_blank" :class="markWallet(wallet, x._owner)">
                   <div v-if="x._verified" class="text-[10px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" :class="markWallet(wallet, x._owner)"> {{ '✔️' }}</div>

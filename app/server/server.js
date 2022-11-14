@@ -32,10 +32,11 @@ client.connect(function(err) {
 
 const server = require('http').createServer(app);
 const PORT = 5001;
+let history = [];
 // run server
 server.listen(PORT, ()=> {
   console.log('listening on port', PORT);
-  setInterval( function() {
+  setInterval( async function() {
     const time =  utils.getTime();
     const arr = time.split(':');
     if ( arr[2] == 0 ) {
@@ -44,6 +45,8 @@ server.listen(PORT, ()=> {
         const date = utils.getDateSQL();
         ctrls.createTable(client, date);
         console.log(date);
+        history = await ctrls.getHistory(client);
+        io.emit('getHistory', history);
       }
     }
   }, 1000);
@@ -64,6 +67,8 @@ io.on('connection', async (socket) => {
   countUsers++;
   console.log(`${countUsers} users connected`);
   io.emit('userNumber', `user_num: ${countUsers}`);
+
+  io.emit('getHistory', await ctrls.getHistory(client));
   
   const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
   let potSOL = 0;

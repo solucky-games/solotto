@@ -5,7 +5,7 @@
       <div class="flex flex-wrap top-24 left-0 right-0" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
         <PotPanel :date="date" :countdown="countdown" :potSOL="potSOL" :potUSD="potUSD" :tickets="tickets" :nVerified="nVerified" :nPlayers="nPlayers" :wallet="wallet.publicKey" />
         <PlayPanel @commit="(number) => commitNumber(number)" v-on="newTicket" :balance="balance" :potSOL="potSOL" :tickets="tickets" :countdown="countdown" :yourNumbers="yourNumbers" :yourProbability="yourProbability" :yourROI="yourROI" />
-        <HistoryPanel />
+        <HistoryPanel :history="history" />
       </div>
       <div class="p-4 pt-8 text-center text-xs text-gray-400" :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'" > 
         <div class="flex justify-center items-center rounded-xl m-4">
@@ -127,6 +127,14 @@ export default {
       potUSD.value = data.potUSD || 0;
     });
 
+    // history
+    const history = ref([]);
+    socket.on('getHistory', (data, error) => {
+      if (error) console.log('Error on socket:', error);
+      console.log(data);
+      history.value = data;
+    });
+
     // tickets
     const tickets = ref([]);
     socket.on('getTickets', (data, error) => {
@@ -138,7 +146,6 @@ export default {
     const nVerified = ref(0);
     socket.on('nVerified', (data, error) => {
       if (error) console.log('Error on socket:', error);
-      console.log(data);
       nVerified.value = data;
     });
 
@@ -159,7 +166,7 @@ export default {
         return response.json();
       })
       .then(function (payload) {
-        console.log(payload);
+        // console.log(payload);
         flag.value = payload.location.country.flag.emoji;
         country.value =  payload.location.country.code;
         city.value =  payload.city;
@@ -284,6 +291,7 @@ export default {
       countdown,
       potSOL,
       potUSD,
+      history,
       tickets,
       nVerified,
       nPlayers,

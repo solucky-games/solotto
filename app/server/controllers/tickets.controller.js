@@ -40,8 +40,21 @@ async function getTickets( client, date ) {
   }
 }
 
+async function getHistory( client ) {
+  const query = `SELECT * FROM _$luckies$_`;
+  try {
+    const data = await client.query(query)
+    const rows = await data.rows;
+    //console.log('rows', rows);
+    return rows
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   createTable,
   postTicket,
-  getTickets
+  getTickets,
+  getHistory
 }
