@@ -146,7 +146,7 @@ export default {
         sumPot += x._pot;
         cumPot += Number(x._pot);
         chartData.value = [...chartData.value, cumPot ];
-        chartLabels.value = [...chartLabels.value, x.__date__ ];
+        chartLabels.value = [...chartLabels.value, x.__date__.substring(5,10) ];
         i++;
       }
       avgPot.value = Math.floor((sumPot / i)) || 0;
