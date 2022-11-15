@@ -116,7 +116,7 @@ export default {
     setInterval( () => {
       time.value = getTime();
       countdown.value = countDown();
-      if ( time.value === '18:00:00' ) {
+      if ( time.value === '18:10:00' ) {
         date.value = getDate();
         if ( store.state.sound )
           pot_audio.play();
