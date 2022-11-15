@@ -2,19 +2,17 @@
 require('dotenv').config()
 
 const express = require('express');
-const router = express.Router();
 const app = express();
 const cors = require('cors');
 const coinTicker = require('coin-ticker');
-const utils = require('./utils/utils');
-const ctrls = require('./controllers/tickets.controller');
+const utils = require('./src/utils');
+const ctrls = require('./src/controller');
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
-app.use(router);
 app.get('/', (req, res) => {
-  res.send('<h1>Welcome hackers to your next challenge! Hack me, get paid in SOL.</h1>');
+  res.send('<h1>Home</h1>');
 });
 
 // Connect to PotsgreSQL
@@ -55,7 +53,7 @@ server.listen(PORT, ()=> {
 // socket.io 
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://localhost:8080',
+    origin: process.env.CLIENT_URL,
     methods: ['GET', 'POST']
   }
 });
@@ -68,7 +66,14 @@ io.on('connection', async (socket) => {
   console.log(`${countUsers} users connected`);
   io.emit('userNumber', `user_num: ${countUsers}`);
 
-  io.emit('getHistory', await ctrls.getHistory(client));
+  io.emit('getHistory', await ctrls.getHistory(client)); 
+  // try {
+  //   const players = await ctrls.getTickets( client ) || [];
+  //   io.emit('totalPlayers', await players.length );
+  //   io.emit('totalCountries', utils.totalCountries(players));
+  // } catch (e) {
+  //   //console.log(e);
+  // }
   
   const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
   let potSOL = 0;
@@ -87,7 +92,7 @@ io.on('connection', async (socket) => {
 
   socket.on('newTicket', async (ticket) => {
     ticket = `'${utils.getTime()}' ${ticket}`;
-    console.log(ticket);
+    // console.log(ticket);
     const date = utils.getDateSQL();
     io.emit('postTicket', ctrls.postTicket( client, date, ticket ));
     const tickets = await ctrls.getTickets( client, utils.getDateSQL() )
@@ -103,7 +108,10 @@ io.on('connection', async (socket) => {
   })
 
   socket.on('newPlayer', async (player) => {
-    if ( ctrls.postPlayer( client, player ) ) {
+    console.log('newPlayer:', player)
+    const post = ctrls.postPlayer( client, player ) 
+    // io.emit('postTicket', ctrls.postPlayer( client, player ));
+    if ( post ) {
       const players = await ctrls.getTickets( client ) || [];
       io.emit('totalPlayers', await players.length );
       io.emit('totalCountries', utils.totalCountries(players));

@@ -1,6 +1,6 @@
 'use strict';
 
-const utils = require('../utils/utils');
+const utils = require('../utils');
 // const Ticket = require('../models/ticket.model');
 
 async function createTable( client, date ) {
@@ -40,10 +40,9 @@ async function getTickets( client, date ) {
   }
 }
 
-
 async function postHistory( client, lucky ) {
   const schema = '__date__, _time, _num, _verified, _account, _owner, _flag, _pot, _timestamp';
-  const query = `INSERT INTO _$luckies ( ${schema} ) VALUES ( ${lucky} )`;
+  const query = `INSERT INTO _$luckies$_ ( ${schema} ) VALUES ( ${lucky} )`;
   client.query(query, function(err, result) {
     if(err) {
       return 0;
@@ -66,13 +65,15 @@ async function getHistory( client ) {
 }
 
 async function postPlayer ( client, player ) {
+  console.log('eoooooooooooo', player);
   const schema = '__wallet__, _flag, _country, _city, _ip, _timestamp';
   const query = `INSERT INTO _players_ ( ${schema} ) VALUES ( ${player} )`;
   client.query(query, function(err, result) {
     if(err) {
+      console.log(`NEW PLAYER!!!! ERROR ${player}`, err);
       return 0;
     }
-    console.log(`NEW PLAYER ${player}`);
+    console.log(`NEW PLAYER!!!!!!!!!!!!!!!!!!! ${player}`);
     return result;
   });
 }

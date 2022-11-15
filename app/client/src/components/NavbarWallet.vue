@@ -13,10 +13,10 @@
       <!-- Wallet Connect -->
       <div class="flex items-center justify-center">
         <wallet-multi-button :dark="this.$store.state.dark"></wallet-multi-button>
-        <div class="">
+        <a href="https://solfaucet.com" target="_blank" >
           <p v-if="balance" class="ml-4 pr-4 text-sm font-semibold uppercase text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >{{balance}} SOL</p>
           <p v-if="balance" class="ml-4 pr-4 text-xs font-semibold uppercase text-gray-400" >DevNet</p>
-        </div>
+        </a>
       </div>
        
       <!-- Toogle nav -->
