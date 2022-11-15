@@ -40,7 +40,7 @@ import HistoryPanel from './components/HistoryPanel.vue';
 import { ref, watchEffect } from 'vue';
 import { useAnchorWallet, useWallet } from 'solana-wallets-vue';
 import { Connection, PublicKey, clusterApiUrl, SystemProgram, Transaction } from '@solana/web3.js';
-import { io } from 'socket.io-client';
+import io from 'socket.io-client';
 import commit_sound from './assets/sounds/3.wav';
 import commited_sound from './assets/sounds/2.wav';
 import wrong_sound from './assets/sounds/wrong.mp3';
@@ -64,7 +64,9 @@ export default {
   },
   data() {
 
-    const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT);
+    const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT, {
+         transports: ['websocket'],
+        });
     const users = ref();
     socket.on('userNumber', (data) => {
       users.value = String(data).split(' ')[1];
