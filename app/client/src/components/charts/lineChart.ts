@@ -21,7 +21,6 @@ ChartJS.register(
   PointElement,
   CategoryScale
 )
-
 export default defineComponent({
   name: 'LineChart',
   components: {
@@ -52,10 +51,10 @@ export default defineComponent({
       type: Array,
       default: Array
     },
-    chartLabels: {
-      type: Array,
-      default: Array
-    }
+    // chartLabels: {
+    //   type: Array,
+    //   default: Array
+    // }
     // styles: {
     //   type: Object as PropType<Partial<CSSStyleDeclaration>>,
     //   default: () => {}
@@ -69,7 +68,7 @@ export default defineComponent({
 
     const chartData = { 
 
-      labels: ['11-07', '11-08', '11-09', '11-10', '11-11', '11-12', '11-13'], // props.chartData,
+      labels: ['11-07', '11-08', '11-09', '11-10', '11-11', '11-12', '11-13', '11-14'], // props.chartData,
       datasets: [{
         label: false,
         backgroundColor: '#c084fc',
@@ -104,7 +103,6 @@ export default defineComponent({
         }
      }
     }
-
     return () => 
       h( Line, {
         chartData,
