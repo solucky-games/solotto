@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between px-4 py-3 sm:p-0">
 
       <!-- Logo -->
-      <a :href="discord_url" target="_blank" class="sm:mr-8">
+      <a :href="landing_url" target="_blank" class="sm:mr-8">
         <button class="rounded-full h-10 flex justify-center items-center">
           <img class="h-12 -mt-2" src="../assets/logo.png" alt="Workcation">
         </button>
@@ -83,12 +83,13 @@ export default {
   data() {
     return {
       isOpen: false,
+      landing_url: process.env.VUE_APP_LANDING_URL,
       twitter_img: require("../assets/ico/twitter.svg"),
       twitter_gif: require("../assets/ico/twitter.gif"),
       twitter_url: process.env.VUE_APP_TWITTER_URL,
       discord_img: require("../assets/ico/discord.png"),
       discord_gif: require("../assets/ico/discord.gif"),
-      discord_url: process.env.VUE_APP_TWITTER_URL,
+      discord_url: process.env.VUE_APP_DISCORD_URL,
       sound_black: require("../assets/ico/sound.png"),
       sound_white: require("../assets/ico/sound-white.png"),
       mute_black: require("../assets/ico/mute.png"),

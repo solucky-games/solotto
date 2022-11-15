@@ -22,7 +22,6 @@ ChartJS.register(
   CategoryScale
 )
 
-
 export default defineComponent({
   name: 'LineChart',
   components: {
