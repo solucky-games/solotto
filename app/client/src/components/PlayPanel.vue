@@ -8,7 +8,6 @@
       <div class="px-4 text-center mt-10">
         <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Commit a</p>
         <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Number</p>
-
         <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center">
           <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
             <div class="uppercase text-xl text-gray-400 font-semibold m-4">Win</div>
