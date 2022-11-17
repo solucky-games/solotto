@@ -1,12 +1,12 @@
 <template>
 <div>
 
-
+  <video src="./assets/vids/hero.mp4" autoplay loop class="fixed h-screen w-screen m-0 z-0 opacity-30" ></video>
   <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
     
     <NavbarWallet :users="users" :balance="balance" :time="time" class="z-50 fixed"/>
     <hero-section class="z-20"></hero-section>
-    <about-section class="z-50 bg-white"></about-section>
+    <about-section class="z-50 bg-white block"></about-section>
     <FooterComp class="z-20" :time="time" :users="users" />
 
   </div>
@@ -117,6 +117,15 @@ export default {
 
 html {
   overflow-x: hidden;
+}
+
+video{
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 ::-webkit-scrollbar {
