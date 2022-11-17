@@ -1,8 +1,8 @@
 <template>
 
-  <header class="sm:pl-24 sm:pr-24 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3 z-99 justify-between flex"  >
+  <header class="sm:pl-24 sm:pr-24 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3 z-99 justify-between flex z-50">
 
-    <div class="flex items-center justify-between px-4 py-3 sm:p-0">
+    <div class="flex items-center justify-between px-4 py-3 sm:p-0 z-50">
 
       <!-- Logo -->
       <a :href="landing_url" target="_blank" class="sm:mr-8">
@@ -22,7 +22,7 @@
        
       <!-- Toogle nav -->
       <div class="sm:hidden fixed right-4">
-        <button @click="isOpen = !isOpen" type="button" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-500'" class="block text-gray-500">
+        <button @click="isOpen = !isOpen" type="button" class="block text-white">
           <svg v-if="!isOpen" class="h-6 w-6 fill-current" viewBox="0 0 24 24" >
             <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
           </svg>
@@ -33,13 +33,14 @@
       </div>
     </div>
     
-    <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0 ">
+    <nav :class="isOpen ? 'block' : 'hidden'" class="px-2 pt-2 pb-4  sm:flex sm:p-0 z-50">
 
-      <div class="flex justify-center items-center rounded-xl fixed top-20 md:top-4 right-20 ">
+      <div class="flex justify-center items-center rounded-xl fixed top-20 md:top-4 right-20 opacity-75"
+      :class="this.$store.state.dark ? 'bg-black' : 'bg-white'" >
 
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
-          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
+          <button class="rounded-full h-10 w-10 m-2 flex justify-center items-center shadow-xl opcaity-100" :class="this.$store.state.dark ? 'bg-white/10 shadow-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-white hover:bg-gray-200 text-gray-600'" @mouseover="twitter_img=twitter_gif" @mouseleave="twitter_img=require('../assets/ico/twitter.svg')">
             <img :src="twitter_img" class="h-6 w-6"/>
           </button>
         </a>

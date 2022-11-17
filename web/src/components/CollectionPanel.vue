@@ -1,7 +1,12 @@
 <template>
   <!-- Play Panel. -->
-
-  <div class="m-auto w-[440px] p-4 z-10">
+  
+  <div
+  class="card"
+  @click="cardOne == 'start' ? (cardOne = 'flipped' ) : (cardOne = 'start' )"
+  v-bind:class="{ flipme: cardOne == 'flipped' }"
+>
+  <div class="m-auto w-[375px] md:w-[440px] p-4 z-10">
 
     <div class="rounded-xl pt-2 pb-2 shadow-xl" :class="this.$store.state.dark ? 'bg-black/60 shadow-gray-700' : 'bg-white/60'">
       <!-- Title Box -->
@@ -20,30 +25,35 @@
           HAPPY TREEE FRIENDS
         </p>
       </div> 
-      <div class="mt-4 text-center uppercase text-sm tracking-widest font-semibold justify-center z-99 w-full p-4">
-        <img :src="nft" alt="" class="rounded-full" />
+      <div class="mt-2 text-center uppercase text-sm tracking-widest font-semibold justify-center z-99 w-full p-6">
+
+        <img :src="nft" alt="" class="rounded-full cursor-pointer" />
       </div>
-      <div class="my-4">
       
-      <p class="uppercase text-6xl tracking-widest font-bold text-transparent bg-clip-text bg-gradient-to-r"
-      :class="this.$store.state.dark ? ' from-yellow-400 to-pink-200' : 'from-orange-600 to-pink-600'">
-        GIGGLES
-      </p>
-      <p class="uppercase text-3xl tracking-widest text-white font-bold"
-      :class="this.$store.state.dark ? 'text-white' : 'text-black'">
-        666 UNIQUE NFTS
-      </p>
-      <p class="uppercase text-3xl tracking-widest text-white font-bold"
-      :class="this.$store.state.dark ? 'text-white' : 'text-black'">
-        🔥 0 UTILITY!!! 🔥
-      </p>
-    </div>
+      <div class="my-2">
+        <p class="uppercase text-5xl tracking-widest font-bold text-transparent bg-clip-text bg-gradient-to-r animate-pulse cursor-pointer"
+        :class="this.$store.state.dark ? ' from-blue-400 to-pink-200' : 'from-blue-400 to-purple-600'">
+          GIGGLES
+        </p>
+        <p class="uppercase text-2xl tracking-widest text-white font-bold"
+        :class="this.$store.state.dark ? 'text-white' : 'text-zinc-700'">
+          666 UNIQUE NFTS
+        </p>
+        <p class="uppercase text-2xl tracking-widest text-white font-bold"
+        :class="this.$store.state.dark ? 'text-white' : 'text-zinc-800'">
+          🔥 0 UTILITY!!! 🔥
+        </p>
+      </div>
 
     <div>
-      <button class="">I WANT IT!</button>
+      <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
+        I WANT IT 🚀 
+      </button>
     </div>
   
     </div>
+
+  </div>
   </div>
 
 </template>

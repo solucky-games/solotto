@@ -1,20 +1,20 @@
 <template>
   <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
 
-    <video src="../assets/vids/hero.mp4" autoplay play loop class="fixed h-screen m-0 z-0 opacity-75" ></video>
+    <video src="../assets/vids/hero.mp4" autoplay loop class="fixed h-screen m-0 z-0 opacity-75" ></video>
 
-    <div class="flex grid-cols-2 flex-wrap h-screen m-0 z-50 text-center align-center justify-center" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'" >
+    <div class="flex grid-cols-2 flex-wrap h-screen m-0 text-center align-center justify-center" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100'" >
 
-      <div class="z-20 text-center align-center justify-center" >
-        <h1 class="text-7xl font-extrabold shadow-white mt-52 ">
+      <div class="z-20 text-center align-center justify-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500" >
+        <h1 class="text-7xl font-extrabold shadow-white mt-52 md:text-9xl lg:text-[150px]">
           SOLUCKY
         </h1>
-        <h1 class="text-2xl font-bold shadow-white mt-12 text-white">
-          BEST SOLANA GAMING <br> COMMUNITY 🖕
+        <h1 class="text-3xl font-bold shadow-white mt-12 text-white md:text-4xl lg:text-[60px]">
+          THE SOLANA GAMING <br><br> COMMUNITY 🖕
         </h1>
       </div>
 
-      <collection-panel class="mt-20 m-10 z-50"></collection-panel>
+      <collection-panel class="mt-20 m-10 z-10"></collection-panel>
       
     </div>
   </div>
@@ -99,4 +99,5 @@ video{
   top: 0;
   left: 0;
 }
+
 </style>

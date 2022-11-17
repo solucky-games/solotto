@@ -5,7 +5,7 @@
   <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
     
     <NavbarWallet :users="users" :balance="balance" :time="time" class="z-50 fixed"/>
-    <hero-section></hero-section>
+    <hero-section class="z-20"></hero-section>
     <about-section class="z-50 bg-white"></about-section>
     <FooterComp class="z-20" :time="time" :users="users" />
 
@@ -39,6 +39,7 @@ export default {
 
     const music = new Audio(bgmusic);
     // if ( store.state.sound )
+    music.play();
     music.play();
 
 
