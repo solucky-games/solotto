@@ -1,12 +1,13 @@
 <template>
-  <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
-    <div class="h-screen w-screen m-0 -mb-12" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'">
-      <NavbarWallet :users="users" :balance="balance" :time="time" />
 
-      <video src="./assets/vids/bg1.mp4" autoplay="autoplay" loop></video>
-      <FooterComp :time="time" :users="users" />
-      
-    </div>
+  <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
+    
+    <NavbarWallet :users="users" :balance="balance" :time="time" class="z-50 fixed"/>
+    <hero-section></hero-section>
+    <div class="h-"></div>
+    
+    <FooterComp :time="time" :users="users" />
+
   </div>
 
 </template>
@@ -18,16 +19,28 @@ import FooterComp from './components/FooterComp.vue';
 import { useAnchorWallet } from 'solana-wallets-vue';
 import { Connection } from '@solana/web3.js';
 import io from 'socket.io-client';
-// import store from './store';
+import bgmusic from './assets/mp3/track2.mp3';
+import HeroSection from './components/HeroSection.vue';
 
 
 export default {
   name: 'App',
   components: {
     NavbarWallet,
-    FooterComp
+    FooterComp,
+    HeroSection,
+    
   },
+  
   setup () {
+
+    const music = new Audio(bgmusic);
+    // if ( store.state.sound )
+    music.play();
+
+    // if ( !store.state.sound )
+    //   music.pause();
+
     const socket = io(process.env.VUE_APP_SOCKET_ENDPOINT, {
          transports: ['websocket'],
         });
@@ -96,6 +109,7 @@ export default {
 
 <style>
 
+
 html {
   overflow-x: hidden;
 }
@@ -118,5 +132,4 @@ html {
   box-shadow: inset 0 0 6px #c41bd3,
 }
 </style>
-
 

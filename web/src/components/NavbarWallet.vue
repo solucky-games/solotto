@@ -1,5 +1,6 @@
 <template>
-  <header class="sm:pl-24 sm:pr-24 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3"  >
+
+  <header class="sm:pl-24 sm:pr-24 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3 z-99 justify-between flex"  >
 
     <div class="flex items-center justify-between px-4 py-3 sm:p-0">
 
@@ -34,7 +35,7 @@
     
     <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0">
 
-      <div class="flex justify-center items-center rounded-xl">
+      <div class="flex justify-center items-center rounded-xl fixed right-20 top-4">
 
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">
@@ -69,6 +70,7 @@
       </div>    
     </nav>
   </header>
+
 </template>
 
 <script>
