@@ -6,15 +6,26 @@
     <div class="flex grid-cols-2 flex-wrap h-screen m-0 text-center align-center justify-center" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100'" >
 
       <div class="z-20 text-center align-center justify-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500" >
-        <h1 class="text-7xl font-extrabold shadow-white mt-52 md:text-9xl lg:text-[150px]">
+        <h1 class="text-7xl font-extrabold shadow-white mt-52 md:text-9xl lg:text-[150px] md:mr-20">
           SOLUCKY
         </h1>
-        <h1 class="text-3xl font-bold shadow-white mt-12 text-white md:text-4xl lg:text-[60px]">
-          THE SOLANA GAMING <br><br> COMMUNITY 🖕
+        <h1 class="text-3xl font-bold shadow-white mt-12 text-white md:text-4xl lg:text-[60px] md:mr-20">
+          THE SOLANA GAMBLING <br><br> COMMUNITY 🖕
         </h1>
+        <div class="flex flex-wrap justify-center mt-24 md:mr-20">
+        <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
+          😈 I'M A DEGEN
+        </button>
+        <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
+          😇 NOT FOR ME
+        </button>
+        <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
+          👽 WHAT IS A NFT?
+        </button>
+      </div>
       </div>
 
-      <collection-panel class="mt-20 m-10 z-10"></collection-panel>
+      <collection-panel class="mt-20 m-10 z-10 md:ml-20"></collection-panel>
       
     </div>
   </div>

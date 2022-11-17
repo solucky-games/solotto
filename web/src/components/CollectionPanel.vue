@@ -47,7 +47,7 @@
 
     <div>
       <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
-        I WANT IT 🚀 
+        🧡 I WANT IT 🧡
       </button>
     </div>
   
