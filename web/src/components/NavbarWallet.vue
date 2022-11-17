@@ -21,7 +21,7 @@
       </div>
        
       <!-- Toogle nav -->
-      <div class="sm:hidden">
+      <div class="sm:hidden fixed right-4">
         <button @click="isOpen = !isOpen" type="button" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-500'" class="block text-gray-500">
           <svg v-if="!isOpen" class="h-6 w-6 fill-current" viewBox="0 0 24 24" >
             <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
@@ -35,7 +35,7 @@
     
     <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0">
 
-      <div class="flex justify-center items-center rounded-xl fixed right-20 top-4">
+      <div class="flex justify-center items-center rounded-xl fixed right-20 top-20">
 
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">

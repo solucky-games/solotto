@@ -1,14 +1,16 @@
 <template>
+<div>
+
 
   <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
     
     <NavbarWallet :users="users" :balance="balance" :time="time" class="z-50 fixed"/>
     <hero-section></hero-section>
-    <about-section></about-section>
+    <about-section class="z-50 bg-white"></about-section>
     <FooterComp class="z-20" :time="time" :users="users" />
 
   </div>
-
+</div>
 </template>
 
 <script>

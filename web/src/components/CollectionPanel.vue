@@ -1,14 +1,14 @@
 <template>
   <!-- Play Panel. -->
 
-  <div class="m-auto w-full max-w-md p-4 z-99">
+  <div class="m-auto w-full max-w-xl p-4 z-99">
 
-    <div class="rounded-xl pt-2 pb-2 shadow-xl" :class="this.$store.state.dark ? 'bg-gray-/30 shadow-gray-700' : 'bg-white/30'">
+    <div class="rounded-xl pt-2 pb-2 shadow-xl" :class="this.$store.state.dark ? 'bg-black/60 shadow-gray-700' : 'bg-white/60'">
       <!-- Title Box -->
-      <div class="px-4 text-center mt-10">
-        <p class="uppercase text-sm tracking-widest text-gray-400 font-semibold">Meet our happy a</p>
-        <p class="uppercase text-3xl tracking-widest text-gray-400 font-semibold">Friends</p>
-        <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center z-99">
+      <div class="px-4 text-center mt-10 text-white">
+        <p class="uppercase text-xll tracking-widest text-whitefont-semibold">Meet our happy a</p>
+        <p class="uppercase text-3xl tracking-widest text-white font-semibold">Friends</p>
+        <div class="text-center uppercase text-sm tracking-widest font-semibold justify-center z-99 m-6">
           <img :src="nft" :alt="nft" class="rounded-full" />
         </div>
 

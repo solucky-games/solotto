@@ -1,15 +1,16 @@
 <template>
   <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
-    <video src="../assets/vids/hero.mp4" autoplay="autoplay" loop class="fixed z-0 opacity-75" ></video>
+
+    <video src="../assets/vids/hero.mp4" autoplay loop class="fixed  h-screen w-screen m-0 z-0 opacity-75" ></video>
 
 
-    <div class="flex h-screen w-screen m-0 z-50" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'" >
+    <div class="flex flex-wrap h-screen w-screen m-0 z-50 text-center" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'" >
 
-      <div class="z-20" >
-        <h1 class="text-[160px] font-extrabold shadow-white mt-52 ml-52 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+      <div class="z-20 text-center fa-align-center justify-center" >
+        <h1 class="text-7xl font-extrabold shadow-white mt-52 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
           SOLUCKY
         </h1>
-        <h1 class="text-6xl font-bold shadow-white mt-12 ml-52 text-white">
+        <h1 class="text-2xl font-bold shadow-white mt-12 text-white">
           BEST SOLANA GAMING <br> COMMUNITY 🖕
         </h1>
       </div>

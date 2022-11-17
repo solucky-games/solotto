@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white">
+  <div class="z-50 bg-white">
     hello
   </div>
 
