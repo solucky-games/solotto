@@ -13,7 +13,7 @@
       
       <!-- Wallet Connect -->
       <div class="flex items-center justify-center">
-        <wallet-multi-button :dark="this.$store.state.dark"></wallet-multi-button>
+        <wallet-multi-button :dark="this.$store.state.dark" class="shadow-xl" ></wallet-multi-button>
         <a href="https://solfaucet.com" target="_blank" >
           <p v-if="balance" class="ml-4 pr-4 text-sm font-semibold uppercase text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >{{balance}} SOL</p>
           <p v-if="balance" class="ml-4 pr-4 text-xs font-semibold uppercase text-gray-400" >DevNet</p>
@@ -33,9 +33,9 @@
       </div>
     </div>
     
-    <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0">
+    <nav :class="isOpen ? 'block' : 'hidden'" class="z-10 px-2 pt-2 pb-4  sm:flex sm:p-0 ">
 
-      <div class="flex justify-center items-center rounded-xl fixed right-20 top-20">
+      <div class="flex justify-center items-center rounded-xl fixed top-20 md:top-4 right-20 ">
 
         <!-- Twitter Button -->
         <a :href="twitter_url" target="_blank">

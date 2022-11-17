@@ -1,13 +1,12 @@
 <template>
   <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
 
-    <video src="../assets/vids/hero.mp4" autoplay loop class="fixed  h-screen w-screen m-0 z-0 opacity-75" ></video>
+    <video src="../assets/vids/hero.mp4" autoplay play loop class="fixed h-screen m-0 z-0 opacity-75" ></video>
 
+    <div class="flex grid-cols-2 flex-wrap h-screen m-0 z-50 text-center align-center justify-center" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'" >
 
-    <div class="flex flex-wrap h-screen w-screen m-0 z-50 text-center" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-700'" >
-
-      <div class="z-20 text-center fa-align-center justify-center" >
-        <h1 class="text-7xl font-extrabold shadow-white mt-52 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+      <div class="z-20 text-center align-center justify-center" >
+        <h1 class="text-7xl font-extrabold shadow-white mt-52 ">
           SOLUCKY
         </h1>
         <h1 class="text-2xl font-bold shadow-white mt-12 text-white">
@@ -15,7 +14,7 @@
         </h1>
       </div>
 
-      <collection-panel class="mt-52 z-50"></collection-panel>
+      <collection-panel class="mt-20 m-10 z-50"></collection-panel>
       
     </div>
   </div>
@@ -91,3 +90,13 @@ export default {
 
 </script>
 
+<style scoped>
+video{
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+</style>

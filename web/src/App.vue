@@ -29,7 +29,6 @@ export default {
   name: 'App',
   components: {
     NavbarWallet,
-    
     HeroSection,
     AboutSection,
     FooterComp,
@@ -41,6 +40,7 @@ export default {
     const music = new Audio(bgmusic);
     // if ( store.state.sound )
     music.play();
+
 
     // if ( !store.state.sound )
     //   music.pause();
