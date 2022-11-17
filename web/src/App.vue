@@ -4,9 +4,8 @@
     
     <NavbarWallet :users="users" :balance="balance" :time="time" class="z-50 fixed"/>
     <hero-section></hero-section>
-    <div class="h-"></div>
-    
-    <FooterComp :time="time" :users="users" />
+    <about-section></about-section>
+    <FooterComp class="z-20" :time="time" :users="users" />
 
   </div>
 
@@ -21,14 +20,17 @@ import { Connection } from '@solana/web3.js';
 import io from 'socket.io-client';
 import bgmusic from './assets/mp3/track2.mp3';
 import HeroSection from './components/HeroSection.vue';
+import AboutSection from './components/AboutSection.vue';
 
 
 export default {
   name: 'App',
   components: {
     NavbarWallet,
-    FooterComp,
+    
     HeroSection,
+    AboutSection,
+    FooterComp,
     
   },
   
