@@ -11,7 +11,7 @@
         <div class="flex justify-center mr-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" >
           <div class="uppercase text-xl font-semibold m-4">&nbsp;&nbsp; Total</div>
           <div class="font-bold text-4xl mt-2" :class="this.$store.state.dark ? 'text-gray-200' : 'text-gray-800'"> 
-            {{ 10 }}
+            {{ 11 }}
           </div>
           <div class="uppercase text-xl font-semibold m-4">Games</div>
         </div>
