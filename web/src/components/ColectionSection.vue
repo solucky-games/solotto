@@ -1,5 +1,5 @@
 <template>
-  <div class="z-50 bg-white h-screen h-min-screen opcaity-100 "
+  <div class="z-50 bg-white h-min-screen opcaity-100 "
     :class="this.$store.dark ? 'bg-black' : 'bg-white'">
     <h1>helloljkdkljd</h1>
     <collection-panel></collection-panel>

@@ -11,7 +11,7 @@
 
         <h1 class="text-3xl font-bold shadow-white mt-12 text-white md:text-4xl lg:text-[60px] animate-pulse"
         :class="this.$store.state.dark ? 'text-gray-100' : 'text-gray-900'">
-          THE SOLANA GAMBLING <br><br> 🖕 COMMUNITY 🔞
+          SOLANA GAMBLING <br><br>🎲 COMMUNITY 🔞
         </h1>
         <div class="flex flex-wrap justify-center md:mt-24 mt-8">
         

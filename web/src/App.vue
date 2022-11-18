@@ -13,6 +13,7 @@
     <hero-section class="bg-transparent"></hero-section>
     <about-section ></about-section>
     <collection-section></collection-section>
+    <social-section></social-section>
     <FooterComp class="z-20" :time="time" :users="users" />
 
   </div>
@@ -30,6 +31,7 @@ import bgmusic from './assets/mp3/track2.mp3';
 import HeroSection from './components/HeroSection.vue';
 import AboutSection from './components/AboutSection.vue';
 import CollectionSection from './components/ColectionSection.vue';
+import SocialSection from './components/SocialSection.vue';
 
 
 export default {
@@ -39,6 +41,7 @@ export default {
     HeroSection,
     AboutSection,
     CollectionSection,
+    SocialSection,
 
 
     FooterComp,

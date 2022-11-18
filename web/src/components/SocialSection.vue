@@ -1,14 +1,12 @@
 <template>
-  <div class="z-50 bg-white h-screen h-min-screen opcaity-100 "
+  <div class="z-50 bg-white h-min-screen opcaity-80 py-12"
     :class="this.$store.dark ? 'bg-black' : 'bg-white'">
-    <div class="grid grid-cols-2 justify-center align-center items-center">
-    <div>
-      hello
+    <div class="justify-center align-center items-center px-4 md:px-[550px]">
+      <a class="twitter-timeline" href="https://twitter.com/solucky__games?ref_src=twsrc%5Etfw">Tweets by solucky__games</a>
     </div>
 
 
 
-  </div>
   </div>
 
 </template>
