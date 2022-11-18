@@ -13,7 +13,7 @@
     <hero-section class="bg-transparent"></hero-section>
     <about-section ></about-section>
     <collection-section></collection-section>
-    <social-section></social-section>
+    <social-section class="bg-transparent"></social-section>
     <FooterComp class="z-20" :time="time" :users="users" />
 
   </div>
