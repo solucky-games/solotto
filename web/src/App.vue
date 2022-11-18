@@ -1,12 +1,17 @@
 <template>
 <div>
+  <header>
+  <video  autoplay loop class="absolute -z-10 w-auto min-w-full min-h-full opacity-60">
+    <source src="./assets/vids/hero.mp4" type="video/mp4" />
+  </video>
+</header>
 
-  <video src="./assets/vids/hero.mp4" autoplay loop class="fixed h-screen w-screen m-0 z-0 opacity-30" ></video>
-  <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
-    
+
+  <div :class="this.$store.state.dark ? 'bg-black/50' : 'bg-white/50'">
+
     <NavbarWallet :users="users" :balance="balance" :time="time" class="z-50 fixed"/>
-    <hero-section class="z-20"></hero-section>
-    <about-section class="z-50 bg-white block"></about-section>
+    <hero-section class="bg-transparent"></hero-section>
+    <about-section ></about-section>
     <FooterComp class="z-20" :time="time" :users="users" />
 
   </div>
@@ -120,6 +125,7 @@ html {
 }
 
 video{
+  z-index: -1;
   width: 100vw;
   height: 100vh;
   object-fit: cover;

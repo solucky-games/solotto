@@ -1,19 +1,19 @@
 <template>
-  <div :class="this.$store.state.dark ? 'bg-gray-900' : 'bg-gray-100'">
+  <div class="flex grid-cols-2 flex-wrap h-screen m-0 text-center align-center justify-center" 
+  :class="this.$store.state.dark ? 'bg-transparent' : 'bg-gray-100'">
 
-    <div class="flex grid-cols-2 flex-wrap h-screen m-0 text-center align-center justify-center" :class="this.$store.state.dark ? 'bg-gray-900 text-gray-100' : 'bg-gray-100'" >
 
       <div class="z-20 text-center align-center justify-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500" >
 
-        <h1 class="text-7xl font-extrabold shadow-white mt-52 md:text-9xl lg:text-[180px] md:mr-20">
-          SOLUCKY
+        <h1 class="text-7xl font-extrabold shadow-white md:mt-52 mt-28 md:text-9xl lg:text-[180px]">
+          $OLUCKY
         </h1>
 
-        <h1 class="text-3xl font-bold shadow-white mt-12 text-white md:text-4xl lg:text-[60px] md:mr-20"
+        <h1 class="text-3xl font-bold shadow-white mt-12 text-white md:text-4xl lg:text-[60px] animate-pulse"
         :class="this.$store.state.dark ? 'text-gray-100' : 'text-gray-900'">
-          THE SOLANA GAMBLING <br><br> COMMUNITY 🖕
+          THE SOLANA GAMBLING <br><br> 🖕 COMMUNITY 🔞
         </h1>
-        <div class="flex flex-wrap justify-center mt-24 md:mr-20">
+        <div class="flex flex-wrap justify-center md:mt-24 mt-8">
         
         <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
           😇 NOT FOR ME -18
@@ -24,7 +24,6 @@
         <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
           👽 WHAT IS A NFT?
         </button>
-      </div>
       </div>
 
       <!-- <collection-panel class="mt-20 m-10 z-10 md:ml-2"></collection-panel> -->

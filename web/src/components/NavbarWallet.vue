@@ -22,7 +22,8 @@
        
       <!-- Toogle nav -->
       <div class="sm:hidden fixed right-4">
-        <button @click="isOpen = !isOpen" type="button" class="block text-white">
+        <button @click="isOpen = !isOpen" type="button" class="block"
+        :class="this.$store.state.dark ? 'text-gray-100' : 'text-gray-800'" >
           <svg v-if="!isOpen" class="h-6 w-6 fill-current" viewBox="0 0 24 24" >
             <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
           </svg>
