@@ -1,7 +1,7 @@
 <template>
 <div>
   <header>
-  <video  autoplay loop class="absolute -z-10 w-auto min-w-full min-h-full opacity-60">
+  <video  autoplay loop  play class="fixed -z-10 w-auto min-w-full min-h-full opacity-60">
     <source src="./assets/vids/hero.mp4" type="video/mp4" />
   </video>
 </header>
@@ -13,7 +13,7 @@
     <hero-section class="bg-transparent"></hero-section>
     <about-section ></about-section>
     <collection-section></collection-section>
-    <social-section class="bg-transparent"></social-section>
+    <social-section ></social-section>
     <FooterComp class="z-20" :time="time" :users="users" />
 
   </div>

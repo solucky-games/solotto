@@ -3,7 +3,7 @@
     
     <div class="flex flex-wrap justify-center items-center rounded-xl m-4">
     
-    <div class="align-center justify-center items-center">
+    <div class="align-center justify-center items-center my-12">
       <iframe src="https://discord.com/widget?id=1043119388057935913&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
     </div>
     </div>

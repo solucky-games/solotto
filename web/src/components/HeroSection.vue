@@ -6,7 +6,7 @@
       <div class="z-20 text-center align-center justify-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500" >
 
         <h1 class="text-7xl font-extrabold shadow-white md:mt-52 mt-28 md:text-9xl lg:text-[180px]">
-          $OLUCKY
+          SOLUCKY
         </h1>
 
         <h1 class="text-3xl font-bold shadow-white mt-12 text-white md:text-4xl lg:text-[60px] animate-pulse"
