@@ -19,22 +19,22 @@
         :class="this.$store.state.dark ? 'from-yellow-200 to-purple-600' : 'from-purple-600 to-orange-600'">
           COLLECTION
         </p>
-
-        <p class="mt-4 uppercase text-2xl tracking-widest text-white font-bold"
-          :class="this.$store.state.dark ? 'text-white' : 'text-black'">
-          HAPPY TREEE FRIENDS
-        </p>
       </div> 
       <div class="mt-2 text-center uppercase text-sm tracking-widest font-semibold justify-center z-99 w-full p-6">
 
         <img :src="nft" alt="" class="rounded-full cursor-pointer" />
       </div>
       
-      <div class="my-2">
+      <div class="my-2 text-center justify-center align-center">
+
         <p class="uppercase text-5xl tracking-widest font-bold text-transparent bg-clip-text bg-gradient-to-r animate-pulse cursor-pointer"
         :class="this.$store.state.dark ? ' from-blue-400 to-pink-200' : 'from-blue-400 to-purple-600'">
           GIGGLES
         </p>
+        <p class="mt-4 uppercase text-2xl tracking-widest font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-purple-600"
+        :class="this.$store.state.dark ? 'from-yellow-200 to-purple-600' : 'from-purple-600 to-orange-600'">
+        HAPPY TREEE FRIENDS
+      </p>
         <p class="uppercase text-2xl tracking-widest text-white font-bold"
         :class="this.$store.state.dark ? 'text-white' : 'text-zinc-700'">
           666 UNIQUE NFTS
@@ -43,13 +43,12 @@
         :class="this.$store.state.dark ? 'text-white' : 'text-zinc-800'">
           🔥 0 UTILITY!!! 🔥
         </p>
+        <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
+          🧡 I WANT IT
+        </button>
       </div>
 
-    <div>
-      <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
-        🧡 I WANT IT
-      </button>
-    </div>
+ 
   
     </div>
 
