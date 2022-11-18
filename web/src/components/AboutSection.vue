@@ -30,7 +30,7 @@
       </div>
       </div>
 
-      <div class="z-20 text-center align-center justify-center " >
+      <div class="z-20 text-center align-center justify-center animate-bounce mt-44 hover:animate-none" >
 
 
        <img src="../assets/img/web3.png" alt="" class="w-full md:w-[600px] lg:w-[800px] mt-24" />
@@ -45,33 +45,43 @@
   :class="this.$store.state.dark ? 'text-white' : 'text-black'">
     OUR TEAM
   </h1>
-    <div class="grid-cols-6 flex flex-wrap justify-center align-center items-center rounded-full py-32"
+    <div class="grid-cols-6 flex flex-wrap justify-center align-center items-center rounded-full py-32 "
     :class="this.$store.state.dark ? 'text-white' : 'text-black'">
 
-    <div class="rounded-full  bg-gradient-to-tr from-pink-400 to-purple-600 font-bold text-2xl mx-12 opacity-75 py-24">
+    <div class="rounded-full  bg-gradient-to-tr from-pink-400 to-purple-600 font-bold text-2xl mx-12 opacity-75 py-24 px-4 hover:px-14 hover:animate-bounce">
       <a href="https://twitter.com/fxmozart_sol" target="_blank" class="cursor-pointer text-white ">
-        <img src="../assets/img/27.png" alt="" class="rounded-full w-32 opacity-50" />
-        FX MOZART
+        <img src="../assets/img/27.png" alt="" class="rounded-full w-32 opacity-50 hover:w-42" />
+        FX<br> MOZART
       </a>
       </div>
   
-      <div class="rounded-full  bg-gradient-to-tr from-pink-400 to-purple-600 font-bold text-2xl mx-12 opacity-75 py-24">
+      <div class="rounded-full  bg-gradient-to-tr from-pink-400 to-purple-600 font-bold text-2xl mx-12 opacity-75 py-24 px-4 hover:px-14 hover:animate-bounce">
         <a href="https://twitter.com/solanaqueen420" target="_blank" class="cursor-pointer text-white ">
         <img src="../assets/img/solanaqueen420.jpg" alt="" class="rounded-full w-32 opacity-50" />
-        SOLANA QUEEN
+        SOLANA <br>QUEEN
       </a>
       </div>
-      <div class="rounded-full bg-orange-600 font-bold text-2xl mx-12">
+      <div class="rounded-full  bg-gradient-to-tr from-pink-400 to-purple-600 font-bold text-2xl mx-12 opacity-75 py-24 px-4 hover:px-14 hover:animate-bounce">
+        <a href="https://twitter.com/ellissa_art" target="_blank" class="cursor-pointer text-white ">
         
-        <img src="../assets/img/elissa.jpg" alt="" class="rounded-full w-64" />
-        ELISSA ART
+        <img src="../assets/img/elissa.jpg" alt="" class="rounded-full w-32 opacity-50" />
+        ELISSA <br>ART
+        </a>
       </div>
-      <div class="rounded-full bg-purple-200 font-bold text-2xl mx-12">
+      <div class="rounded-full  bg-gradient-to-tr from-pink-400 to-purple-600 font-bold text-2xl mx-12 opacity-75 py-24 px-4 hover:px-14 hover:animate-bounce">
+        <a href="https://twitter.com/maxriderbmx" target="_blank" class="cursor-pointer text-white ">
         
-        <img src="../assets/img/metamax.jpg" alt="" class="rounded-full w-64" />
-        METAMAX
+        <img src="../assets/img/doxy.png" alt="" class="rounded-full w-32 opacity-50" />
+        DOXXIS <br> GM
+        </a>
       </div>
-      
+      <div class="rounded-full  bg-gradient-to-tr from-pink-400 to-purple-600 font-bold text-2xl mx-12 opacity-75 py-24 px-4 hover:px-14 hover:animate-bounce">
+        <a href="https://twitter.com/maxriderbmx" target="_blank" class="cursor-pointer text-white ">
+        
+        <img src="../assets/img/metamax.jpg" alt="" class="rounded-full w-32 opacity-50" />
+        META <br> MAX
+        </a>
+      </div>
       </div>
 
 
