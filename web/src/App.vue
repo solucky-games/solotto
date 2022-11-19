@@ -2,7 +2,7 @@
 <div>
   <header>
   <video  autoplay loop  play class="fixed -z-10 w-auto min-w-full min-h-full opacity-60">
-    <source src="./assets/vids/hero.mp4" type="video/mp4" />
+    <source  src="./assets/vids/hero.mp4" type="video/mp4" />
   </video>
 </header>
 
