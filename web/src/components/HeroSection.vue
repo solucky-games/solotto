@@ -1,6 +1,6 @@
 <template>
   <div class="flex grid-cols-2 flex-wrap h-screen m-0 text-center align-center justify-center" 
-  :class="this.$store.state.dark ? 'bg-transparent' : 'bg-gray-100'">
+  :class="this.$store.state.dark ? 'bg-black/50' : 'bg-white/50'">
 
 
       <div class="z-20 text-center align-center justify-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500" >
@@ -18,7 +18,7 @@
         <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
           😇 NOT FOR ME -18
         </button>
-        <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
+        <button class="border bg-gradient-to-tr from-purple-500 to-pink-500 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">
           😈 I'M A DEGEN +18
         </button>
         <button class="border bg-gradient-to-tr from-blue-400 to-purple-600 text-white hover:border-white p-4 rounded-xl m-4 px-8 font-bold border-purple-500 hover:animate-bounce transition-colors">

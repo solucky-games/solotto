@@ -13,7 +13,7 @@
           WEB3 VEGAS IS HERE
         </h1>
         <p class="mt-12 px-4 text-gray-400 text-bold">
-          SOLUCKY IS THE BEST GAMBLING COMMUNITY IN THE SOLANA BLOCKCHAIN. 
+          SOLUCKY IS THE BEST GAMBLING PLATFORM IN THE SOLANA BLOCKCHAIN. 
         </p>
         <p class="mt-6 px-4 text-gray-400 text-bold">
           WE AIM TO BE THE FIRST WEB3 CASINO WITH SOLANA'S FAST & CHEAP TRANSACTIONS.
@@ -39,7 +39,7 @@
     
     </div>
     
-    <div class="mt-24 ">
+    <div class="mt-48 ">
 
       <h1 class="text-xl text-center font-extrabold  md:mt-8 md:text-3xl lg:text-[30px] text-transparent bg-clip-text bg-gradient-to-r from-pink-100 to-purple-500"
      >
