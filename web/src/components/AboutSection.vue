@@ -61,7 +61,7 @@
           <a href="https://twitter.com/fxmozart_sol" target="_blank" class="cursor-pointer text-center"
           :class="this.$store.state.dark ? 'text-white' : 'text.black'">
             <img src="../assets/img/coinbase.png" alt="" class="rounded-full w-28 opacity-50 hover:w-42" />
-            COINBASE
+            PHANTOM
           </a>
           </div>
 
