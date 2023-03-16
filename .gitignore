@@ -3,6 +3,8 @@
 .env.local
 .env.production
 
+.vscode
+
 .DS_Store
 package-lock.json
 
